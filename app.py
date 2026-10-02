@@ -67,6 +67,14 @@ css_style = """
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         margin-bottom: 22px;
     }
+    .profile-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 24px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
     .glass-card-green {
         background: linear-gradient(135deg, rgba(235, 247, 238, 0.9) 0%, rgba(210, 240, 218, 0.9) 100%);
         padding: 16px;
@@ -111,26 +119,44 @@ BASE_EMISSION = 822.40  # Mt CO2eq
 PROFILE_DETAILS = {
     "🏛️ S0 Referans Küresel Durum (Baseline)": {
         "desc": "Veri setindeki tüm küresel ekonomilerin tam ortalamasını temsil eden nötr mihenk taşı.",
+        "badge": "Mihenk Taş / Referans",
+        "focus": "Küresel Ortalama Kıyaslaması",
+        "recipe": "Mevcut küresel dengenin korunması ve kademeli emisyon azaltımı.",
         "gdp": 25000.0, "energy": 5.2, "gvc": 25.0, "trade": 85.0, "manuf": 18.0, "renew": 22.0, "broadband": 20.0, "internet": 75.0, "mobile": 110.0
     },
     "🇪🇺 AB Yeşil Mutabakat Ülkesi": {
         "desc": "Sıkı iklim politikaları, yüksek milli gelir ve baskın yenilenebilir enerji dönüşümü sağlayan gelişmiş AB modeli.",
+        "badge": "İklim ve Temiz Enerji Lideri",
+        "focus": "Sınırda Karbon Düzenlemesi (CBAM) ve İkiz Dönüşüm",
+        "recipe": "Yenilenebilir enerji şebekesini dijital yapay zeka ile optimize etmek ve tedarik zinciri emisyonlarını denetlemek.",
         "gdp": 48000.0, "energy": 3.2, "gvc": 32.0, "trade": 85.0, "manuf": 14.0, "renew": 58.0, "broadband": 38.0, "internet": 92.0, "mobile": 135.0
     },
     "🏭 Gelişmekte Olan Sanayi Ekonomisi": {
         "desc": "Yüksek imalat sanayi payı, yüksek enerji yoğunluğu ve henüz kısıtlı yenilenebilir enerji entegrasyonu olan üretim odaklı ekonomi.",
+        "badge": "Üretim ve Sanayi Üssü",
+        "focus": "Enerji Verimliliği ve Temiz Üretim Teknolojileri",
+        "recipe": "Kömür/fosil bağımlılığını azaltmak, sanayide enerji yoğunluğunu düşürmek ve temiz teknoloji yatırımları çekmek.",
         "gdp": 8500.0, "energy": 8.8, "gvc": 22.0, "trade": 55.0, "manuf": 28.0, "renew": 14.0, "broadband": 12.0, "internet": 58.0, "mobile": 95.0
     },
     "🐉 Yüksek Dijitalleşmiş Asya Ekonomisi": {
         "desc": "Küresel değer zincirlerine (GVC) yüksek entegrasyon, devasa dış ticaret açıklığı ve hiper-dijitalleşme altyapısına sahip Asya modeli.",
+        "badge": "Hiper-Dijital Tedarik Üssü",
+        "focus": "Küresel Tedarik Zincirlerinin Karbonsuzlaştırılması",
+        "recipe": "Devasa dijital altyapıyı veri merkezlerinde %100 yenilenebilir enerjiye geçirmek ve ihracatta karbonsuz lojistiği benimsemek.",
         "gdp": 35000.0, "energy": 5.5, "gvc": 42.0, "trade": 130.0, "manuf": 26.0, "renew": 22.0, "broadband": 44.0, "internet": 96.0, "mobile": 160.0
     },
     "⚡ Düşük Gelirli & Yüksek Enerji Yoğunluklu Ülke": {
         "desc": "Verimsiz enerji kullanımı, düşük milli gelir ve zayıf dijitalleşme ile en yüksek emisyon riski taşıyan kırılgan ekonomi.",
+        "badge": "Yüksek Emisyon Riski & Kırılgan Yapı",
+        "focus": "Uluslararası İklim Finansmanı ve Altyapı Dönüşümü",
+        "recipe": "Eski elektrik şebekelerini yenilemek, küresel iklim fonlarından yararlanarak yenilenebilir enerji sıçraması yapmak.",
         "gdp": 3200.0, "energy": 12.5, "gvc": 12.0, "trade": 35.0, "manuf": 20.0, "renew": 8.0, "broadband": 4.0, "internet": 32.0, "mobile": 65.0
     },
     "🍃 Yeşil İkiz Dönüşüm Öncüsü": {
         "desc": "Yüksek yenilenebilir enerji (%65) ve ileri dijital altyapının sinerji oluşturduğu ideal karbonsuzlaşma modeli.",
+        "badge": "Geleceğin İdeal Modeli",
+        "focus": "Sıfır Karbon Büyüme ve Yeşil Dijital Entegrasyon",
+        "recipe": "Akıllı şehirler, yeşil veri merkezleri ve %100 karbonsuz üretim ile küresel iklim standartlarını belirlemek.",
         "gdp": 55000.0, "energy": 2.8, "gvc": 30.0, "trade": 90.0, "manuf": 15.0, "renew": 65.0, "broadband": 42.0, "internet": 95.0, "mobile": 140.0
     }
 }
@@ -195,7 +221,7 @@ COUNTRIES_DATA = {
 if "visitor_count" not in st.session_state:
     try:
         req = urllib.request.Request(
-            "https://api.counterapi.dev/v1/karbon-simulasyonu-zeynep-v4/visits/up",
+            "https://api.counterapi.dev/v1/karbon-simulasyonu-zeynep-v5/visits/up",
             headers={"User-Agent": "Mozilla/5.0"}
         )
         with urllib.request.urlopen(req, timeout=3) as response:
@@ -204,9 +230,9 @@ if "visitor_count" not in st.session_state:
             if cnt and isinstance(cnt, int) and cnt > 0:
                 st.session_state.visitor_count = cnt
             else:
-                st.session_state.visitor_count = 186
+                st.session_state.visitor_count = 214
     except Exception:
-        st.session_state.visitor_count = 186
+        st.session_state.visitor_count = 214
 
 # 2. MODEL VE ÖLÇEKLENDİRİCİLERİ YÜKLEME
 @st.cache_resource
@@ -304,8 +330,8 @@ else:
 st.sidebar.markdown("---")
 st.sidebar.subheader("🎛️ Politika Parametreleri")
 
-gdp = st.sidebar.slider("Kişi Başı GSYH (\$)", 1000, 95000, int(st.session_state.gdp_val), step=1000)
-energy_intensity = st.sidebar.slider("Enerji Yoğunluğu (MJ/\$)", 1.0, 15.0, float(st.session_state.energy_val), step=0.1)
+gdp = st.sidebar.slider("Kişi Başı GSYH ($)", 1000, 95000, int(st.session_state.gdp_val), step=1000)
+energy_intensity = st.sidebar.slider("Enerji Yoğunluğu (MJ/$)", 1.0, 15.0, float(st.session_state.energy_val), step=0.1)
 gvc_output = st.sidebar.slider("GVC Çıktısı Payı (% Brüt Çıktı)", 5.0, 60.0, float(st.session_state.gvc_val), step=0.5)
 trade_openness = st.sidebar.slider("Ticari Açıklık (% GSYH)", 20.0, 200.0, float(st.session_state.trade_val), step=1.0)
 manufacturing = st.sidebar.slider("İmalat Sanayi Payı (% GSYH)", 2.0, 45.0, float(st.session_state.manuf_val), step=0.5)
@@ -318,7 +344,7 @@ mobile_sub = st.sidebar.slider("Mobil Abonelik (100 Kişide)", 30.0, 200.0, floa
 
 # Yan Menü Altı: Canlı Ziyaretçi Sayacı
 st.sidebar.markdown("---")
-count_display = st.session_state.get("visitor_count", 186)
+count_display = st.session_state.get("visitor_count", 214)
 st.sidebar.markdown(f"👁️ **Toplam Ziyaret Sayısı:** `{count_display}`")
 
 # HESAPLAMALAR
@@ -405,267 +431,354 @@ col4.metric(
 
 st.markdown("---")
 
-# SEKMELİ YAPI (6 SEKMELİ BÜYÜK MODÜL)
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-    "🌍 Küresel Emisyon Haritası",
-    "🎛️ Canlı Simülasyon & Akıllı Çıkarımlar",
-    "📊 Birebir Gösterge Kıyaslaması",
-    "🎯 Net-Zero Politika Reçete Motoru",
-    "⚔️ İkili Ülke Karşılaştırma Modu",
-    "📜 Metodoloji & XAI Notları"
-])
+# SEKMELİ YAPI (EĞER HAZIR PROFİL SEÇİLİYSE ÖZEL ARAYÜZ SEKMELERİ)
+if mode_choice == "Hazır Ülke Profilini Kullan":
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "🏛️ Tipoloji & Profil Özel Analiz Paneli",
+        "🎛️ Canlı Simülasyon & Akıllı Çıkarımlar",
+        "📊 Yüzdesel Gösterge Kıyaslaması",
+        "🎯 Net-Zero Politika Reçetesi"
+    ])
 
-# SEKME 1: CANLI ATLANTİK MAVİSİ DÜNYA HARİTASI
-with tab1:
-    st.subheader("🗺️ Canlı Küresel Karbon Ayak İzi Haritası")
-    st.markdown("Okyanusların **Atlantik Mavisi (`#0e2a47`)**, ülkelerin ise **Zümrüt Yeşili (Düşük) → Altın Sarısı → Mercan Kırmızısı (Yüksek)** tonlarında renklendirildiği küresel harita. Harita üzerindeki herhangi bir ülkeye veya aşağıdaki seçim kutusuna tıklayarak inceleme yapabilirsiniz.")
+    with tab1:
+        p_data = PROFILE_DETAILS[selected_profile]
+        st.subheader(f"{selected_profile} — Tipoloji Özel Derin Analizi")
+        
+        st.markdown(f"""
+        <div class="profile-card">
+            <span style="background:#2b5c8f;color:white;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;">{p_data['badge']}</span>
+            <h3 style="margin-top:10px;color:#1e293b;">Politika Odağı: {p_data['focus']}</h3>
+            <p style="font-size:15px;color:#475569;"><b>Tanım:</b> {p_data['desc']}</p>
+            <div style="background:#f1f5f9;padding:14px;border-radius:10px;border-left:4px solid #10b981;margin-top:10px;">
+                <b>🎯 Özel Karbonsuzlaşma Reçetesi:</b> {p_data['recipe']}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    map_list = []
-    for c_name, c_data in COUNTRIES_DATA.items():
-        e_val = predict_emissions(c_data["gdp"], c_data["energy"], c_data["gvc"], c_data["trade"], c_data["manuf"], c_data["renew"], c_data["broadband"], c_data["internet"], c_data["mobile"])
-        map_list.append({
-            "Ülke": c_name,
-            "ISO": c_data["iso"],
-            "Emisyon": e_val,
-            "GSYH": c_data["gdp"],
-            "Yenilenebilir (%)": c_data["renew"],
-            "Enerji Yoğunluğu": c_data["energy"]
-        })
-    df_map = pd.DataFrame(map_list)
+        # Profil vs S0 Baseline Karşılaştırma Grafiği
+        st.markdown("### 📊 Profilin Küresel Ortalama (S0 Baseline) ile Gösterge Düzeyinde Kıyaslaması")
+        p_vals_raw = [p_data['gdp'], p_data['energy'], p_data['gvc'], p_data['trade'], p_data['manuf'], p_data['renew'], p_data['internet']]
+        base_vals_raw = [BASE_GDP, BASE_ENERGY, BASE_GVC, BASE_TRADE, BASE_MANUF, BASE_RENEW, BASE_INTERNET]
+        
+        diff_pcts = [((pv - bv)/bv)*100 for pv, bv in zip(p_vals_raw, base_vals_raw)]
+        labels = ["GSYH", "Enerji Yoğunluğu", "GVC Çıktısı", "Ticari Açıklık", "İmalat Sanayi", "Yenilenebilir Enerji", "İnternet Kullanımı"]
 
-    # İnteraktif Seçim Kutusu ile Ülke Odaklama
-    selected_map_country = st.selectbox(
-        "🔍 Haritada Odaklanılacak Ülkeyi Seçiniz:",
-        list(COUNTRIES_DATA.keys()),
-        index=list(COUNTRIES_DATA.keys()).index(selected_country) if selected_country in COUNTRIES_DATA else 0
-    )
-    if selected_map_country != st.session_state.selected_country_name:
-        st.session_state.selected_country_name = selected_map_country
-
-    fig_map = px.choropleth(
-        df_map,
-        locations="ISO",
-        color="Emisyon",
-        hover_name="Ülke",
-        hover_data={"ISO": False, "Emisyon": ":.2f", "GSYH": ":,.0f", "Yenilenebilir (%)": ":.1f", "Enerji Yoğunluğu": ":.1f"},
-        color_continuous_scale=[
-            [0.0, "#2ca02c"],   # Zümrüt Yeşili (En Düşük Emisyon)
-            [0.35, "#ff7f0e"],  # Turuncu / Altın Sarısı
-            [1.0, "#d62728"]    # Mercan Kırmızısı (En Yüksek Emisyon)
-        ],
-        title="Küresel Ekonomilerin Tahmini Karbon Ayak İzi Dağılımı (Mt CO₂eq)"
-    )
-
-    # Seçili ülkeyi haritada altın sarısı kalın çerçeve ile vurgulama
-    sel_iso = COUNTRIES_DATA[selected_map_country]["iso"]
-    sel_row = df_map[df_map["ISO"] == sel_iso]
-    if not sel_row.empty:
-        fig_map.add_trace(go.Choropleth(
-            locations=sel_row["ISO"],
-            z=sel_row["Emisyon"],
-            colorscale=[[0, "#ffff00"], [1, "#ffff00"]],
-            showscale=False,
-            marker_line_color="#ffffff",
-            marker_line_width=3.5,
-            name=f"Seçili Ülke: {selected_map_country}"
+        fig_prof = go.Figure()
+        colors = ["#2ca02c" if dp <= 0 and "Yoğunluğu" in l else ("#2ca02c" if dp >= 0 and ("Yenilenebilir" in l or "İnternet" in l or "GSYH" in l) else "#d62728") for dp, l in zip(diff_pcts, labels)]
+        
+        fig_prof.add_trace(go.Bar(
+            y=labels,
+            x=diff_pcts,
+            orientation="h",
+            marker_color=colors,
+            text=[f"{dp:+.1f}%" for dp in diff_pcts],
+            textposition="outside"
         ))
+        fig_prof.update_layout(
+            title="S0 Küresel Ortalamaya Göre Yüzdesel Sapma (%)",
+            xaxis_title="Yüzdesel Fark (%)",
+            template="plotly_white",
+            height=400
+        )
+        st.plotly_chart(fig_prof, use_container_width=True)
 
-    # Okyanus & Denizleri Derin Atlantik Mavisi Yapma
-    fig_map.update_geos(
-        showocean=True, oceancolor="#0e2a47",
-        showlakes=True, lakecolor="#0e2a47",
-        showrivers=True, rivercolor="#0e2a47",
-        showcountries=True, countrycolor="#444444",
-        showframe=False,
-        projection_type="natural earth"
-    )
-    fig_map.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
-    st.plotly_chart(fig_map, use_container_width=True)
+    with tab2:
+        st.subheader("📈 10.000 İterasyonlu Monte Carlo Olasılık Dağılımı")
+        fig = go.Figure()
+        fig.add_vline(x=BASE_EMISSION, line_width=2, line_dash="dot", line_color="gray", annotation_text=f"S0 Baseline ({BASE_EMISSION:.1f})")
+        fig.add_trace(go.Histogram(x=mc_distribution, nbinsx=50, name="Senaryo Dağılımı", marker_color="#2b5c8f" if emission_diff <= 0 else "#d9534f", opacity=0.75))
+        fig.add_vline(x=pred_emission, line_width=3, line_dash="dash", line_color="red", annotation_text=f"Yeni Senaryo ({pred_emission:.1f})")
+        fig.update_layout(xaxis_title="Talep Tabanlı GHG Emisyonu (Mt CO₂eq)", yaxis_title="Simülasyon Frekansı", template="plotly_white", height=380)
+        st.plotly_chart(fig, use_container_width=True)
 
-    # HARİTA ALTI DETAYLI ŞIK PARLAK KARTLAR
-    st.markdown(f"### 📌 {selected_map_country} — Gerçek Makroekonomik & Dijital Gösterge Kartı")
-    m_c = COUNTRIES_DATA[selected_map_country]
-    m_e = predict_emissions(m_c["gdp"], m_c["energy"], m_c["gvc"], m_c["trade"], m_c["manuf"], m_c["renew"], m_c["broadband"], m_c["internet"], m_c["mobile"])
-
-    c_c1, c_c2, c_c3, c_c4 = st.columns(4)
-    c_c1.markdown(f"<div class='glass-card-blue'><b>Mevcut Emisyon</b><h3 style='color:#1f77b4;margin:0;'>{m_e:.2f} Mt CO₂eq</h3><small>ISO: {m_c['iso']}</small></div>", unsafe_allow_html=True)
-    c_c2.markdown(f"<div class='glass-card-blue'><b>Kişi Başı GSYH</b><h3 style='color:#1f77b4;margin:0;'>\${m_c['gdp']:,.0f}</h3><small>Küresel Düzey</small></div>", unsafe_allow_html=True)
-    c_c3.markdown(f"<div class='glass-card-green'><b>Yenilenebilir Enerji</b><h3 style='color:#2ca02c;margin:0;'>%{m_c['renew']:.1f}</h3><small>Temiz Enerji Payı</small></div>", unsafe_allow_html=True)
-    c_c4.markdown(f"<div class='glass-card-red'><b>Enerji Yoğunluğu</b><h3 style='color:#d62728;margin:0;'>{m_c['energy']:.1f} MJ/\$</h3><small>Verimlilik Göstergesi</small></div>", unsafe_allow_html=True)
-
-    d_c1, d_c2, d_c3, d_c4 = st.columns(4)
-    d_c1.markdown(f"<div class='glass-card-blue'><b>İmalat Sanayi Payı</b><h4 style='margin:0;'>%{m_c['manuf']:.1f}</h4></div>", unsafe_allow_html=True)
-    d_c2.markdown(f"<div class='glass-card-blue'><b>GVC Çıktısı Payı</b><h4 style='margin:0;'>%{m_c['gvc']:.1f}</h4></div>", unsafe_allow_html=True)
-    d_c3.markdown(f"<div class='glass-card-blue'><b>Ticari Açıklık</b><h4 style='margin:0;'>%{m_c['trade']:.1f}</h4></div>", unsafe_allow_html=True)
-    d_c4.markdown(f"<div class='glass-card-green'><b>İnternet Kullanıcı Oranı</b><h4 style='margin:0;'>%{m_c['internet']:.1f}</h4></div>", unsafe_allow_html=True)
-
-# SEKME 2: CANLI SİMÜLASYON & AKILLI ÇIKARIMLAR
-with tab2:
-    st.subheader("📈 10.000 İterasyonlu Monte Carlo Olasılık Dağılımı")
-    fig = go.Figure()
-    fig.add_vline(x=BASE_EMISSION, line_width=2, line_dash="dot", line_color="gray", annotation_text=f"S0 Baseline ({BASE_EMISSION:.1f})", annotation_position="top left")
-    fig.add_trace(go.Histogram(x=mc_distribution, nbinsx=50, name="Senaryo Dağılımı", marker_color="#2b5c8f" if emission_diff <= 0 else "#d9534f", opacity=0.75))
-    fig.add_vline(x=pred_emission, line_width=3, line_dash="dash", line_color="red", annotation_text=f"Yeni Senaryo ({pred_emission:.1f})", annotation_position="top right")
-    fig.update_layout(xaxis_title="Talep Tabanlı GHG Emisyonu (Mt CO₂eq)", yaxis_title="Simülasyon Frekansı", template="plotly_white", height=380)
-    st.plotly_chart(fig, use_container_width=True)
-
-    # AKILLI POLITİKA ÇIKARIM RAPORU
-    st.markdown("### 🤖 Otomatik Metodolojik Politika Raporu")
-    direction_text = "düşüş yönlü bir duyarlılık" if emission_diff <= 0 else "artış yönlü bir yük"
-    pct_text = f"%{abs(emission_pct_change):.1f}"
-    max_red_name = feature_names[np.argmin(feature_contribs)]
-    max_inc_name = feature_names[np.argmax(feature_contribs)]
-    
-    twin_text = f"Yenilenebilir enerji payının (% {renewable_energy:.1f}) yüksek seviyede tutulması, dijitalleşmenin getirebileceği 'Rebound (Geri Tepme) Etkisini' engellemiş ve Yeşil-Dijital İkiz Dönüşüm sinerjisini doğrulamıştır." if renewable_energy >= 35.0 else f"Yenilenebilir enerji payının (% {renewable_energy:.1f}) henüz kritik eşiğin altında kalması nedeniyle, dijitalleşme ve sanayi üretimi toplam emisyonlar üzerinde baskı oluşturmaktadır."
-
-    st.markdown(f"""
-    <div class="insight-card">
-    <h4>📝 Akıllı Senaryo Çıkarımı ve Karar Destek Özeti</h4>
-    <p>Simüle edilen bu politika bileşimi sonucında, talep bazlı karbon ayak izi tahmini referans duruma (822.40 Mt CO₂eq) kıyasla <b>{pct_text}</b> oranında <b>{direction_text}</b> sergileyerek <b>{pred_emission:.2f} Mt CO₂eq</b> seviyesinde dengelenmiştir.</p>
-    <p><b>Dinamik SVR Karar Yüzeyi Ayrıştırması:</b> Karbonsuzlaşmaya en yüksek katkıyı sağlayan değişken <b>{max_red_name}</b> olurken, emisyon öngörüsünü yukarı çeken ana etken <b>{max_inc_name}</b> olarak öne çıkmaktadır.</p>
-    <p><b>İkiz Dönüşüm Analizi:</b> {twin_text}</p>
-    <p><i><b>Metodolojik Not:</b> Bu çıkarımlar SVR modelinin ilişkisel marjinal duyarlılıklarına dayanmaktadır; doğrudan nedensel (causal) bir bağlam ifade etmez.</i></p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# SEKME 3: RADAR YERİNE CANLI ÇİFT RENKLİ BARIŞTIRMA ÇUBUKLARI
-with tab3:
-    st.subheader("📊 Mevcut Durum vs Yeni Politika Birebir Gösterge Kıyaslaması")
-    st.markdown("Aşağıdaki çift çubuklu grafik, seçtiğiniz ülkenin / profilin **Mevcut Durumu** ile **Yeni Senaryo Politikasını** tüm değişkenler bazında doğrudan karşılaştırır.")
-
-    if mode_choice == "Küresel Ülke Listesinden Seç":
-        b_c = COUNTRIES_DATA[selected_country]
-        base_vals = [b_c["gdp"], b_c["energy"], b_c["gvc"], b_c["trade"], b_c["manuf"], b_c["renew"], b_c["internet"]]
-    else:
+    with tab3:
+        st.subheader("📊 Profil Göstergelerinin Yüzdesel Değişim Analizi")
         p_c = PROFILE_DETAILS[selected_profile]
         base_vals = [p_c["gdp"], p_c["energy"], p_c["gvc"], p_c["trade"], p_c["manuf"], p_c["renew"], p_c["internet"]]
+        scen_vals = [gdp, energy_intensity, gvc_output, trade_openness, manufacturing, renewable_energy, internet_users]
+        comp_labels = ["GSYH ($)", "Enerji Yoğunluğu (MJ/$)", "GVC Payı (%)", "Ticari Açıklık (%)", "İmalat Sanayi (%)", "Yenilenebilir Enerji (%)", "İnternet Kullanımı (%)"]
+        
+        pct_deltas = [((s - b)/b)*100 if b>0 else 0 for b, s in zip(base_vals, scen_vals)]
+        
+        fig_pct = go.Figure()
+        fig_pct.add_trace(go.Bar(
+            y=comp_labels,
+            x=pct_deltas,
+            orientation="h",
+            marker_color=["#2ca02c" if pd <=0 and "Enerji Yoğunluğu" in l else "#1f77b4" for pd, l in zip(pct_deltas, comp_labels)],
+            text=[f"{pd:+.1f}%" for pd in pct_deltas],
+            textposition="outside"
+        ))
+        fig_pct.update_layout(title="Mevcut Profil Durumuna Göre Yüzdesel Politika Değişimi (%)", xaxis_title="Yüzdesel Değişim (%)", template="plotly_white", height=420)
+        st.plotly_chart(fig_pct, use_container_width=True)
 
-    scen_vals = [gdp, energy_intensity, gvc_output, trade_openness, manufacturing, renewable_energy, internet_users]
-    comp_labels = ["GSYH (\$)", "Enerji Yoğunluğu (MJ/\$)", "GVC Payı (%)", "Ticari Açıklık (%)", "İmalat Sanayi (%)", "Yenilenebilir Enerji (%)", "İnternet Kullanımı (%)"]
+    with tab4:
+        st.subheader("🎯 Net-Zero / Hedef Tabanlı Politika Reçetesi Motoru")
+        target_pct = st.slider("🎯 Hedeflenen Karbon Emisyonu Azaltım Oranı (%):", 5, 50, 20, step=5)
+        target_emission = BASE_EMISSION * (1.0 - (target_pct / 100.0))
+        rec_renew = min(80.0, BASE_RENEW + (target_pct * 0.8))
+        rec_energy = max(1.5, BASE_ENERGY - (target_pct * 0.08))
+        rec_manuf = max(8.0, BASE_MANUF - (target_pct * 0.15))
+        rec_emission = predict_emissions(BASE_GDP, rec_energy, BASE_GVC, BASE_TRADE, rec_manuf, rec_renew, BASE_BROADBAND, BASE_INTERNET, BASE_MOBILE)
 
-    fig_bar_comp = go.Figure()
-    fig_bar_comp.add_trace(go.Bar(
-        y=comp_labels,
-        x=base_vals,
-        name="Mevcut / Referans Durum",
-        orientation="h",
-        marker_color="#1f77b4"
-    ))
-    fig_bar_comp.add_trace(go.Bar(
-        y=comp_labels,
-        x=scen_vals,
-        name="Yeni Politika Senaryosu",
-        orientation="h",
-        marker_color="#2ca02c" if pred_emission <= base_country_emission else "#d62728"
-    ))
+        r_col1, r_col2, r_col3 = st.columns(3)
+        r_col1.markdown(f"<div class='glass-card-green'><b>Gerekli Yenilenebilir Enerji</b><h3 style='color:#2ca02c;'>%{rec_renew:.1f}</h3></div>", unsafe_allow_html=True)
+        r_col2.markdown(f"<div class='glass-card-green'><b>Gerekli Enerji Yoğunluğu</b><h3 style='color:#2ca02c;'>{rec_energy:.1f} MJ/$</h3></div>", unsafe_allow_html=True)
+        r_col3.markdown(f"<div class='glass-card-green'><b>Önerilen İmalat Sanayi Payı</b><h3 style='color:#2ca02c;'>%{rec_manuf:.1f}</h3></div>", unsafe_allow_html=True)
 
-    fig_bar_comp.update_layout(
-        barmode="group",
-        title="Gösterge Düzeyinde Birebir Karşılaştırma",
-        xaxis_title="Gösterge Değeri",
-        template="plotly_white",
-        height=480
-    )
-    st.plotly_chart(fig_bar_comp, use_container_width=True)
-
-    # SENARYO RAPORUNU İNDİRME BUTTONLARI
-    st.markdown("### 📥 Senaryo Raporunu İndir")
-    export_df = pd.DataFrame([{
-        "Senaryo": selected_country if mode_choice == "Küresel Ülke Listesinden Seç" else selected_profile,
-        "Tahmini_Emisyon_Mt": round(pred_emission, 2),
-        "Baseline_Farki_Mt": round(emission_diff, 2),
-        "Yuzdesel_Degisim": round(emission_pct_change, 2),
-        "Alt_Guven_Siniri": round(lower_bound, 2),
-        "Ust_Guven_Siniri": round(upper_bound, 2),
-        "GSYH_\$": gdp,
-        "Enerji_Yogunlugu_MJ": energy_intensity,
-        "Yenilenebilir_Enerji_Pct": renewable_energy,
-        "İmalat_Sanayi_Pct": manufacturing
-    }])
-    csv_data = export_df.to_csv(index=False).encode('utf-8')
-    st.download_button(
-        label="📄 Senaryo Sonuçlarını CSV Olarak İndir",
-        data=csv_data,
-        file_name=f"karbon_senaryo_{selected_country if mode_choice=='Küresel Ülke Listesinden Seç' else 'profil'}.csv",
-        mime="text/csv"
-    )
-
-# SEKME 4: NET-ZERO HEDEF TABANLI POLITİKA REÇETE MOTORU
-with tab4:
-    st.subheader("🎯 Net-Zero / Hedef Tabanlı Politika Reçetesi Motoru")
-    st.markdown("Ulaşmak istediğiniz **karbon emisyonu azaltım hedefini** belirleyin. Yapay zeka modeli tersten hesaplama yaparak bu hedefe ulaşmak için gerekli optimal politika parametrelerini reçete eder.")
-
-    target_pct = st.slider("🎯 Hedeflenen Karbon Emisyonu Azaltım Oranı (%):", 5, 50, 20, step=5)
-    target_emission = BASE_EMISSION * (1.0 - (target_pct / 100.0))
-
-    st.markdown(f"#### 📉 Hedeflenen Emisyon Seviyesi: **{target_emission:.2f} Mt CO₂eq** ( Baseline'a göre -%{target_pct} Azaltım )")
-
-    # Tersten Reçete Simülasyonu
-    rec_renew = min(80.0, BASE_RENEW + (target_pct * 0.8))
-    rec_energy = max(1.5, BASE_ENERGY - (target_pct * 0.08))
-    rec_manuf = max(8.0, BASE_MANUF - (target_pct * 0.15))
-    rec_emission = predict_emissions(BASE_GDP, rec_energy, BASE_GVC, BASE_TRADE, rec_manuf, rec_renew, BASE_BROADBAND, BASE_INTERNET, BASE_MOBILE)
-
-    r_col1, r_col2, r_col3 = st.columns(3)
-    r_col1.markdown(f"<div class='glass-card-green'><b>Gerekli Yenilenebilir Enerji</b><h3 style='color:#2ca02c;'>%{rec_renew:.1f}</h3><small>Mevcut: %{BASE_RENEW:.1f}</small></div>", unsafe_allow_html=True)
-    r_col2.markdown(f"<div class='glass-card-green'><b>Gerekli Enerji Yoğunluğu</b><h3 style='color:#2ca02c;'>{rec_energy:.1f} MJ/\$</h3><small>Mevcut: {BASE_ENERGY:.1f}</small></div>", unsafe_allow_html=True)
-    r_col3.markdown(f"<div class='glass-card-green'><b>Önerilen İmalat Sanayi Payı</b><h3 style='color:#2ca02c;'>%{rec_manuf:.1f}</h3><small>Mevcut: %{BASE_MANUF:.1f}</small></div>", unsafe_allow_html=True)
-
-    st.info(f"💡 **Reçete Simülasyon Sonucu:** Yukarıdaki parametre kombinasyonu uygulandığında, model emisyonu **{rec_emission:.2f} Mt CO₂eq** seviyesine düşürmekte ve %{target_pct} hedefinize başarıyla ulaşmaktadır.")
-
-# SEKME 5: İKİLİ ÜLKE KARŞILAŞTIRMA MODU
-with tab5:
-    st.subheader("⚔️ İkili Ülke Birebir Karşılaştırma Modu")
-    st.markdown("İki farklı ülkeyi seçerek makroekonomik, dijital ve emisyon performanslarını yan yana kıyaslayın.")
-
-    col_k1, col_k2 = st.columns(2)
-    with col_k1:
-        country_A = st.selectbox("1. Ülkeyi Seçiniz:", list(COUNTRIES_DATA.keys()), index=0)
-    with col_k2:
-        country_B = st.selectbox("2. Ülkeyi Seçiniz:", list(COUNTRIES_DATA.keys()), index=1)
-
-    cA_data = COUNTRIES_DATA[country_A]
-    cB_data = COUNTRIES_DATA[country_B]
-
-    eA = predict_emissions(cA_data["gdp"], cA_data["energy"], cA_data["gvc"], cA_data["trade"], cA_data["manuf"], cA_data["renew"], cA_data["broadband"], cA_data["internet"], cA_data["mobile"])
-    eB = predict_emissions(cB_data["gdp"], cB_data["energy"], cB_data["gvc"], cB_data["trade"], cB_data["manuf"], cB_data["renew"], cB_data["broadband"], cB_data["internet"], cB_data["mobile"])
-
-    res_col1, res_col2 = st.columns(2)
-    res_col1.markdown(f"<div class='glass-card-blue'><h3>{country_A}</h3><h4>Tahmini Emisyon: <b>{eA:.2f} Mt CO₂eq</b></h4><p>GSYH: \${cA_data['gdp']:,.0f} | Yenilenebilir: %{cA_data['renew']:.1f}</p></div>", unsafe_allow_html=True)
-    res_col2.markdown(f"<div class='glass-card-blue'><h3>{country_B}</h3><h4>Tahmini Emisyon: <b>{eB:.2f} Mt CO₂eq</b></h4><p>GSYH: \${cB_data['gdp']:,.0f} | Yenilenebilir: %{cB_data['renew']:.1f}</p></div>", unsafe_allow_html=True)
-
-    # İkili Karşılaştırma Grafiği
-    fig_two = go.Figure(data=[
-        go.Bar(name=country_A, x=["Emisyon (Mt)", "GSYH (\$k)", "Yenilenebilir (%)", "Enerji Yoğunluğu (x10)"], y=[eA, cA_data["gdp"]/1000, cA_data["renew"], cA_data["energy"]*10], marker_color="#1f77b4"),
-        go.Bar(name=country_B, x=["Emisyon (Mt)", "GSYH (\$k)", "Yenilenebilir (%)", "Enerji Yoğunluğu (x10)"], y=[eB, cB_data["gdp"]/1000, cB_data["renew"], cB_data["energy"]*10], marker_color="#ff7f0e")
+else:
+    # ÜLKE SEÇİLİ EKRAN SEKMELERİ
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "🌍 Küresel Emisyon Haritası",
+        "🎛️ Canlı Simülasyon & Akıllı Çıkarımlar",
+        "📊 Birebir Gösterge Kıyaslaması",
+        "🎯 Net-Zero Politika Reçete Motoru",
+        "⚔️ İkili Ülke Karşılaştırma Modu",
+        "📜 Metodoloji & XAI Notları"
     ])
-    fig_two.update_layout(barmode='group', title=f"{country_A} vs {country_B} Gösterge Karşılaştırması", template="plotly_white", height=420)
-    st.plotly_chart(fig_two, use_container_width=True)
 
-# SEKME 6: METODOLOJİ VE XAI NOTLARI
-with tab6:
-    st.subheader("📜 Metodoloji, Hazır Profiller ve XAI Notları")
-    st.markdown("### 🏛️ Hazır Ülke Profillerinin Sayısal Varsayımları")
-    prof_table = []
-    for p_name, p_vals in PROFILE_DETAILS.items():
-        prof_table.append({
-            "Hazır Profil Adı": p_name,
-            "GSYH (\$)": f"{p_vals['gdp']:,.0f}",
-            "Enerji Yoğ. (MJ/\$)": f"{p_vals['energy']:.1f}",
-            "Yenilenebilir (%)": f"{p_vals['renew']:.1f}%",
-            "İmalat (%)": f"{p_vals['manuf']:.1f}%",
-            "GVC Payı (%)": f"{p_vals['gvc']:.1f}%",
-            "Ticari Açıklık (%)": f"{p_vals['trade']:.1f}%",
-            "İnternet (%)": f"{p_vals['internet']:.1f}%"
-        })
-    st.dataframe(pd.DataFrame(prof_table), use_container_width=True, hide_index=True)
+    # SEKME 1: CANLI DÜNYA HARİTASI (ÜST ARAMA KUTUSU KALDIRILDI)
+    with tab1:
+        st.subheader("🗺️ Canlı Küresel Karbon Ayak İzi Haritası")
+        st.markdown("Okyanusların **Atlantik Mavisi (`#0e2a47`)**, ülkelerin ise **Zümrüt Yeşili (Düşük) → Altın Sarısı → Mercan Kırmızısı (Yüksek)** tonlarında renklendirildiği küresel harita. Sol menüden seçtiğiniz ülke harita üzerinde kalın çerçeve ile otomatik vurgulanmaktadır.")
 
-    st.markdown("""
-    ---
-    ### 🔬 Matematiksel ve Metodolojik Çerçeve
-    * **Tahmin Modeli:** RBF Çekirdekli Destek Vektör Regresyonu (SVR - Test \\(R^2 = 0.975\\)).
-    * **Boyut İndirgeme:** Dijitalleşme göstergeleri (Sabit Genişbant, İnternet, Mobil) Temel Bileşenler Analizi (PCA) ile tek bir Dijitalleşme İndeksine dönüştürülmüştür.
-    * **Yerel XAI Katkı Yöntemi:** Her bir değişkenin tahmine olan marjinal katkısı, diğer değişkenler S0 Baseline seviyesinde sabit tutularak SVR karar yüzeyi üzerinde tekil duyarlılık adımları ile ayrıştırılmıştır.
-    * **Belirsizlik Analizi:** Modelin ampirik artık hata dağılımı (\\(RMSE = 101.24\\text{ Mt CO}_2\\text{eq}\\)) üzerinden 10.000 iterasyonlu Monte Carlo simülasyonu çalıştırılmıştır.
-    * **Metodolojik Çerçeve:** Bu araç nedensel (causal) çıkarım yapmaz; makroekonomik değişkenler arasındaki **tahminsel ve ilişkisel (associative) duyarlılıkları** simüle eder.
-    """)
+        map_list = []
+        for c_name, c_data in COUNTRIES_DATA.items():
+            e_val = predict_emissions(c_data["gdp"], c_data["energy"], c_data["gvc"], c_data["trade"], c_data["manuf"], c_data["renew"], c_data["broadband"], c_data["internet"], c_data["mobile"])
+            map_list.append({
+                "Ülke": c_name,
+                "ISO": c_data["iso"],
+                "Emisyon": e_val,
+                "GSYH": c_data["gdp"],
+                "Yenilenebilir (%)": c_data["renew"],
+                "Enerji Yoğunluğu": c_data["energy"]
+            })
+        df_map = pd.DataFrame(map_list)
+
+        fig_map = px.choropleth(
+            df_map,
+            locations="ISO",
+            color="Emisyon",
+            hover_name="Ülke",
+            hover_data={"ISO": False, "Emisyon": ":.2f", "GSYH": ":,.0f", "Yenilenebilir (%)": ":.1f", "Enerji Yoğunluğu": ":.1f"},
+            color_continuous_scale=[
+                [0.0, "#2ca02c"],   # Zümrüt Yeşili (En Düşük Emisyon)
+                [0.35, "#ff7f0e"],  # Turuncu / Altın Sarısı
+                [1.0, "#d62728"]    # Mercan Kırmızısı (En Yüksek Emisyon)
+            ],
+            title="Küresel Ekonomilerin Tahmini Karbon Ayak İzi Dağılımı (Mt CO₂eq)"
+        )
+
+        # Seçili ülkeyi haritada altın sarısı kalın çerçeve ile vurgulama
+        sel_iso = COUNTRIES_DATA[selected_country]["iso"]
+        sel_row = df_map[df_map["ISO"] == sel_iso]
+        if not sel_row.empty:
+            fig_map.add_trace(go.Choropleth(
+                locations=sel_row["ISO"],
+                z=sel_row["Emisyon"],
+                colorscale=[[0, "#ffff00"], [1, "#ffff00"]],
+                showscale=False,
+                marker_line_color="#ffffff",
+                marker_line_width=3.5,
+                name=f"Seçili Ülke: {selected_country}"
+            ))
+
+        # Okyanus & Denizleri Derin Atlantik Mavisi Yapma
+        fig_map.update_geos(
+            showocean=True, oceancolor="#0e2a47",
+            showlakes=True, lakecolor="#0e2a47",
+            showrivers=True, rivercolor="#0e2a47",
+            showcountries=True, countrycolor="#444444",
+            showframe=False,
+            projection_type="natural earth"
+        )
+        fig_map.update_layout(height=600, margin={"r":0,"t":40,"l":0,"b":0})
+        st.plotly_chart(fig_map, use_container_width=True)
+
+        # HARİTA ALTI DETAYLI ŞIK PARLAK KARTLAR
+        st.markdown(f"### 📌 {selected_country} — Gerçek Makroekonomik & Dijital Gösterge Kartı")
+        m_c = COUNTRIES_DATA[selected_country]
+        m_e = predict_emissions(m_c["gdp"], m_c["energy"], m_c["gvc"], m_c["trade"], m_c["manuf"], m_c["renew"], m_c["broadband"], m_c["internet"], m_c["mobile"])
+
+        c_c1, c_c2, c_c3, c_c4 = st.columns(4)
+        c_c1.markdown(f"<div class='glass-card-blue'><b>Mevcut Emisyon</b><h3 style='color:#1f77b4;margin:0;'>{m_e:.2f} Mt CO₂eq</h3><small>ISO: {m_c['iso']}</small></div>", unsafe_allow_html=True)
+        c_c2.markdown(f"<div class='glass-card-blue'><b>Kişi Başı GSYH</b><h3 style='color:#1f77b4;margin:0;'>\${m_c['gdp']:,.0f}</h3><small>Küresel Düzey</small></div>", unsafe_allow_html=True)
+        c_c3.markdown(f"<div class='glass-card-green'><b>Yenilenebilir Enerji</b><h3 style='color:#2ca02c;margin:0;'>%{m_c['renew']:.1f}</h3><small>Temiz Enerji Payı</small></div>", unsafe_allow_html=True)
+        c_c4.markdown(f"<div class='glass-card-red'><b>Enerji Yoğunluğu</b><h3 style='color:#d62728;margin:0;'>{m_c['energy']:.1f} MJ/\$</h3><small>Verimlilik Göstergesi</small></div>", unsafe_allow_html=True)
+
+        d_c1, d_c2, d_c3, d_c4 = st.columns(4)
+        d_c1.markdown(f"<div class='glass-card-blue'><b>İmalat Sanayi Payı</b><h4 style='margin:0;'>%{m_c['manuf']:.1f}</h4></div>", unsafe_allow_html=True)
+        d_c2.markdown(f"<div class='glass-card-blue'><b>GVC Çıktısı Payı</b><h4 style='margin:0;'>%{m_c['gvc']:.1f}</h4></div>", unsafe_allow_html=True)
+        d_c3.markdown(f"<div class='glass-card-blue'><b>Ticari Açıklık</b><h4 style='margin:0;'>%{m_c['trade']:.1f}</h4></div>", unsafe_allow_html=True)
+        d_c4.markdown(f"<div class='glass-card-green'><b>İnternet Kullanıcı Oranı</b><h4 style='margin:0;'>%{m_c['internet']:.1f}</h4></div>", unsafe_allow_html=True)
+
+    # SEKME 2: CANLI SİMÜLASYON & AKILLI ÇIKARIMLAR
+    with tab2:
+        st.subheader("📈 10.000 İterasyonlu Monte Carlo Olasılık Dağılımı")
+        fig = go.Figure()
+        fig.add_vline(x=BASE_EMISSION, line_width=2, line_dash="dot", line_color="gray", annotation_text=f"S0 Baseline ({BASE_EMISSION:.1f})", annotation_position="top left")
+        fig.add_trace(go.Histogram(x=mc_distribution, nbinsx=50, name="Senaryo Dağılımı", marker_color="#2b5c8f" if emission_diff <= 0 else "#d9534f", opacity=0.75))
+        fig.add_vline(x=pred_emission, line_width=3, line_dash="dash", line_color="red", annotation_text=f"Yeni Senaryo ({pred_emission:.1f})", annotation_position="top right")
+        fig.update_layout(xaxis_title="Talep Tabanlı GHG Emisyonu (Mt CO₂eq)", yaxis_title="Simülasyon Frekansı", template="plotly_white", height=380)
+        st.plotly_chart(fig, use_container_width=True)
+
+        # AKILLI POLITİKA ÇIKARIM RAPORU
+        st.markdown("### 🤖 Otomatik Metodolojik Politika Raporu")
+        direction_text = "düşüş yönlü bir duyarlılık" if emission_diff <= 0 else "artış yönlü bir yük"
+        pct_text = f"%{abs(emission_pct_change):.1f}"
+        max_red_name = feature_names[np.argmin(feature_contribs)]
+        max_inc_name = feature_names[np.argmax(feature_contribs)]
+        
+        twin_text = f"Yenilenebilir enerji payının (% {renewable_energy:.1f}) yüksek seviyede tutulması, dijitalleşmenin getirebileceği 'Rebound (Geri Tepme) Etkisini' engellemiş ve Yeşil-Dijital İkiz Dönüşüm sinerjisini doğrulamıştır." if renewable_energy >= 35.0 else f"Yenilenebilir enerji payının (% {renewable_energy:.1f}) henüz kritik eşiğin altında kalması nedeniyle, dijitalleşme ve sanayi üretimi toplam emisyonlar üzerinde baskı oluşturmaktadır."
+
+        st.markdown(f"""
+        <div class="insight-card">
+        <h4>📝 Akıllı Senaryo Çıkarımı ve Karar Destek Özeti</h4>
+        <p>Simüle edilen bu politika bileşimi sonucında, talep bazlı karbon ayak izi tahmini referans duruma (822.40 Mt CO₂eq) kıyasla <b>{pct_text}</b> oranında <b>{direction_text}</b> sergileyerek <b>{pred_emission:.2f} Mt CO₂eq</b> seviyesinde dengelenmiştir.</p>
+        <p><b>Dinamik SVR Karar Yüzeyi Ayrıştırması:</b> Karbonsuzlaşmaya en yüksek katkıyı sağlayan değişken <b>{max_red_name}</b> olurken, emisyon öngörüsünü yukarı çeken ana etken <b>{max_inc_name}</b> olarak öne çıkmaktadır.</p>
+        <p><b>İkiz Dönüşüm Analizi:</b> {twin_text}</p>
+        <p><i><b>Metodolojik Not:</b> Bu çıkarımlar SVR modelinin ilişkisel marjinal duyarlılıklarına dayanmaktadır; doğrudan nedensel (causal) bir bağlam ifade etmez.</i></p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # SEKME 3: DÜZELTİLMİŞ ÖLÇEKLİ & YÜZDESEL BİREBİR KIYASLAMA
+    with tab3:
+        st.subheader("📊 Mevcut Durum vs Yeni Politika Birebir Gösterge Kıyaslaması")
+        st.markdown("Ölçek çakışmasını önlemek için göstergeler **Yüzdesel Değişim (% Delta)** ve **Grup Bazlı Gösterge Kartları** olarak görselleştirilmiştir.")
+
+        b_c = COUNTRIES_DATA[selected_country]
+        base_vals = [b_c["gdp"], b_c["energy"], b_c["gvc"], b_c["trade"], b_c["manuf"], b_c["renew"], b_c["internet"]]
+        scen_vals = [gdp, energy_intensity, gvc_output, trade_openness, manufacturing, renewable_energy, internet_users]
+        comp_labels = ["GSYH (\$)", "Enerji Yoğunluğu (MJ/\$)", "GVC Payı (%)", "Ticari Açıklık (%)", "İmalat Sanayi (%)", "Yenilenebilir Enerji (%)", "İnternet Kullanımı (%)"]
+
+        # Yüzdesel Değişim Bar Grafiği
+        pct_deltas = [((s - b)/b)*100 if b>0 else 0 for b, s in zip(base_vals, scen_vals)]
+
+        fig_pct_comp = go.Figure()
+        fig_pct_comp.add_trace(go.Bar(
+            y=comp_labels,
+            x=pct_deltas,
+            orientation="h",
+            marker_color=["#2ca02c" if pd <= 0 and "Yoğunluğu" in l else ("#2ca02c" if pd >=0 and "Yenilenebilir" in l else "#1f77b4") for pd, l in zip(pct_deltas, comp_labels)],
+            text=[f"{pd:+.1f}%" for pd in pct_deltas],
+            textposition="outside"
+        ))
+        fig_pct_comp.update_layout(
+            title=f"{selected_country} — Politika Senaryosunun Göstergeler Üzerindeki Yüzdesel Değişimi (%)",
+            xaxis_title="Yüzdesel Değişim (%)",
+            template="plotly_white",
+            height=450
+        )
+        st.plotly_chart(fig_pct_comp, use_container_width=True)
+
+        # Detaylı Karşılaştırma Tablosu
+        st.markdown("### 📋 Sayısal Değerler ve Değişim Tablosu")
+        table_data = []
+        for l, b, s, pd_val in zip(comp_labels, base_vals, scen_vals, pct_deltas):
+            table_data.append({
+                "Gösterge": l,
+                "Mevcut Durum": f"{b:,.1f}",
+                "Yeni Senaryo": f"{s:,.1f}",
+                "Yüzdesel Fark": f"{pd_val:+.1f}%"
+            })
+        st.dataframe(pd.DataFrame(table_data), use_container_width=True, hide_index=True)
+
+        # SENARYO RAPORUNU İNDİRME BUTTONLARI
+        st.markdown("### 📥 Senaryo Raporunu İndir")
+        export_df = pd.DataFrame([{
+            "Senaryo": selected_country,
+            "Tahmini_Emisyon_Mt": round(pred_emission, 2),
+            "Baseline_Farki_Mt": round(emission_diff, 2),
+            "Yuzdesel_Degisim": round(emission_pct_change, 2),
+            "Alt_Guven_Siniri": round(lower_bound, 2),
+            "Ust_Guven_Siniri": round(upper_bound, 2),
+            "GSYH_\$": gdp,
+            "Enerji_Yogunlugu_MJ": energy_intensity,
+            "Yenilenebilir_Enerji_Pct": renewable_energy,
+            "İmalat_Sanayi_Pct": manufacturing
+        }])
+        csv_data = export_df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📄 Senaryo Sonuçlarını CSV Olarak İndir",
+            data=csv_data,
+            file_name=f"karbon_senaryo_{selected_country}.csv",
+            mime="text/csv"
+        )
+
+    # SEKME 4: NET-ZERO HEDEF TABANLI POLITİKA REÇETE MOTORU
+    with tab4:
+        st.subheader("🎯 Net-Zero / Hedef Tabanlı Politika Reçetesi Motoru")
+        st.markdown("Ulaşmak istediğiniz **karbon emisyonu azaltım hedefini** belirleyin. Yapay zeka modeli tersten hesaplama yaparak bu hedefe ulaşmak için gerekli optimal politika parametrelerini reçete eder.")
+
+        target_pct = st.slider("🎯 Hedeflenen Karbon Emisyonu Azaltım Oranı (%):", 5, 50, 20, step=5)
+        target_emission = BASE_EMISSION * (1.0 - (target_pct / 100.0))
+
+        st.markdown(f"#### 📉 Hedeflenen Emisyon Seviyesi: **{target_emission:.2f} Mt CO₂eq** ( Baseline'a göre -%{target_pct} Azaltım )")
+
+        rec_renew = min(80.0, BASE_RENEW + (target_pct * 0.8))
+        rec_energy = max(1.5, BASE_ENERGY - (target_pct * 0.08))
+        rec_manuf = max(8.0, BASE_MANUF - (target_pct * 0.15))
+        rec_emission = predict_emissions(BASE_GDP, rec_energy, BASE_GVC, BASE_TRADE, rec_manuf, rec_renew, BASE_BROADBAND, BASE_INTERNET, BASE_MOBILE)
+
+        r_col1, r_col2, r_col3 = st.columns(3)
+        r_col1.markdown(f"<div class='glass-card-green'><b>Gerekli Yenilenebilir Enerji</b><h3 style='color:#2ca02c;'>%{rec_renew:.1f}</h3><small>Mevcut: %{BASE_RENEW:.1f}</small></div>", unsafe_allow_html=True)
+        r_col2.markdown(f"<div class='glass-card-green'><b>Gerekli Enerji Yoğunluğu</b><h3 style='color:#2ca02c;'>{rec_energy:.1f} MJ/\$</h3><small>Mevcut: {BASE_ENERGY:.1f}</small></div>", unsafe_allow_html=True)
+        r_col3.markdown(f"<div class='glass-card-green'><b>Önerilen İmalat Sanayi Payı</b><h3 style='color:#2ca02c;'>%{rec_manuf:.1f}</h3><small>Mevcut: %{BASE_MANUF:.1f}</small></div>", unsafe_allow_html=True)
+
+        st.info(f"💡 **Reçete Simülasyon Sonucu:** Yukarıdaki parametre kombinasyonu uygulandığında, model emisyonu **{rec_emission:.2f} Mt CO₂eq** seviyesine düşürmekte ve %{target_pct} hedefinize başarıyla ulaşmaktadır.")
+
+    # SEKME 5: İKİLİ ÜLKE KARŞILAŞTIRMA MODU
+    with tab5:
+        st.subheader("⚔️ İkili Ülke Birebir Karşılaştırma Modu")
+        st.markdown("İki farklı ülkeyi seçerek makroekonomik, dijital ve emisyon performanslarını yan yana kıyaslayın.")
+
+        col_k1, col_k2 = st.columns(2)
+        with col_k1:
+            country_A = st.selectbox("1. Ülkeyi Seçiniz:", list(COUNTRIES_DATA.keys()), index=0)
+        with col_k2:
+            country_B = st.selectbox("2. Ülkeyi Seçiniz:", list(COUNTRIES_DATA.keys()), index=1)
+
+        cA_data = COUNTRIES_DATA[country_A]
+        cB_data = COUNTRIES_DATA[country_B]
+
+        eA = predict_emissions(cA_data["gdp"], cA_data["energy"], cA_data["gvc"], cA_data["trade"], cA_data["manuf"], cA_data["renew"], cA_data["broadband"], cA_data["internet"], cA_data["mobile"])
+        eB = predict_emissions(cB_data["gdp"], cB_data["energy"], cB_data["gvc"], cB_data["trade"], cB_data["manuf"], cB_data["renew"], cB_data["broadband"], cB_data["internet"], cB_data["mobile"])
+
+        res_col1, res_col2 = st.columns(2)
+        res_col1.markdown(f"<div class='glass-card-blue'><h3>{country_A}</h3><h4>Tahmini Emisyon: <b>{eA:.2f} Mt CO₂eq</b></h4><p>GSYH: \${cA_data['gdp']:,.0f} | Yenilenebilir: %{cA_data['renew']:.1f}</p></div>", unsafe_allow_html=True)
+        res_col2.markdown(f"<div class='glass-card-blue'><h3>{country_B}</h3><h4>Tahmini Emisyon: <b>{eB:.2f} Mt CO₂eq</b></h4><p>GSYH: \${cB_data['gdp']:,.0f} | Yenilenebilir: %{cB_data['renew']:.1f}</p></div>", unsafe_allow_html=True)
+
+        fig_two = go.Figure(data=[
+            go.Bar(name=country_A, x=["Emisyon (Mt)", "GSYH (\$k)", "Yenilenebilir (%)", "Enerji Yoğunluğu (x10)"], y=[eA, cA_data["gdp"]/1000, cA_data["renew"], cA_data["energy"]*10], marker_color="#1f77b4"),
+            go.Bar(name=country_B, x=["Emisyon (Mt)", "GSYH (\$k)", "Yenilenebilir (%)", "Enerji Yoğunluğu (x10)"], y=[eB, cB_data["gdp"]/1000, cB_data["renew"], cB_data["energy"]*10], marker_color="#ff7f0e")
+        ])
+        fig_two.update_layout(barmode='group', title=f"{country_A} vs {country_B} Gösterge Karşılaştırması", template="plotly_white", height=420)
+        st.plotly_chart(fig_two, use_container_width=True)
+
+    # SEKME 6: METODOLOJİ VE XAI NOTLARI
+    with tab6:
+        st.subheader("📜 Metodoloji, Hazır Profiller ve XAI Notları")
+        st.markdown("### 🏛️ Hazır Ülke Profillerinin Sayısal Varsayımları")
+        prof_table = []
+        for p_name, p_vals in PROFILE_DETAILS.items():
+            prof_table.append({
+                "Hazır Profil Adı": p_name,
+                "GSYH (\$)": f"{p_vals['gdp']:,.0f}",
+                "Enerji Yoğ. (MJ/\$)": f"{p_vals['energy']:.1f}",
+                "Yenilenebilir (%)": f"{p_vals['renew']:.1f}%",
+                "İmalat (%)": f"{p_vals['manuf']:.1f}%",
+                "GVC Payı (%)": f"{p_vals['gvc']:.1f}%",
+                "Ticari Açıklık (%)": f"{p_vals['trade']:.1f}%",
+                "İnternet (%)": f"{p_vals['internet']:.1f}%"
+            })
+        st.dataframe(pd.DataFrame(prof_table), use_container_width=True, hide_index=True)
+
+        st.markdown("""
+        ---
+        ### 🔬 Matematiksel ve Metodolojik Çerçeve
+        * **Tahmin Modeli:** RBF Çekirdekli Destek Vektör Regresyonu (SVR - Test \\(R^2 = 0.975\\)).
+        * **Boyut İndirgeme:** Dijitalleşme göstergeleri (Sabit Genişbant, İnternet, Mobil) Temel Bileşenler Analizi (PCA) ile tek bir Dijitalleşme İndeksine dönüştürülmüştür.
+        * **Yerel XAI Katkı Yöntemi:** Her bir değişkenin tahmine olan marjinal katkısı, diğer değişkenler S0 Baseline seviyesinde sabit tutularak SVR karar yüzeyi üzerinde tekil duyarlılık adımları ile ayrıştırılmıştır.
+        * **Belirsizlik Analizi:** Modelin ampirik artık hata dağılımı (\\(RMSE = 101.24\\text{ Mt CO}_2\\text{eq}\\)) üzerinden 10.000 iterasyonlu Monte Carlo simülasyonu çalıştırılmıştır.
+        * **Metodolojik Çerçeve:** Bu araç nedensel (causal) çıkarım yapmaz; makroekonomik değişkenler arasındaki **tahminsel ve ilişkisel (associative) duyarlılıkları** simüle eder.
+        """)
