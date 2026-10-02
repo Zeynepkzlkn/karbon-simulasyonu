@@ -14,8 +14,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
-# Modern UI / CSS Stillemesi
+# Modern UI / CSS Stillemesi (React DOM Uyumlu Güvenli CSS)
 st.markdown(
     """
     <style>
@@ -31,6 +30,50 @@ st.markdown(
         width: 100%;
         border-radius: 8px;
         font-weight: 600;
+    }
+    
+    /* STREAMLIT ÜST MENÜ VE ÜST BARI GÜVENLİ GİZLEME */
+    header[data-testid="stHeader"] {
+        visibility: hidden;
+        height: 0px;
+    }
+    footer {
+        visibility: hidden;
+    }
+    div[data-testid="stDecoration"] {
+        visibility: hidden;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)# Modern UI / CSS Stillemesi (React DOM Uyumlu Güvenli CSS)
+st.markdown(
+    """
+    <style>
+    .main { background-color: #f8f9fa; }
+    .stMetric {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border: 1px solid #e9ecef;
+    }
+    .stButton>button {
+        width: 100%;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    
+    /* STREAMLIT ÜST MENÜ VE ÜST BARI GÜVENLİ GİZLEME */
+    header[data-testid="stHeader"] {
+        visibility: hidden;
+        height: 0px;
+    }
+    footer {
+        visibility: hidden;
+    }
+    div[data-testid="stDecoration"] {
+        visibility: hidden;
     }
     </style>
 """,
