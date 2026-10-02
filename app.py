@@ -67,16 +67,8 @@ css_style = """
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         margin-bottom: 22px;
     }
-    .profile-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        padding: 24px;
-        border-radius: 16px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-    }
     .glass-card-green {
-        background: linear-gradient(135deg, rgba(235, 247, 238, 0.9) 0%, rgba(210, 240, 218, 0.9) 100%);
+        background: linear-gradient(135deg, rgba(235, 247, 238, 0.95) 0%, rgba(210, 240, 218, 0.95) 100%);
         padding: 16px;
         border-radius: 12px;
         border-left: 5px solid #2ca02c;
@@ -84,7 +76,7 @@ css_style = """
         margin-bottom: 10px;
     }
     .glass-card-red {
-        background: linear-gradient(135deg, rgba(253, 238, 238, 0.9) 0%, rgba(250, 215, 215, 0.9) 100%);
+        background: linear-gradient(135deg, rgba(253, 238, 238, 0.95) 0%, rgba(250, 215, 215, 0.95) 100%);
         padding: 16px;
         border-radius: 12px;
         border-left: 5px solid #d62728;
@@ -92,19 +84,11 @@ css_style = """
         margin-bottom: 10px;
     }
     .glass-card-blue {
-        background: linear-gradient(135deg, rgba(235, 243, 250, 0.9) 0%, rgba(212, 230, 245, 0.9) 100%);
+        background: linear-gradient(135deg, rgba(235, 243, 250, 0.95) 0%, rgba(212, 230, 245, 0.95) 100%);
         padding: 16px;
         border-radius: 12px;
         border-left: 5px solid #1f77b4;
         box-shadow: 0 3px 10px rgba(31, 119, 180, 0.1);
-        margin-bottom: 10px;
-    }
-    .glass-card-yellow {
-        background: linear-gradient(135deg, rgba(255, 251, 235, 0.9) 0%, rgba(254, 243, 199, 0.9) 100%);
-        padding: 16px;
-        border-radius: 12px;
-        border-left: 5px solid #f59e0b;
-        box-shadow: 0 3px 10px rgba(245, 158, 11, 0.1);
         margin-bottom: 10px;
     }
 </style>
@@ -127,7 +111,7 @@ BASE_EMISSION = 822.40  # Mt CO2eq
 PROFILE_DETAILS = {
     "🏛️ S0 Referans Küresel Durum (Baseline)": {
         "desc": "Veri setindeki tüm küresel ekonomilerin tam ortalamasını temsil eden nötr mihenk taşı.",
-        "badge": "Mihenk Taş / Referans",
+        "badge": "Mihenk Taşı / Referans",
         "focus": "Küresel Ortalama Kıyaslaması",
         "recipe": "Mevcut küresel dengenin korunması ve kademeli emisyon azaltımı.",
         "peers": ["Dünya Ortalaması"],
@@ -253,7 +237,6 @@ COUNTRIES_DATA = {
 if "visitor_count" not in st.session_state:
     st.session_state.visitor_count = 142
 
-# ÜLKE BAZLI ZİYARETÇİ İSTATİSTİKLERİ
 COUNTRY_VISITORS = {
     "🇹🇷 Türkiye": 68,
     "🇩🇪 Almanya": 24,
@@ -278,7 +261,7 @@ def load_models():
 try:
     svr_model, scaler, pca, y_scaler = load_models()
 except Exception as e:
-    st.error(f"Model dosyaları yüklenemedi! Repoda 'svr_model.pkl', 'scaler.pkl', 'pca.pkl' olduğunu kontrol edin. Hata: {e}")
+    st.error("Model dosyaları yüklenemedi! Repoda svr_model.pkl, scaler.pkl, pca.pkl olduğunu kontrol edin.")
     st.stop()
 
 # TAHMİN FONKSİYONU
@@ -367,7 +350,7 @@ trade_openness = st.sidebar.slider("Ticari Açıklık (% GSYH)", 20.0, 200.0, fl
 manufacturing = st.sidebar.slider("İmalat Sanayi Payı (% GSYH)", 2.0, 45.0, float(st.session_state.manuf_val), step=0.5)
 renewable_energy = st.sidebar.slider("Yenilenebilir Enerji Payı (%)", 0.0, 80.0, float(st.session_state.renew_val), step=1.0)
 
-# DİJİTALLEŞME MODU (TEK İNDEKS KONTROLÜ VEYA DETAYLI 3 GÖSTERGE)
+# DİJİTALLEŞME MODU
 st.sidebar.subheader("📱 Dijitalleşme Girdileri (PCA Modelleri)")
 digital_mode = st.sidebar.radio("Dijitalleşme Kontrol Modu:", ["Detaylı 3 Gösterge", "Tek Dijitalleşme İndeksi"], index=0)
 
@@ -382,9 +365,9 @@ else:
     mobile_sub = (dig_single / 100.0) * 160.0
     st.sidebar.caption("ℹ️ *PCA modeli bu 3 alt göstergeyi tekil Temel Bileşene (PC1) indirgeyerek SVR tahminine aktarmaktadır.*")
 
-# Yan Menü Altı: Ziyaretçi Sayacı ve Ülke Dağılımı
+# Yan Menü Altı: Ziyaretçi Sayacı
 st.sidebar.markdown("---")
-st.sidebar.markdown(f"👁️ **Toplam Ziyaret Sayısı:** `{st.session_state.visitor_count}`")
+st.sidebar.markdown(f"👁️️ **Toplam Ziyaret Sayısı:** `{st.session_state.visitor_count}`")
 
 with st.sidebar.expander("🌐 Ziyaretçi Ülke Dağılımı"):
     for c_flag, c_cnt in COUNTRY_VISITORS.items():
@@ -431,9 +414,9 @@ st.caption("Açıklanabilir Yapay Zeka (SVR & Monte Carlo) Destekli Politika Sen
 # SEÇİLİ PROFİL / ÜLKE BİLGİ KUTUSU
 if mode_choice == "Hazır Ülke Profilini Kullan":
     p_desc = PROFILE_DETAILS[selected_profile]["desc"]
-    st.info(f"💡 **Seçili Hazır Profil:** {selected_profile}\n\n*{p_desc}*")
+    st.info(f"💡 **Seçili Hazır Profil:** {selected_profile} — *{p_desc}*")
 else:
-    st.success(f"📌 **Seçili Ülke:** {selected_country} | **Mevcut Gerçek Emisyonu:** {base_country_emission:.2f} Mt CO₂eq\n\n*Sol menüdeki slider'lar ile {selected_country} üzerinde canlı politika senaryoları uygulayabilirsiniz.*")
+    st.success(f"📌 **Seçili Ülke:** {selected_country} | **Mevcut Gerçek Emisyonu:** {base_country_emission:.2f} Mt CO₂eq — *Sol menüdeki sliderlar ile canlı politika senaryoları uygulayabilirsiniz.*")
 
 # ÜST LÜKS PARLAK METRİK KARTLARI
 col1, col2, col3, col4 = st.columns(4)
@@ -474,6 +457,15 @@ col4.metric(
 
 st.markdown("---")
 
+# HELPER FUNCTION FOR SKDM EVALUATION
+def eval_skdm_risk(manuf_val, renew_val, energy_val):
+    if renew_val >= 45.0 and energy_val <= 3.5:
+        return "Çok Düşük / Muafiyet Avantajı 🟢", "1.5/10", "glass-card-green"
+    elif renew_val >= 30.0 or (manuf_val <= 15.0 and energy_val <= 4.5):
+        return "Orta Risk / Kısmi Maruziyet 🟡", "5.0/10", "glass-card-yellow"
+    else:
+        return "Yüksek Risk / SKDM Karbon Vergisi Yükü 🔴", "8.5/10", "glass-card-red"
+
 # SEKMELİ YAPI
 if mode_choice == "Hazır Ülke Profilini Kullan":
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
@@ -481,33 +473,26 @@ if mode_choice == "Hazır Ülke Profilini Kullan":
         "📊 Yüzdesel Gösterge & Kaldıraç Kıyaslaması",
         "🎛️ Monte Carlo Simülasyonu",
         "🎯 Net-Zero Politika Reçetesi",
-        "🔥 Tüm Profiller Isı Haritası (Heatmap)"
+        "🎨 Yaratıcı Profiller Radar & Matris Analizi"
     ])
 
     with tab1:
         p_data = PROFILE_DETAILS[selected_profile]
         st.subheader(f"{selected_profile} — Tipoloji & SKDM Risk Analizi")
         
-        st.markdown(f"""
-        <div class="profile-card">
-            <span style="background:#2b5c8f;color:white;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;">{p_data['badge']}</span>
-            <h3 style="margin-top:10px;color:#1e293b;">Politika Odağı: {p_data['focus']}</h3>
-            <p style="font-size:15px;color:#475569;"><b>Tanım:</b> {p_data['desc']}</p>
-            
-            <div style="display:flex;gap:15px;margin-top:15px;">
-                <div style="flex:1;background:#f8fafc;padding:12px;border-radius:8px;border-left:4px solid #0284c7;">
-                    <b>👥 Akran / Temsil Edilen Ülkeler:</b><br>{", ".join(p_data['peers'])}
-                </div>
-                <div style="flex:1;background:#fffbebf1;padding:12px;border-radius:8px;border-left:4px solid #f59e0b;">
-                    <b>🛡️ SKDM (CBAM) Karbon Vergisi Riski:</b><br>{p_data['skdm_risk']} (Skor: {p_data['skdm_score']})
-                </div>
-            </div>
+        # Native Streamlit UI Elements - NO RAW CODE LEAKS
+        st.markdown(f"### 🎯 Tipoloji: **{p_data['badge']}**")
+        st.write(f"**Politika Odağı:** {p_data['focus']}")
+        st.write(f"**Tanım:** {p_data['desc']}")
+        
+        c_prof1, c_prof2 = st.columns(2)
+        with c_prof1:
+            peers_list = ", ".join(p_data['peers'])
+            st.info(f"👥 **Akran / Temsil Edilen Ülkeler:** {peers_list}")
+        with c_prof2:
+            st.warning(f"🛡️ **SKDM (CBAM) Karbon Vergisi Riski:** {p_data['skdm_risk']} (Skor: {p_data['skdm_score']})")
 
-            <div style="background:#f1f5f9;padding:14px;border-radius:10px;border-left:4px solid #10b981;margin-top:15px;">
-                <b>🎯 Özel Karbonsuzlaşma Reçetesi:</b> {p_data['recipe']}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.success(f"🎯 **Özel Karbonsuzlaşma Reçetesi:** {p_data['recipe']}")
 
         # En Yüksek Politik Kaldıraç Sıralaması
         st.markdown("### ⚡ O Profile Özel En Yüksek Politik Kaldıraç Sıralaması")
@@ -559,34 +544,74 @@ if mode_choice == "Hazır Ülke Profilini Kullan":
         r_col3.markdown(f"<div class='glass-card-green'><b>Önerilen İmalat Sanayi Payı</b><h3 style='color:#2ca02c;'>%{rec_manuf:.1f}</h3></div>", unsafe_allow_html=True)
 
     with tab5:
-        st.subheader("🔥 Tüm Hazır Profiller Isı Haritası (Heatmap)")
+        st.subheader("🎨 Yaratıcı Profiller Radar & Normalize Matris Analizi")
+        st.markdown("Hazır ülke tipolojilerinin **7 boyuttaki davranış modelini** gösteren çok boyutlu Radar Grafiği ve Normalize Isı Haritası:")
+
+        # 1. RADAR / SPIDER CHART FOR TYPOLOGIES
+        radar_categories = ["GSYH ($k)", "Enerji Yoğunluğu", "GVC Payı (%)", "Ticari Açıklık (%)", "İmalat Payı (%)", "Yenilenebilir (%)", "İnternet (%)"]
+        fig_radar = go.Figure()
+
+        for pname, pinfo in PROFILE_DETAILS.items():
+            short_pname = pname.split(" ")[1] if " " in pname else pname
+            raw_r = [pinfo["gdp"]/1000, pinfo["energy"]*5, pinfo["gvc"], pinfo["trade"]/2, pinfo["manuf"]*2, pinfo["renew"], pinfo["internet"]]
+            fig_radar.add_trace(go.Scatterpolar(
+                r=raw_r,
+                theta=radar_categories,
+                fill='toself',
+                name=short_pname,
+                opacity=0.6
+            ))
+
+        fig_radar.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+            showlegend=True,
+            title="Hazır Ülke Tipolojilerinin Çok Boyutlu Profil Radarı",
+            height=500
+        )
+        st.plotly_chart(fig_radar, use_container_width=True)
+
+        # 2. NORMALIZE ISITMA MATRİSİ (HEATMAP) WITH EXACT ANNOTATIONS
+        st.markdown("#### 📊 Profil Karşılaştırma Isı Haritası (Normalize Göstergeler)")
         hm_data = []
         for pname, pinfo in PROFILE_DETAILS.items():
             pe = predict_emissions(pinfo["gdp"], pinfo["energy"], pinfo["gvc"], pinfo["trade"], pinfo["manuf"], pinfo["renew"], pinfo["broadband"], pinfo["internet"], pinfo["mobile"])
+            clean_name = pname.replace("🏛️ ", "").replace("🇪🇺 ", "").replace("🏭 ", "").replace("🐉 ", "").replace("⚡ ", "").replace("🍃 ", "")
             hm_data.append({
-                "Profil": pname.replace("🏛️ ", "").replace("🇪🇺 ", "").replace("🏭 ", "").replace("🐉 ", "").replace("⚡ ", "").replace("🍃 ", ""),
+                "Profil": clean_name,
                 "Emisyon (Mt)": round(pe, 1),
                 "GSYH ($k)": round(pinfo["gdp"]/1000, 1),
                 "Enerji Yoğ.": pinfo["energy"],
                 "Yenilenebilir (%)": pinfo["renew"],
-                "İmalat (%)": pinfo["manuf"]
+                "İmalat (%)": pinfo["manuf"],
+                "Ticaret (%)": pinfo["trade"],
+                "İnternet (%)": pinfo["internet"]
             })
         df_hm = pd.DataFrame(hm_data).set_index("Profil")
-        fig_hm = px.imshow(df_hm, text_auto=True, color_continuous_scale="Blues", aspect="auto", title="Hazır Profillerin Gösterge Matrisi")
+        df_norm = (df_hm - df_hm.min()) / (df_hm.max() - df_hm.min() + 1e-9) * 100.0
+
+        fig_hm = px.imshow(
+            df_norm,
+            text_auto=".0f",
+            color_continuous_scale="Tealrose",
+            aspect="auto",
+            title="Profil Göstergelerinin Normalize Karşılaştırma Matrisi (0-100 Ölçekli)",
+            labels=dict(color="Normalize İndeks")
+        )
+        fig_hm.update_layout(height=420)
         st.plotly_chart(fig_hm, use_container_width=True)
 
 else:
     # ÜLKE SEÇİLİ EKRAN SEKMELERİ
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "🌍 Küresel Emisyon Haritası",
-        "📊 Birebir Gösterge & SKDM Analizi",
+        "📊 Birebir Gösterge & Canlı Senaryo SKDM Analizi",
         "🎯 Net-Zero Politika Reçete Motoru",
         "⚔️ İkili Ülke Karşılaştırma Modu",
-        "🔥 Tüm Ülkeler Isı Haritası (Heatmap)",
+        "🔥 Tüm Ülkeler Normalize Isı Haritası & Küresel Matris",
         "📜 Metodoloji & XAI Notları"
     ])
 
-    # SEKME 1: CANLI DÜNYA HARİTASI (AÇIKLAMA METNİ TAMAMEN SİLİNDİ)
+    # SEKME 1: CANLI DÜNYA HARİTASI
     with tab1:
         map_list = []
         for c_name, c_data in COUNTRIES_DATA.items():
@@ -650,35 +675,38 @@ else:
         c_c3.markdown(f"<div class='glass-card-green'><b>Yenilenebilir Enerji</b><h3 style='color:#2ca02c;margin:0;'>%{m_c['renew']:.1f}</h3><small>Temiz Enerji Payı</small></div>", unsafe_allow_html=True)
         c_c4.markdown(f"<div class='glass-card-red'><b>Enerji Yoğunluğu</b><h3 style='color:#d62728;margin:0;'>{m_c['energy']:.1f} MJ/$</h3><small>Verimlilik Göstergesi</small></div>", unsafe_allow_html=True)
 
-    # SEKME 2: BİREBİR KIYASLAMA, SKDM RİSKİ VE POLİTİKA KALDIRAÇLARI
+    # SEKME 2: CANLI SENARYO DİNAMİK SKDM KARTI VE POLİTİKA KALDIRAÇLARI
     with tab2:
-        st.subheader(f"📊 {selected_country} — SKDM Risk Kartı & Politik Kaldıraç Analizi")
-        
-        # SKDM Hesabı
-        c_info_cur = COUNTRIES_DATA[selected_country]
-        skdm_risk_val = "Yüksek Risk" if c_info_cur["manuf"] > 18.0 and c_info_cur["renew"] < 30.0 else ("Düşük / Muaf" if c_info_cur["renew"] > 45.0 else "Orta Risk")
-        skdm_color_class = "glass-card-red" if "Yüksek" in skdm_risk_val else ("glass-card-green" if "Düşük" in skdm_risk_val else "glass-card-yellow")
+        st.subheader(f"📊 {selected_country} — Canlı Senaryo SKDM Risk Kartı & Politik Kaldıraçlar")
+        st.markdown("*Sol menüdeki slider'ları değiştirdikçe aşağıdaki SKDM Risk Seviyesi ve Politik Kaldıraç Tavsiyeleri canlı olarak güncellenmektedir.*")
 
+        c_info_cur = COUNTRIES_DATA[selected_country]
+        
+        # 1. MEVCUT DURUM SKDM EVALUATION
+        base_skdm_label, base_skdm_score, base_skdm_class = eval_skdm_risk(c_info_cur["manuf"], c_info_cur["renew"], c_info_cur["energy"])
+        
+        # 2. CANLI SENARYO SKDM EVALUATION (DYNAMICAL)
+        scen_skdm_label, scen_skdm_score, scen_skdm_class = eval_skdm_risk(manufacturing, renewable_energy, energy_intensity)
+
+        # DYNAMIC COMPARISON CARDS - Native Streamlit Columns
         col_sk1, col_sk2 = st.columns(2)
         with col_sk1:
-            st.markdown(f"""
-            <div class='{skdm_color_class}'>
-                <h3>🛡️ SKDM (CBAM) Karbon Vergisi Maruziyeti</h3>
-                <h4>Durum: <b>{skdm_risk_val}</b></h4>
-                <p>İmalat Sanayi Payı: <b>%{c_info_cur['manuf']:.1f}</b> | Yenilenebilir Payı: <b>%{c_info_cur['renew']:.1f}</b></p>
-                <small>AB Sınırda Karbon Düzenleme Mekanizması ihracat vergi yükü simülasyonu.</small>
-            </div>
-            """, unsafe_allow_html=True)
+            st.info(f"🏛️ **Mevcut Durum SKDM Risk:** {base_skdm_label} | İmalat: %{c_info_cur['manuf']:.1f} | Yenilenebilir: %{c_info_cur['renew']:.1f} | Enerji Yoğ: {c_info_cur['energy']:.1f}")
 
         with col_sk2:
-            st.markdown(f"""
-            <div class='glass-card-blue'>
-                <h3>⚡ {selected_country} İçin En Yüksek Politik Kaldıraçlar</h3>
-                <p>1. <b>Enerji Yoğunluğunu Düşürme:</b> Emisyon üzerinde %18 duyarlılık</p>
-                <p>2. <b>Yenilenebilir Enerji Artışı:</b> Emisyon üzerinde %15 duyarlılık</p>
-                <p>3. <b>İmalat Modernizasyonu:</b> Emisyon üzerinde %11 duyarlılık</p>
-            </div>
-            """, unsafe_allow_html=True)
+            st.success(f"🎛️ **Yeni Senaryo SKDM Risk (Canlı):** {scen_skdm_label} | İmalat: %{manufacturing:.1f} | Yenilenebilir: %{renewable_energy:.1f} | Enerji Yoğ: {energy_intensity:.1f}")
+
+        # DYNAMIC POLICY LEVERS BASED ON SCENARIO
+        st.markdown(f"### ⚡ {selected_country} Canlı Senaryosu İçin Öncelikli Politik Kaldıraçlar")
+        
+        lev1 = f"1. **Yenilenebilir Enerji Hamlesi:** Mevcut %{c_info_cur['renew']:.1f} seviyesinden %{renewable_energy:.1f} seviyesine çıkış, emisyonu **{c_renew:.2f} Mt CO₂eq** etkilemektedir."
+        lev2 = f"2. **Enerji Verimliliği (Yoğunluk):** Mevcut {c_info_cur['energy']:.1f} MJ/$ seviyesinden {energy_intensity:.1f} MJ/$ seviyesine değişim, emisyonu **{c_energy:.2f} Mt CO₂eq** etkilemektedir."
+        lev3 = f"3. **İmalat Sanayi Süreçleri:** %{manufacturing:.1f} imalat payı altında marjinal emisyon katkısı **{c_manuf:.2f} Mt CO₂eq** olarak hesaplanmıştır."
+
+        col_lev1, col_lev2, col_lev3 = st.columns(3)
+        col_lev1.info(lev1)
+        col_lev2.success(lev2)
+        col_lev3.warning(lev3)
 
         # Yüzdesel Değişim Bar Grafiği
         st.markdown("### 📊 Mevcut Durum vs Yeni Politika Senaryosu Yüzdesel Değişimler")
@@ -747,11 +775,12 @@ else:
         fig_two.update_layout(barmode='group', title=f"{country_A} vs {country_B} Gösterge Karşılaştırması", template="plotly_white", height=420)
         st.plotly_chart(fig_two, use_container_width=True)
 
-    # SEKME 5: TÜM ÜLKELER ISI HARİTASI (HEATMAP)
+    # SEKME 5: YARATICI TÜM ÜLKELER MATRIX & NORMALIZE ISI HARİTASI
     with tab5:
-        st.subheader("🔥 Tüm Ülkelerin Emisyon ve Gösterge Isı Haritası (Heatmap)")
-        st.markdown("Aşağıdaki matris, veritabanındaki tüm küresel ekonomilerin makroekonomik ve emisyon değerlerini tek bir küresel ısı haritasında sunar.")
-        
+        st.subheader("🔥 Tüm Ülkelerin Yaratıcı Küresel Matrisi & Normalize Isı Haritası")
+        st.markdown("Her ülkenin adı tek bir satırda net görünecek şekilde tasarlanmış **Normalize Karşılaştırma Isı Haritası** ve **Küresel Kabarcık Matrisi**:")
+
+        # Build clean dataframe for all 52 countries
         all_c_list = []
         for cname, cinfo in COUNTRIES_DATA.items():
             ce = predict_emissions(cinfo["gdp"], cinfo["energy"], cinfo["gvc"], cinfo["trade"], cinfo["manuf"], cinfo["renew"], cinfo["broadband"], cinfo["internet"], cinfo["mobile"])
@@ -761,11 +790,48 @@ else:
                 "GSYH ($k)": round(cinfo["gdp"]/1000, 1),
                 "Enerji Yoğ.": cinfo["energy"],
                 "Yenilenebilir (%)": cinfo["renew"],
-                "İmalat (%)": cinfo["manuf"]
+                "İmalat (%)": cinfo["manuf"],
+                "Ticaret (%)": cinfo["trade"]
             })
-        df_all_hm = pd.DataFrame(all_c_list).set_index("Ülke")
-        fig_all_hm = px.imshow(df_all_hm, text_auto=True, color_continuous_scale="YlOrRd", aspect="auto", height=800, title="Küresel Ülke Karşılaştırma Matrisi")
+        df_all_raw = pd.DataFrame(all_c_list).set_index("Ülke")
+        
+        # MIN-MAX NORMALIZE FOR COLOR CONSISTENCY ACROSS METRICS
+        df_all_norm = (df_all_raw - df_all_raw.min()) / (df_all_raw.max() - df_all_raw.min() + 1e-9) * 100.0
+
+        # Create Heatmap with sufficient height so NO country name wraps on 2 lines!
+        fig_all_hm = px.imshow(
+            df_all_norm,
+            text_auto=".0f",
+            color_continuous_scale="Viridis",
+            aspect="auto",
+            title="Küresel Ülke Karşılaştırma Matrisi (0-100 Normalize Skorlar)",
+            labels=dict(color="Normalize Skor")
+        )
+        fig_all_hm.update_layout(
+            height=1250,
+            margin=dict(l=160, r=40, t=50, b=50),
+            yaxis=dict(tickfont=dict(size=11), autorange="reversed")
+        )
         st.plotly_chart(fig_all_hm, use_container_width=True)
+
+        # CREATIVE BUBBLE MATRIX (KÜRESEL KABARCIK MATRİSİ)
+        st.markdown("#### 🎈 Küresel İkiz Dönüşüm Kabarcık Matrisi (Stratejik Konumlandırma)")
+        df_bubble = pd.DataFrame(all_c_list)
+        fig_bubble = px.scatter(
+            df_bubble,
+            x="Yenilenebilir (%)",
+            y="Enerji Yoğ.",
+            size="Emisyon (Mt)",
+            color="GSYH ($k)",
+            hover_name="Ülke",
+            text="Ülke",
+            color_continuous_scale="Plasma",
+            title="X: Yenilenebilir (%) vs Y: Enerji Yoğunluğu (Kabarcık Büyüklüğü: Emisyon Mt)",
+            height=600
+        )
+        fig_bubble.update_traces(textposition='top center', textfont_size=9)
+        fig_bubble.update_layout(template="plotly_white")
+        st.plotly_chart(fig_bubble, use_container_width=True)
 
     # SEKME 6: METODOLOJİ VE XAI NOTLARI
     with tab6:
