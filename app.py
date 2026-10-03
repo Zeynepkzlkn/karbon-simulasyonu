@@ -521,7 +521,7 @@ if mode_choice in [mod_opt1, "Select from Global Country List"]:
     )
 else:
     col2.metric(
-        label=f"{selected_profile.split(' ')[0]} Profil Baseline",
+        label="Seçili Profil Baseline",
         value=f"{base_country_emission:.2f} Mt CO₂eq",
         delta=f"{country_policy_pct:+.1f}% Senaryo / Scenario",
         delta_color="inverse"
@@ -573,9 +573,9 @@ def generate_pdf_report():
     pdf.cell(190, 8, clean_pdf_text("POLITIKA VE MAKRO PARAMETRELER"))
     pdf.ln(8)
     pdf.set_font("Helvetica", '', 10)
-    pdf.cell(190, 6, clean_pdf_text(f"- Kisi Basi GSYH: \${gdp:,.0f}"))
+    pdf.cell(190, 6, clean_pdf_text(f"- Kisi Basi GSYH: ${gdp:,.0f}"))
     pdf.ln(6)
-    pdf.cell(190, 6, clean_pdf_text(f"- Enerji Yogunlugu: {energy_intensity:.1f} MJ/\$"))
+    pdf.cell(190, 6, clean_pdf_text(f"- Enerji Yogunlugu: {energy_intensity:.1f} MJ/$"))
     pdf.ln(6)
     pdf.cell(190, 6, clean_pdf_text(f"- Yenilenebilir Enerji Payi: %{renewable_energy:.1f}"))
     pdf.ln(6)
@@ -604,7 +604,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "📜 Metodoloji & XAI Notları"
 ])
 
-# TAB 1: KÜRESEL EMİSYON HARİTASI & ALTTAN DETAYLI ÜLKE GÖSTERGELERİ
+# TAB 1: KÜRESEL EMİSYON HARİTASI & ALTTAN DETAYLI ÜLKE / PROFİL GÖSTERGELERİ
 with tab1:
     map_list = []
     for c_name, c_data in COUNTRIES_DATA.items():
@@ -626,21 +626,50 @@ with tab1:
     fig_map.update_layout(height=520, margin={"r":0,"t":40,"l":0,"b":0})
     st.plotly_chart(fig_map, use_container_width=True)
 
-    # ALTTTAKİ ÜLKE GÖSTERGELERİ VE DETAYLI MATRİS
+    # ALTTTAKİ GÖSTERGELER VE DİNAMİK LİSTE (ÜLKE vs HAZIR PROFİL MODU)
     st.markdown("---")
-    st.subheader(f"📌 {selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile} Göstergeleri & Küresel Sıralama")
     
-    col_m1, col_m2, col_m3, col_m4, col_m5 = st.columns(5)
-    c_m = COUNTRIES_DATA[selected_country] if mode_choice in [mod_opt1, 'Select from Global Country List'] else PROFILE_DETAILS[selected_profile]
-    
-    col_m1.metric("Milli Gelir (GSYH)", f"\${c_m['gdp']:,.0f}")
-    col_m2.metric("Enerji Yoğunluğu", f"{c_m['energy']:.1f} MJ/\$")
-    col_m3.metric("Yenilenebilir Enerji", f"%{c_m['renew']:.1f}")
-    col_m4.metric("İmalat Sanayi Payı", f"%{c_m['manuf']:.1f}")
-    col_m5.metric("Ticari Açıklık", f"%{c_m['trade']:.1f}")
+    if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
+        st.subheader(f"📌 {selected_profile} — Profil Göstergeleri & Hazır Profiller Sıralaması")
+        c_m = PROFILE_DETAILS[selected_profile]
+        
+        col_m1, col_m2, col_m3, col_m4, col_m5 = st.columns(5)
+        col_m1.metric("Milli Gelir (GSYH)", f"${c_m['gdp']:,.0f}")
+        col_m2.metric("Enerji Yoğunluğu", f"{c_m['energy']:.1f} MJ/$")
+        col_m3.metric("Yenilenebilir Enerji", f"%{c_m['renew']:.1f}")
+        col_m4.metric("İmalat Sanayi Payı", f"%{c_m['manuf']:.1f}")
+        col_m5.metric("Ticari Açıklık", f"%{c_m['trade']:.1f}")
 
-    st.markdown("#### 📊 Küresel Ülke Emisyon & Politika Listesi")
-    st.dataframe(df_map.sort_values("Emisyon (Mt)", ascending=False), use_container_width=True, hide_index=True)
+        st.markdown("#### 📊 Hazır Ülke Profilleri Karşılaştırma & Emisyon Listesi")
+        prof_table_data = []
+        for p_name, p_data in PROFILE_DETAILS.items():
+            p_e = predict_emissions(p_data["gdp"], p_data["energy"], p_data["gvc"], p_data["trade"], p_data["manuf"], p_data["renew"], p_data["broadband"], p_data["internet"], p_data["mobile"])
+            prof_table_data.append({
+                "Hazır Profil / Tipoloji": p_name,
+                "Rozet / Kimlik": p_data["badge"],
+                "Tahmini Emisyon (Mt)": round(p_e, 1),
+                "GSYH (\$)": p_data["gdp"],
+                "Enerji Yoğunluğu (MJ/$)": p_data["energy"],
+                "Yenilenebilir (%)": p_data["renew"],
+                "İmalat (%)": p_data["manuf"],
+                "SKDM Karbon Riski": p_data["skdm_risk"]
+            })
+        df_prof_table = pd.DataFrame(prof_table_data)
+        st.dataframe(df_prof_table.sort_values("Tahmini Emisyon (Mt)", ascending=False), use_container_width=True, hide_index=True)
+
+    else:
+        st.subheader(f"📌 {selected_country} Göstergeleri & Küresel Sıralama")
+        c_m = COUNTRIES_DATA[selected_country]
+        
+        col_m1, col_m2, col_m3, col_m4, col_m5 = st.columns(5)
+        col_m1.metric("Milli Gelir (GSYH)", f"${c_m['gdp']:,.0f}")
+        col_m2.metric("Enerji Yoğunluğu", f"{c_m['energy']:.1f} MJ/$")
+        col_m3.metric("Yenilenebilir Enerji", f"%{c_m['renew']:.1f}")
+        col_m4.metric("İmalat Sanayi Payı", f"%{c_m['manuf']:.1f}")
+        col_m5.metric("Ticari Açıklık", f"%{c_m['trade']:.1f}")
+
+        st.markdown("#### 📊 Küresel Ülke Emisyon & Politika Listesi")
+        st.dataframe(df_map.sort_values("Emisyon (Mt)", ascending=False), use_container_width=True, hide_index=True)
 
 # TAB 2: CANLI SENARYO SKDM ANALİZİ & DİNAMİK YAPAY ZEKA DESTEKLİ ÖNERİLER
 with tab2:
@@ -710,10 +739,10 @@ with tab2:
         </div>
         """, unsafe_allow_html=True)
 
-# TAB 3: KURUMSAL / İŞLETME İKLİM RİSKİ SİMÜLATÖRÜ
+# TAB 3: KURUMSAL / İŞLETME İKLİM RİSKİ SİMÜLATÖRÜ & SERBEST LOKASYON SEÇİMİ
 with tab3:
     st.subheader("🏭 Kurumsal / İşletme İklim Riski Simülatörü (Macro-to-Micro Downscaling)")
-    st.markdown("İhracatçı veya tedarik zincirinde yer alan şirketler için **AB SKDM Vergi Hesabı, Lokasyon Optimizasyonu ve Kapsam 3 (Scope 3) Stres Testi**:")
+    st.markdown("İhracatçı veya tedarik zincirinde yer alan şirketler için **AB SKDM Vergi Hesabı, Serbest Lokasyon Seçimi ve Kapsam 3 (Scope 3) Stres Testi**:")
 
     # 1. SKDM VERGİ CEZASI & TASARRUF HESAPLAYICI
     st.markdown("#### 1. 💰 Şirket AB İhracatı & SKDM Vergi Cezası / Tasarruf Hesaplayıcı")
@@ -734,21 +763,65 @@ with tab3:
     col_c2.metric("Yeni Senaryo SKDM Cezası", f"€{scen_cbam_tax:,.0f}")
     col_c3.metric("Net Yıllık Vergi Tasarrufu", f"€{net_tax_savings:,.0f}", delta=f"{(net_tax_savings/base_cbam_tax)*100:+.1f}% Tasarruf" if base_cbam_tax>0 else "0%")
 
-    # 2. OPTİMİZASYON
-    st.markdown("#### 2. 📍 Şirket Yatırım & Tedarikçi Lokasyon Seçim Optimizasyonu")
-    min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):", 5.0, 40.0, 15.0)
-    max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/\$):", 2.0, 10.0, 5.0)
-
-    opt_candidates = []
-    for cname, cinfo in COUNTRIES_DATA.items():
-        if cinfo["manuf"] >= min_manuf_target and cinfo["energy"] <= max_energy_limit:
-            score = (cinfo["renew"] * 0.4) + ((15.0 - cinfo["energy"]) * 0.4) + (cinfo["gdp"]/1000 * 0.2)
-            opt_candidates.append({"Ülke": cname, "Score": score, "Yenilenebilir (%)": cinfo["renew"], "Enerji Yoğ.": cinfo["energy"], "İmalat (%)": cinfo["manuf"]})
+    # 2. ESNEK LOKASYON OPTİMİZASYONU & MANUEL ÜLKE SEÇİMİ
+    st.markdown("#### 2. 📍 Şirket Yatırım & Tedarikçi Lokasyon Değerlendirme")
     
-    if opt_candidates:
-        df_opt = pd.DataFrame(opt_candidates).sort_values("Score", ascending=False).head(3)
-        st.success("🎯 **Şirketiniz İçin En Optimal 3 Ülke Lokasyonu:**")
-        st.dataframe(df_opt[["Ülke", "Yenilenebilir (%)", "Enerji Yoğ.", "İmalat (%)"]], use_container_width=True, hide_index=True)
+    loc_mode = st.radio(
+        "Lokasyon Analiz Yöntemini Seçiniz:",
+        ["🎯 Manuel Ülke Seçimi (İstediğiniz Ülkeleri Karşılaştırın)", "🤖 Otomatik Kriter Bazlı Filtreleme (En Uygun Ülkeler)"],
+        index=0
+    )
+
+    if loc_mode.startswith("🎯"):
+        selected_custom_countries = st.multiselect(
+            "Değerlendirmek İstediğiniz Ülkeleri Seçiniz:",
+            list(COUNTRIES_DATA.keys()),
+            default=["Türkiye", "Almanya", "Avusturya", "Çekya", "Polonya", "Meksika"]
+        )
+        if selected_custom_countries:
+            custom_eval = []
+            for cname in selected_custom_countries:
+                cinfo = COUNTRIES_DATA[cname]
+                score = (cinfo["renew"] * 0.4) + ((15.0 - cinfo["energy"]) * 0.4) + (cinfo["gdp"]/1000 * 0.2)
+                cbam_risk, _, _ = eval_skdm_risk(cinfo["manuf"], cinfo["renew"], cinfo["energy"])
+                custom_eval.append({
+                    "Ülke": cname,
+                    "Uygunluk Skoru": round(score, 1),
+                    "Yenilenebilir Enerji (%)": cinfo["renew"],
+                    "Enerji Yoğunluğu (MJ/\$)": cinfo["energy"],
+                    "İmalat Payı (%)": cinfo["manuf"],
+                    "GSYH (\$)": cinfo["gdp"],
+                    "SKDM Risk Durumu": cbam_risk
+                })
+            df_custom_eval = pd.DataFrame(custom_eval).sort_values("Uygunluk Skoru", ascending=False)
+            st.success("🎯 **Seçtiğiniz Ülkelerin Detaylı İklim & Yatırım Analiz Tablosu:**")
+            st.dataframe(df_custom_eval, use_container_width=True, hide_index=True)
+        else:
+            st.info("Lütfen listeden incelemek istediğiniz en az bir ülke seçiniz.")
+    else:
+        min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):", 5.0, 40.0, 15.0)
+        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/\$):", 2.0, 10.0, 5.0)
+
+        opt_candidates = []
+        for cname, cinfo in COUNTRIES_DATA.items():
+            if cinfo["manuf"] >= min_manuf_target and cinfo["energy"] <= max_energy_limit:
+                score = (cinfo["renew"] * 0.4) + ((15.0 - cinfo["energy"]) * 0.4) + (cinfo["gdp"]/1000 * 0.2)
+                cbam_risk, _, _ = eval_skdm_risk(cinfo["manuf"], cinfo["renew"], cinfo["energy"])
+                opt_candidates.append({
+                    "Ülke": cname,
+                    "Uygunluk Skoru": round(score, 1),
+                    "Yenilenebilir (%)": cinfo["renew"],
+                    "Enerji Yoğ. (MJ/\$)": cinfo["energy"],
+                    "İmalat Payı (%)": cinfo["manuf"],
+                    "SKDM Riski": cbam_risk
+                })
+        
+        if opt_candidates:
+            df_opt = pd.DataFrame(opt_candidates).sort_values("Uygunluk Skoru", ascending=False)
+            st.success("🤖 **Kriterlerinize Uyan En Optimal Ülke Lokasyonları:**")
+            st.dataframe(df_opt, use_container_width=True, hide_index=True)
+        else:
+            st.warning("Seçilen katı kısıtları karşılayan ülke bulunamadı. Lütfen kısıtları esnetin.")
 
     # 3. KAPSAM 3 STRES TESTİ
     st.markdown("#### 3. 📊 Kurumsal Kapsam 3 (Scope 3) İklim Riski Stres Testi")
