@@ -176,7 +176,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Kritik Derecede Yüksek Risk",
         "skdm_score": "9.5/10",
         "levers": ["1. Şebeke Modernizasyonu & Enerji Verimliliği (-%28)", "2. Yenilenebilir Enerji Sıçraması (-%20)", "3. Dijital Altyapı Yatırımı (-%8)"],
-        "gdp": 3200.0, "energy": 12.5, "gvc": 12.0, "trade": 35.0, "manuf": 20.0, "renew": 8.0, "broadband": 4.0, "internet": 32.0, "mobile": 65.0
+        "gdp": 3200.0, "energy": 12.5, "gvc": 12.0, "trade": 35.0, "manuf": 20.0, "renew": 8.0, "broadband": 4.0, "internet": 65.0, "mobile": 65.0
     },
     "🍃 Yeşil İkiz Dönüşüm Öncüsü": {
         "desc": "Yüksek yenilenebilir enerji (%65) ve ileri dijital altyapının sinerji oluşturduğu ideal karbonsuzlaşma modeli.",
@@ -445,7 +445,7 @@ st.title(title_text)
 st.caption(sub_title)
 
 # SAVE SCENARIO BUTTON
-col_sc1, col_sc2 = st.columns()
+col_sc1, col_sc2 = st.columns(2)
 with col_sc2:
     if st.button("💾 " + ("Senaryoyu Hafızaya Kaydet" if is_tr else "Save Scenario to Memory")):
         s_name = f"{selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile.split(' ')} - {pred_emission:.1f} Mt"
@@ -611,7 +611,7 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
 
         # 1. SKDM VERGİ CEZASI & TASARRUF HESAPLAYICI
         st.markdown("#### 1. 💰 Şirket AB İhracatı & SKDM Vergi Cezası / Tasarruf Hesaplayıcı")
-        corp_export = st.number_input("Şirketinizin Yıllık AB İhracat Cirosu (\$ / €):", min_value=100000, max_value=1000000000, value=5000000, step=500000)
+        corp_export = st.number_input("Şirketinizin Yıllık AB İhracat Cirosu ($ / €):", min_value=100000, max_value=1000000000, value=5000000, step=500000)
 
         baseline_intensity_factor = (BASE_ENERGY / 10.0) * (1.0 - (BASE_RENEW / 100.0)) * 0.08
         scen_intensity_factor = (energy_intensity / 10.0) * (1.0 - (renewable_energy / 100.0)) * 0.08
@@ -625,12 +625,12 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
         col_c2.metric("Yeni Senaryo SKDM Cezası", f"€{scen_cbam_tax:,.0f}")
         col_c3.metric("Net Yıllık Vergi Tasarrufu", f"€{net_tax_savings:,.0f}", delta=f"{(net_tax_savings/base_cbam_tax)*100:+.1f}% Tasarruf" if base_cbam_tax>0 else "0%")
 
-        # 2. ŞİRKET YATIRIM LOKASYON OPTİMİZASYONU (CLEAN TITLE NO CODE)
+        # 2. ŞİRKET YATIRIM LOKASYON OPTİMİZASYONU
         st.markdown("#### 2. 📍 Şirket Yatırım & Tedarikçi Lokasyon Seçim Optimizasyonu")
         st.markdown("Şirketiniz için en düşük iklim riskli ve en verimli 3 küresel tedarik/yatırım ülkesini matematiksel olarak listeleyin:")
 
         min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):", 5.0, 40.0, 15.0)
-        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/\$):", 2.0, 10.0, 5.0)
+        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/$):", 2.0, 10.0, 5.0)
 
         opt_candidates = []
         for cname, cinfo in COUNTRIES_DATA.items():
@@ -672,7 +672,7 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
 
         r_col1, r_col2, r_col3 = st.columns(3)
         r_col1.markdown(f"<div class='glass-card-green'><b>Gerekli Yenilenebilir Enerji</b><h3 style='color:#2ca02c;'>%{rec_renew:.1f}</h3></div>", unsafe_allow_html=True)
-        r_col2.markdown(f"<div class='glass-card-green'><b>Gerekli Enerji Yoğunluğu</b><h3 style='color:#2ca02c;'>{rec_energy:.1f} MJ/\$</h3></div>", unsafe_allow_html=True)
+        r_col2.markdown(f"<div class='glass-card-green'><b>Gerekli Enerji Yoğunluğu</b><h3 style='color:#2ca02c;'>{rec_energy:.1f} MJ/$</h3></div>", unsafe_allow_html=True)
         r_col3.markdown(f"<div class='glass-card-green'><b>Önerilen İmalat Sanayi Payı</b><h3 style='color:#2ca02c;'>%{rec_manuf:.1f}</h3></div>", unsafe_allow_html=True)
 
     with tab6:
@@ -685,7 +685,7 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
             raw_r = [pinfo["gdp"]/1000, pinfo["energy"]*5, pinfo["gvc"], pinfo["trade"]/2, pinfo["manuf"]*2, pinfo["renew"], pinfo["internet"]]
             fig_radar.add_trace(go.Scatterpolar(r=raw_r, theta=radar_categories, fill='toself', name=short_pname, opacity=0.6))
 
-        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=)), showlegend=True, title="Hazır Ülke Tipolojilerinin Çok Boyutlu Profil Radarı", height=500)
+        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=True, title="Hazır Ülke Tipolojilerinin Çok Boyutlu Profil Radarı", height=500)
         st.plotly_chart(fig_radar, use_container_width=True)
 
 else:
