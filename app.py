@@ -176,7 +176,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Kritik Derecede Yüksek Risk",
         "skdm_score": "9.5/10",
         "levers": ["1. Şebeke Modernizasyonu & Enerji Verimliliği (-%28)", "2. Yenilenebilir Enerji Sıçraması (-%20)", "3. Dijital Altyapı Yatırımı (-%8)"],
-        "gdp": 3200.0, "energy": 12.5, "gvc": 12.0, "trade": 35.0, "manuf": 20.0, "renew": 8.0, "broadband": 4.0, "internet": 65.0, "mobile": 65.0
+        "gdp": 3200.0, "energy": 12.5, "gvc": 12.0, "trade": 35.0, "manuf": 20.0, "renew": 8.0, "broadband": 4.0, "internet": 32.0, "mobile": 65.0
     },
     "🍃 Yeşil İkiz Dönüşüm Öncüsü": {
         "desc": "Yüksek yenilenebilir enerji (%65) ve ileri dijital altyapının sinerji oluşturduğu ideal karbonsuzlaşma modeli.",
@@ -513,38 +513,47 @@ def eval_skdm_risk(manuf_val, renew_val, energy_val):
     else:
         return ("Yüksek Risk / SKDM Karbon Vergisi Yükü 🔴" if is_tr else "High CBAM Tax Risk 🔴"), "8.5/10", "glass-card-red"
 
-# PDF GENERATOR FUNCTION WITH UNICODE CLEANING
+# PDF GENERATOR FUNCTION WITH UNICODE CLEANING & FPDF2 FIX
 def generate_pdf_report():
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(190, 10, clean_pdf_text("KURESEL KARBON AYAK IZI & SKDM RISK RAPORU"), ln=True, align='C')
-    pdf.ln(5)
+    pdf.set_font("Helvetica", 'B', 16)
+    pdf.cell(190, 10, clean_pdf_text("KURESEL KARBON AYAK IZI & SKDM RISK RAPORU"), align='C')
+    pdf.ln(10)
     
-    pdf.set_font("Arial", '', 11)
+    pdf.set_font("Helvetica", '', 11)
     sec_name = selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile
-    pdf.cell(190, 8, clean_pdf_text(f"Senaryo / Ulke: {sec_name}"), ln=True)
-    pdf.cell(190, 8, clean_pdf_text(f"Tahmini Seragazi Emisyonu: {pred_emission:.2f} Mt CO2eq"), ln=True)
-    pdf.cell(190, 8, clean_pdf_text(f"S0 Baseline Farkii: {emission_pct_change:+.1f}%"), ln=True)
-    pdf.cell(190, 8, clean_pdf_text(f"Alt ve Ust Guven Sinirlari (%95 Monte Carlo): {lower_bound:.1f} - {upper_bound:.1f} Mt CO2eq"), ln=True)
-    pdf.ln(5)
+    pdf.cell(190, 8, clean_pdf_text(f"Senaryo / Ulke: {sec_name}"))
+    pdf.ln(8)
+    pdf.cell(190, 8, clean_pdf_text(f"Tahmini Seragazi Emisyonu: {pred_emission:.2f} Mt CO2eq"))
+    pdf.ln(8)
+    pdf.cell(190, 8, clean_pdf_text(f"S0 Baseline Farkii: {emission_pct_change:+.1f}%"))
+    pdf.ln(8)
+    pdf.cell(190, 8, clean_pdf_text(f"Alt ve Ust Guven Sinirlari (%95 Monte Carlo): {lower_bound:.1f} - {upper_bound:.1f} Mt CO2eq"))
+    pdf.ln(12)
 
-    pdf.set_font("Arial", 'B', 13)
-    pdf.cell(190, 8, clean_pdf_text("POLITIKA VE MAKRO PARAMETRELER"), ln=True)
-    pdf.set_font("Arial", '', 10)
-    pdf.cell(190, 6, clean_pdf_text(f"- Kisi Basi GSYH: ${gdp:,.0f}"), ln=True)
-    pdf.cell(190, 6, clean_pdf_text(f"- Enerji Yogunlugu: {energy_intensity:.1f} MJ/$"), ln=True)
-    pdf.cell(190, 6, clean_pdf_text(f"- Yenilenebilir Enerji Payi: %{renewable_energy:.1f}"), ln=True)
-    pdf.cell(190, 6, clean_pdf_text(f"- Imalat Sanayi Payi: %{manufacturing:.1f}"), ln=True)
-    pdf.cell(190, 6, clean_pdf_text(f"- Ticari Aciklik: %{trade_openness:.1f}"), ln=True)
-    pdf.ln(5)
+    pdf.set_font("Helvetica", 'B', 13)
+    pdf.cell(190, 8, clean_pdf_text("POLITIKA VE MAKRO PARAMETRELER"))
+    pdf.ln(8)
+    pdf.set_font("Helvetica", '', 10)
+    pdf.cell(190, 6, clean_pdf_text(f"- Kisi Basi GSYH: ${gdp:,.0f}"))
+    pdf.ln(6)
+    pdf.cell(190, 6, clean_pdf_text(f"- Enerji Yogunlugu: {energy_intensity:.1f} MJ/$"))
+    pdf.ln(6)
+    pdf.cell(190, 6, clean_pdf_text(f"- Yenilenebilir Enerji Payi: %{renewable_energy:.1f}"))
+    pdf.ln(6)
+    pdf.cell(190, 6, clean_pdf_text(f"- Imalat Sanayi Payi: %{manufacturing:.1f}"))
+    pdf.ln(6)
+    pdf.cell(190, 6, clean_pdf_text(f"- Ticari Aciklik: %{trade_openness:.1f}"))
+    pdf.ln(10)
 
-    pdf.set_font("Arial", 'B', 13)
-    pdf.cell(190, 8, clean_pdf_text("METODOLOJIK ACIKLANABILIRLIK VE DOGRULAMA NOTU"), ln=True)
-    pdf.set_font("Arial", '', 9)
+    pdf.set_font("Helvetica", 'B', 13)
+    pdf.cell(190, 8, clean_pdf_text("METODOLOJIK ACIKLANABILIRLIK VE DOGRULAMA NOTU"))
+    pdf.ln(8)
+    pdf.set_font("Helvetica", '', 9)
     pdf.multi_cell(190, 5, clean_pdf_text("Bu rapor RBF-SVR (Test R2 = 0.975) ve Monte Carlo simulesiyle uretilmistir. Sonuclar iliskisel ve tahminsel duyarliliklari (associative marginal effects) temsil eder, dogrudan nedensellik iddiasi tasimaz."))
     
-    return pdf.output(dest='S').encode('latin-1', errors='replace')
+    return bytes(pdf.output())
 
 # TABS DEFINITION
 if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
@@ -685,7 +694,7 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
             raw_r = [pinfo["gdp"]/1000, pinfo["energy"]*5, pinfo["gvc"], pinfo["trade"]/2, pinfo["manuf"]*2, pinfo["renew"], pinfo["internet"]]
             fig_radar.add_trace(go.Scatterpolar(r=raw_r, theta=radar_categories, fill='toself', name=short_pname, opacity=0.6))
 
-        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=True, title="Hazır Ülke Tipolojilerinin Çok Boyutlu Profil Radarı", height=500)
+        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True)), showlegend=True, title="Hazır Ülke Tipolojilerinin Çok Boyutlu Profil Radarı", height=500)
         st.plotly_chart(fig_radar, use_container_width=True)
 
 else:
