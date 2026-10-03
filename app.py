@@ -135,7 +135,7 @@ def track_new_visit():
 
 visitor_info = track_new_visit()
 
-# HELPER FUNCTION TO CLEAN TEXT FOR PDF (PREVENTS UNICODE ENCODING ERROR)
+# HELPER FUNCTION TO CLEAN TEXT FOR PDF (PREVENTS UNICODE ENCODING ERROR INCLUDING EMOJIS)
 def clean_pdf_text(text):
     if not isinstance(text, str):
         text = str(text)
@@ -146,7 +146,8 @@ def clean_pdf_text(text):
     }
     for tr_char, clean_char in replacements.items():
         text = text.replace(tr_char, clean_char)
-    return text
+    # Strip emojis and non-latin-1 characters safely
+    return text.encode("latin-1", "ignore").decode("latin-1")
 
 # BASELINE S0 CONSTANTS
 BASE_GDP = 25000.0
@@ -471,7 +472,7 @@ st.title(title_text)
 st.caption(sub_title)
 
 # SAVE SCENARIO BUTTON
-col_sc1, col_sc2 = st.columns([3, 1])
+col_sc1, col_sc2 = st.columns(2)
 with col_sc2:
     if st.button("💾 " + ("Senaryoyu Hafızaya Kaydet" if is_tr else "Save Scenario to Memory")):
         s_name = f"{selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile} - {pred_emission:.1f} Mt"
@@ -479,7 +480,7 @@ with col_sc2:
             "Senaryo Adı": s_name,
             "Tahmini Emisyon (Mt)": round(pred_emission, 2),
             "GSYH (\$)": gdp,
-            "Enerji Yoğunluğu (MJ/$)": energy_intensity,
+            "Enerji Yoğunluğu (MJ/\$)": energy_intensity,
             "Yenilenebilir Enerji (%)": renewable_energy,
             "İmalat Payı (%)": manufacturing,
             "Ticari Açıklık (%)": trade_openness
