@@ -96,6 +96,19 @@ css_style = """
 """
 st.markdown(css_style, unsafe_allow_html=True)
 
+# HELPER FUNCTION TO CLEAN TEXT FOR PDF (PREVENTS UNICODE ENCODING ERROR)
+def clean_pdf_text(text):
+    if not isinstance(text, str):
+        text = str(text)
+    replacements = {
+        "ı": "i", "İ": "I", "ğ": "g", "Ğ": "G",
+        "ş": "s", "Ş": "S", "ç": "c", "Ç": "C",
+        "ö": "o", "Ö": "O", "ü": "u", "Ü": "U"
+    }
+    for tr_char, clean_char in replacements.items():
+        text = text.replace(tr_char, clean_char)
+    return text
+
 # BASELINE S0 CONSTANTS
 BASE_GDP = 25000.0
 BASE_ENERGY = 5.2
@@ -432,10 +445,10 @@ st.title(title_text)
 st.caption(sub_title)
 
 # SAVE SCENARIO BUTTON
-col_sc1, col_sc2 = st.columns([3, 1])
+col_sc1, col_sc2 = st.columns()
 with col_sc2:
     if st.button("💾 " + ("Senaryoyu Hafızaya Kaydet" if is_tr else "Save Scenario to Memory")):
-        s_name = f"{selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile.split(' ')[1]} - {pred_emission:.1f} Mt"
+        s_name = f"{selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile.split(' ')} - {pred_emission:.1f} Mt"
         st.session_state.saved_scenarios.append({
             "Name": s_name,
             "Emisyon": pred_emission,
@@ -500,35 +513,36 @@ def eval_skdm_risk(manuf_val, renew_val, energy_val):
     else:
         return ("Yüksek Risk / SKDM Karbon Vergisi Yükü 🔴" if is_tr else "High CBAM Tax Risk 🔴"), "8.5/10", "glass-card-red"
 
-# PDF GENERATOR FUNCTION
+# PDF GENERATOR FUNCTION WITH UNICODE CLEANING
 def generate_pdf_report():
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", 'B', 16)
-    pdf.cell(190, 10, "KURESEL KARBON AYAK IZI & SKDM RISK RAPORU", ln=True, align='C')
+    pdf.cell(190, 10, clean_pdf_text("KURESEL KARBON AYAK IZI & SKDM RISK RAPORU"), ln=True, align='C')
     pdf.ln(5)
     
     pdf.set_font("Arial", '', 11)
-    pdf.cell(190, 8, f"Senaryo / Ulke: {selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile}", ln=True)
-    pdf.cell(190, 8, f"Tahmini Seragazı Emisyonu: {pred_emission:.2f} Mt CO2eq", ln=True)
-    pdf.cell(190, 8, f"S0 Baseline Farkı: {emission_pct_change:+.1f}%", ln=True)
-    pdf.cell(190, 8, f"Alt ve Ust Guven Sinirlari (%95 Monte Carlo): {lower_bound:.1f} - {upper_bound:.1f} Mt CO2eq", ln=True)
+    sec_name = selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile
+    pdf.cell(190, 8, clean_pdf_text(f"Senaryo / Ulke: {sec_name}"), ln=True)
+    pdf.cell(190, 8, clean_pdf_text(f"Tahmini Seragazi Emisyonu: {pred_emission:.2f} Mt CO2eq"), ln=True)
+    pdf.cell(190, 8, clean_pdf_text(f"S0 Baseline Farkii: {emission_pct_change:+.1f}%"), ln=True)
+    pdf.cell(190, 8, clean_pdf_text(f"Alt ve Ust Guven Sinirlari (%95 Monte Carlo): {lower_bound:.1f} - {upper_bound:.1f} Mt CO2eq"), ln=True)
     pdf.ln(5)
 
     pdf.set_font("Arial", 'B', 13)
-    pdf.cell(190, 8, "POLITIKA VE MAKRO PARAMETRELER", ln=True)
+    pdf.cell(190, 8, clean_pdf_text("POLITIKA VE MAKRO PARAMETRELER"), ln=True)
     pdf.set_font("Arial", '', 10)
-    pdf.cell(190, 6, f"- Kisi Basi GSYH: ${gdp:,.0f}", ln=True)
-    pdf.cell(190, 6, f"- Enerji Yogunlugu: {energy_intensity:.1f} MJ/$", ln=True)
-    pdf.cell(190, 6, f"- Yenilenebilir Enerji Payi: %{renewable_energy:.1f}", ln=True)
-    pdf.cell(190, 6, f"- Imalat Sanayi Payi: %{manufacturing:.1f}", ln=True)
-    pdf.cell(190, 6, f"- Ticari Aciklik: %{trade_openness:.1f}", ln=True)
+    pdf.cell(190, 6, clean_pdf_text(f"- Kisi Basi GSYH: ${gdp:,.0f}"), ln=True)
+    pdf.cell(190, 6, clean_pdf_text(f"- Enerji Yogunlugu: {energy_intensity:.1f} MJ/$"), ln=True)
+    pdf.cell(190, 6, clean_pdf_text(f"- Yenilenebilir Enerji Payi: %{renewable_energy:.1f}"), ln=True)
+    pdf.cell(190, 6, clean_pdf_text(f"- Imalat Sanayi Payi: %{manufacturing:.1f}"), ln=True)
+    pdf.cell(190, 6, clean_pdf_text(f"- Ticari Aciklik: %{trade_openness:.1f}"), ln=True)
     pdf.ln(5)
 
     pdf.set_font("Arial", 'B', 13)
-    pdf.cell(190, 8, "METODOLOJIK ACCIKLANABILIRLIK VE DOGRULAMA NOTU", ln=True)
+    pdf.cell(190, 8, clean_pdf_text("METODOLOJIK ACIKLANABILIRLIK VE DOGRULAMA NOTU"), ln=True)
     pdf.set_font("Arial", '', 9)
-    pdf.multi_cell(190, 5, "Bu rapor RBF-SVR (Test R2 = 0.975) ve Monte Carlo simulesiyle uretilmistir. Sonuclar iliskisel ve tahminsel duyarliliklari (associative marginal effects) temsil eder, dogrudan nedensellik iddiasi tasimaz.")
+    pdf.multi_cell(190, 5, clean_pdf_text("Bu rapor RBF-SVR (Test R2 = 0.975) ve Monte Carlo simulesiyle uretilmistir. Sonuclar iliskisel ve tahminsel duyarliliklari (associative marginal effects) temsil eder, dogrudan nedensellik iddiasi tasimaz."))
     
     return pdf.output(dest='S').encode('latin-1', errors='replace')
 
@@ -599,7 +613,6 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
         st.markdown("#### 1. 💰 Şirket AB İhracatı & SKDM Vergi Cezası / Tasarruf Hesaplayıcı")
         corp_export = st.number_input("Şirketinizin Yıllık AB İhracat Cirosu (\$ / €):", min_value=100000, max_value=1000000000, value=5000000, step=500000)
 
-        # Formula: Baseline vs Scenario CBAM Tax
         baseline_intensity_factor = (BASE_ENERGY / 10.0) * (1.0 - (BASE_RENEW / 100.0)) * 0.08
         scen_intensity_factor = (energy_intensity / 10.0) * (1.0 - (renewable_energy / 100.0)) * 0.08
 
@@ -612,14 +625,13 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
         col_c2.metric("Yeni Senaryo SKDM Cezası", f"€{scen_cbam_tax:,.0f}")
         col_c3.metric("Net Yıllık Vergi Tasarrufu", f"€{net_tax_savings:,.0f}", delta=f"{(net_tax_savings/base_cbam_tax)*100:+.1f}% Tasarruf" if base_cbam_tax>0 else "0%")
 
-        # 2. ŞİRKET YATIRIM LOKASYON OPTİMİZASYONU
-        st.markdown("#### 2. 📍 Şirket Yatırım & Tedarikçi Lokasyon Seçim Optimizasyonu (`scipy.optimize`)")
+        # 2. ŞİRKET YATIRIM LOKASYON OPTİMİZASYONU (CLEAN TITLE NO CODE)
+        st.markdown("#### 2. 📍 Şirket Yatırım & Tedarikçi Lokasyon Seçim Optimizasyonu")
         st.markdown("Şirketiniz için en düşük iklim riskli ve en verimli 3 küresel tedarik/yatırım ülkesini matematiksel olarak listeleyin:")
 
         min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):", 5.0, 40.0, 15.0)
         max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/\$):", 2.0, 10.0, 5.0)
 
-        # Filter countries
         opt_candidates = []
         for cname, cinfo in COUNTRIES_DATA.items():
             if cinfo["manuf"] >= min_manuf_target and cinfo["energy"] <= max_energy_limit:
@@ -669,11 +681,11 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
         fig_radar = go.Figure()
 
         for pname, pinfo in PROFILE_DETAILS.items():
-            short_pname = pname.split(" ")[1] if " " in pname else pname
+            short_pname = pname.split(" ") if " " in pname else pname
             raw_r = [pinfo["gdp"]/1000, pinfo["energy"]*5, pinfo["gvc"], pinfo["trade"]/2, pinfo["manuf"]*2, pinfo["renew"], pinfo["internet"]]
             fig_radar.add_trace(go.Scatterpolar(r=raw_r, theta=radar_categories, fill='toself', name=short_pname, opacity=0.6))
 
-        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=True, title="Hazır Ülke Tipolojilerinin Çok Boyutlu Profil Radarı", height=500)
+        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=)), showlegend=True, title="Hazır Ülke Tipolojilerinin Çok Boyutlu Profil Radarı", height=500)
         st.plotly_chart(fig_radar, use_container_width=True)
 
 else:
@@ -729,8 +741,8 @@ else:
         col_c2.metric("Yeni Senaryo SKDM Cezası", f"€{scen_cbam_tax:,.0f}")
         col_c3.metric("Net Yıllık Vergi Tasarrufu", f"€{net_tax_savings:,.0f}", delta=f"{(net_tax_savings/base_cbam_tax)*100:+.1f}% Tasarruf" if base_cbam_tax>0 else "0%")
 
-        # 2. OPTİMİZASYON
-        st.markdown("#### 2. 📍 Şirket Yatırım & Tedarikçi Lokasyon Seçim Optimizasyonu (`scipy.optimize`)")
+        # 2. OPTİMİZASYON (CLEAN TITLE NO CODE)
+        st.markdown("#### 2. 📍 Şirket Yatırım & Tedarikçi Lokasyon Seçim Optimizasyonu")
         min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):", 5.0, 40.0, 15.0)
         max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/\$):", 2.0, 10.0, 5.0)
 
