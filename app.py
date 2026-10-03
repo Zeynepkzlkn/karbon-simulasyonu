@@ -102,13 +102,13 @@ def load_visitor_data():
     default_data = {
         "total_visits": 142,
         "country_breakdown": {
-            "🇹🇷 Türkiye": 68,
-            "🇩🇪 Almanya": 24,
-            "🇺🇸 ABD": 18,
-            "🇬🇧 İngiltere": 12,
-            "🇫🇷 Fransa": 9,
-            "🇳🇱 Hollanda": 6,
-            "🌍 Diğer Ülkeler": 5
+            "🇹🇷 Türkiye / Turkey": 68,
+            "🇩🇪 Almanya / Germany": 24,
+            "🇺🇸 ABD / USA": 18,
+            "🇬🇧 İngiltere / UK": 12,
+            "🇫🇷 Fransa / France": 9,
+            "🇳🇱 Hollanda / Netherlands": 6,
+            "🌍 Diğer Ülkeler / Others": 5
         }
     }
     if os.path.exists(VISITOR_FILE):
@@ -124,7 +124,9 @@ def track_new_visit():
     if "has_visited" not in st.session_state:
         st.session_state.has_visited = True
         vdata["total_visits"] += 1
-        vdata["country_breakdown"]["🇹🇷 Türkiye"] += 1
+        key_tr = "🇹🇷 Türkiye / Turkey"
+        if key_tr in vdata["country_breakdown"]:
+            vdata["country_breakdown"][key_tr] += 1
         try:
             with open(VISITOR_FILE, "w", encoding="utf-8") as f:
                 json.dump(vdata, f, ensure_ascii=False, indent=2)
@@ -141,7 +143,8 @@ def clean_pdf_text(text):
     replacements = {
         "ı": "i", "İ": "I", "ğ": "g", "Ğ": "G",
         "ş": "s", "Ş": "S", "ç": "c", "Ç": "C",
-        "ö": "o", "Ö": "O", "ü": "u", "Ü": "U"
+        "ö": "o", "Ö": "O", "ü": "u", "Ü": "U",
+        "–": "-", "—": "-", "“": '"', "”": '"', "‘": "'", "’": "'"
     }
     for tr_char, clean_char in replacements.items():
         text = text.replace(tr_char, clean_char)
@@ -160,9 +163,74 @@ BASE_INTERNET = 75.0
 BASE_MOBILE = 110.0
 BASE_EMISSION = 822.40  # Mt CO2eq
 
+# TRANSLATION MAP FOR COUNTRIES (TR <-> EN)
+COUNTRY_TRANSLATIONS = {
+    "Türkiye": "Turkey",
+    "Almanya": "Germany",
+    "Amerika Birleşik Devletleri": "United States",
+    "Çin": "China",
+    "Hindistan": "India",
+    "Fransa": "France",
+    "İngiltere": "United Kingdom",
+    "İtalya": "Italy",
+    "İspanya": "Spain",
+    "Japonya": "Japan",
+    "Güney Kore": "South Korea",
+    "Brezilya": "Brazil",
+    "Kanada": "Canada",
+    "Avustralya": "Australia",
+    "Meksika": "Mexico",
+    "Endonezya": "Indonesia",
+    "Hollanda": "Netherlands",
+    "İsviçre": "Switzerland",
+    "İsveç": "Sweden",
+    "Norveç": "Norway",
+    "Polonya": "Poland",
+    "Güney Afrika": "South Africa",
+    "Suudi Arabistan": "Saudi Arabia",
+    "Arjantin": "Argentina",
+    "Yunanistan": "Greece",
+    "Portekiz": "Portugal",
+    "Belçika": "Belgium",
+    "Avusturya": "Austria",
+    "Danimarka": "Denmark",
+    "Finlandiya": "Finland",
+    "İrlanda": "Ireland",
+    "Şili": "Chile",
+    "Kolombiya": "Colombia",
+    "Çekya": "Czechia",
+    "Macaristan": "Hungary",
+    "Romanya": "Romania",
+    "Malezya": "Malaysia",
+    "Tayland": "Thailand",
+    "Vietnam": "Vietnam",
+    "Filipinler": "Philippines",
+    "Singapur": "Singapore",
+    "Yeni Zelanda": "New Zealand",
+    "Mısır": "Egypt",
+    "Nijerya": "Nigeria",
+    "Cezayir": "Algeria",
+    "Fas": "Morocco",
+    "İsrail": "Israel",
+    "Birleşik Arap Emirlikleri": "United Arab Emirates",
+    "Katar": "Qatar",
+    "Kazakistan": "Kazakhstan",
+    "Ukrayna": "Ukraine",
+    "Pakistan": "Pakistan"
+}
+
+REVERSE_COUNTRY_TRANSLATIONS = {v: k for k, v in COUNTRY_TRANSLATIONS.items()}
+
+def get_country_name(name_tr, is_tr):
+    if is_tr:
+        return name_tr
+    return COUNTRY_TRANSLATIONS.get(name_tr, name_tr)
+
 # PROFILE DETAILS
 PROFILE_DETAILS = {
     "🏛️ S0 Referans Küresel Durum (Baseline)": {
+        "title_tr": "🏛️ S0 Referans Küresel Durum (Baseline)",
+        "title_en": "🏛️ S0 Reference Global State (Baseline)",
         "desc": "Veri setindeki tüm küresel ekonomilerin tam ortalamasını temsil eden nötr mihenk taşı.",
         "desc_en": "Neutral benchmark representing the exact global average of all economies in the dataset.",
         "badge": "Mihenk Taşı / Referans",
@@ -178,6 +246,8 @@ PROFILE_DETAILS = {
         "gdp": 25000.0, "energy": 5.2, "gvc": 25.0, "trade": 85.0, "manuf": 18.0, "renew": 22.0, "broadband": 20.0, "internet": 75.0, "mobile": 110.0
     },
     "🇪🇺 AB Yeşil Mutabakat Ülkesi": {
+        "title_tr": "🇪🇺 AB Yeşil Mutabakat Ülkesi",
+        "title_en": "🇪🇺 EU Green Deal Country",
         "desc": "Sıkı iklim politikaları, yüksek milli gelir ve baskın yenilenebilir enerji dönüşümü sağlayan gelişmiş AB modeli.",
         "desc_en": "Advanced EU model with strict climate policies, high GDP, and dominant renewable energy transition.",
         "badge": "İklim ve Temiz Enerji Lideri",
@@ -193,6 +263,8 @@ PROFILE_DETAILS = {
         "gdp": 48000.0, "energy": 3.2, "gvc": 32.0, "trade": 85.0, "manuf": 14.0, "renew": 58.0, "broadband": 38.0, "internet": 92.0, "mobile": 135.0
     },
     "🏭 Gelişmekte Olan Sanayi Ekonomisi": {
+        "title_tr": "🏭 Gelişmekte Olan Sanayi Ekonomisi",
+        "title_en": "🏭 Emerging Industrial Economy",
         "desc": "Yüksek imalat sanayi payı, yüksek enerji yoğunluğu ve henüz kısıtlı yenilenebilir enerji entegrasyonu olan üretim odaklı ekonomi.",
         "desc_en": "Production-oriented economy with high manufacturing share, high energy intensity, and limited renewables.",
         "badge": "Üretim ve Sanayi Üssü",
@@ -208,6 +280,8 @@ PROFILE_DETAILS = {
         "gdp": 8500.0, "energy": 8.8, "gvc": 22.0, "trade": 55.0, "manuf": 28.0, "renew": 14.0, "broadband": 12.0, "internet": 58.0, "mobile": 95.0
     },
     "🐉 Yüksek Dijitalleşmiş Asya Ekonomisi": {
+        "title_tr": "🐉 Yüksek Dijitalleşmiş Asya Ekonomisi",
+        "title_en": "🐉 Highly Digitalized Asian Economy",
         "desc": "Küresel değer zincirlerine (GVC) yüksek entegrasyon, devasa dış ticaret açıklığı ve hiper-dijitalleşme altyapısına sahip Asya modeli.",
         "desc_en": "Asian model with deep GVC integration, massive trade openness, and hyper-digital infrastructure.",
         "badge": "Hiper-Dijital Tedarik Üssü",
@@ -223,6 +297,8 @@ PROFILE_DETAILS = {
         "gdp": 35000.0, "energy": 5.5, "gvc": 42.0, "trade": 130.0, "manuf": 26.0, "renew": 22.0, "broadband": 44.0, "internet": 96.0, "mobile": 160.0
     },
     "⚡ Düşük Gelirli & Yüksek Enerji Yoğunluklu Ülke": {
+        "title_tr": "⚡ Düşük Gelirli & Yüksek Enerji Yoğunluklu Ülke",
+        "title_en": "⚡ Low Income & High Energy Intensity Country",
         "desc": "Verimsiz enerji kullanımı, düşük milli gelir ve zayıf dijitalleşme ile en yüksek emisyon riski taşıyan kırılgan ekonomi.",
         "desc_en": "Fragile economy with inefficient energy use, low GDP per capita, and weak digital infrastructure.",
         "badge": "Yüksek Emisyon Riski & Kırılgan Yapı",
@@ -238,6 +314,8 @@ PROFILE_DETAILS = {
         "gdp": 3200.0, "energy": 12.5, "gvc": 12.0, "trade": 35.0, "manuf": 20.0, "renew": 8.0, "broadband": 4.0, "internet": 32.0, "mobile": 65.0
     },
     "🍃 Yeşil İkiz Dönüşüm Öncüsü": {
+        "title_tr": "🍃 Yeşil İkiz Dönüşüm Öncüsü",
+        "title_en": "🍃 Green Twin Transition Pioneer",
         "desc": "Yüksek yenilenebilir enerji (%65) ve ileri dijital altyapının sinerji oluşturduğu ideal karbonsuzlaşma modeli.",
         "desc_en": "Ideal decarbonization model combining high renewable energy (65%) and advanced digital infrastructure.",
         "badge": "Geleceğin İdeal Modeli",
@@ -352,7 +430,7 @@ def predict_emissions(gdp_i, energy_i, gvc_i, trade_i, manuf_i, renew_i, bb_i, n
             pred_e = (pred_scaled * Y_STD) + Y_MEAN
         return max(10.0, float(pred_e))
     else:
-        # Mathematical fallback for initial state or testing
+        # Mathematical fallback for initial state
         e_est = 800.0 + (gdp_i / 1000.0) * 2.5 + (energy_i * 35.0) + (manuf_i * 8.0) - (renew_i * 6.5)
         return max(10.0, float(e_est))
 
@@ -404,10 +482,15 @@ st.sidebar.subheader(param_header)
 mode_choice = st.sidebar.radio(mod_choice_label, [mod_opt1, mod_opt2])
 
 selected_profile = "🏛️ S0 Referans Küresel Durum (Baseline)"
-selected_country = st.session_state.selected_country_name
+selected_country_tr = st.session_state.selected_country_name
+
+profile_keys = list(PROFILE_DETAILS.keys())
+profile_display_map = {k: k if is_tr else PROFILE_DETAILS[k]["title_en"] for k in profile_keys}
+reverse_profile_map = {v: k for k, v in profile_display_map.items()}
 
 if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
-    selected_profile = st.sidebar.selectbox("Hazır Profiller / Profiles:", list(PROFILE_DETAILS.keys()))
+    selected_profile_disp = st.sidebar.selectbox("Hazır Profiller / Profiles:", list(profile_display_map.values()))
+    selected_profile = reverse_profile_map[selected_profile_disp]
     p_info = PROFILE_DETAILS[selected_profile]
     st.session_state.gdp_val = p_info["gdp"]
     st.session_state.energy_val = p_info["energy"]
@@ -419,11 +502,17 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
     st.session_state.internet_val = p_info["internet"]
     st.session_state.mobile_val = p_info["mobile"]
 else:
-    country_list = list(COUNTRIES_DATA.keys())
-    curr_idx = country_list.index(st.session_state.selected_country_name) if st.session_state.selected_country_name in country_list else 0
-    selected_country = st.sidebar.selectbox("Ülke Listesi / Country List:", country_list, index=curr_idx)
-    st.session_state.selected_country_name = selected_country
-    c_info = COUNTRIES_DATA[selected_country]
+    country_list_tr = list(COUNTRIES_DATA.keys())
+    country_display_list = [get_country_name(c, is_tr) for c in country_list_tr]
+    
+    current_country_disp = get_country_name(st.session_state.selected_country_name, is_tr)
+    curr_idx = country_display_list.index(current_country_disp) if current_country_disp in country_display_list else 0
+    
+    selected_country_disp = st.sidebar.selectbox("Ülke Listesi / Country List:", country_display_list, index=curr_idx)
+    selected_country_tr = REVERSE_COUNTRY_TRANSLATIONS.get(selected_country_disp, selected_country_disp)
+    st.session_state.selected_country_name = selected_country_tr
+    
+    c_info = COUNTRIES_DATA[selected_country_tr]
     st.session_state.gdp_val = c_info["gdp"]
     st.session_state.energy_val = c_info["energy"]
     st.session_state.gvc_val = c_info["gvc"]
@@ -434,22 +523,22 @@ else:
     st.session_state.internet_val = c_info["internet"]
     st.session_state.mobile_val = c_info["mobile"]
 
-gdp = st.sidebar.slider("Kişi Başı GSYH / GDP per Capita ($)" if is_tr else "GDP per Capita ($)", 1000, 95000, int(st.session_state.gdp_val), step=1000)
-energy_intensity = st.sidebar.slider("Enerji Yoğunluğu / Energy Intensity (MJ/$)" if is_tr else "Energy Intensity (MJ/$)", 1.0, 15.0, float(st.session_state.energy_val), step=0.1)
-gvc_output = st.sidebar.slider("GVC Çıktısı / GVC Output Share (%)" if is_tr else "GVC Output Share (%)", 5.0, 60.0, float(st.session_state.gvc_val), step=0.5)
-trade_openness = st.sidebar.slider("Ticari Açıklık / Trade Openness (% GDP)" if is_tr else "Trade Openness (% GDP)", 20.0, 200.0, float(st.session_state.trade_val), step=1.0)
-manufacturing = st.sidebar.slider("İmalat Sanayi / Manufacturing Share (% GDP)" if is_tr else "Manufacturing Share (% GDP)", 2.0, 45.0, float(st.session_state.manuf_val), step=0.5)
-renewable_energy = st.sidebar.slider("Yenilenebilir Enerji / Renewable Share (%)" if is_tr else "Renewable Share (%)", 0.0, 80.0, float(st.session_state.renew_val), step=1.0)
+gdp = st.sidebar.slider("Kişi Başı GSYH ($)" if is_tr else "GDP per Capita ($)", 1000, 95000, int(st.session_state.gdp_val), step=1000)
+energy_intensity = st.sidebar.slider("Enerji Yoğunluğu (MJ/$)" if is_tr else "Energy Intensity (MJ/$)", 1.0, 15.0, float(st.session_state.energy_val), step=0.1)
+gvc_output = st.sidebar.slider("GVC Çıktısı (%)" if is_tr else "GVC Output Share (%)", 5.0, 60.0, float(st.session_state.gvc_val), step=0.5)
+trade_openness = st.sidebar.slider("Ticari Açıklık (% GDP)" if is_tr else "Trade Openness (% GDP)", 20.0, 200.0, float(st.session_state.trade_val), step=1.0)
+manufacturing = st.sidebar.slider("İmalat Sanayi (% GDP)" if is_tr else "Manufacturing Share (% GDP)", 2.0, 45.0, float(st.session_state.manuf_val), step=0.5)
+renewable_energy = st.sidebar.slider("Yenilenebilir Enerji (%)" if is_tr else "Renewable Share (%)", 0.0, 80.0, float(st.session_state.renew_val), step=1.0)
 
 st.sidebar.subheader(dig_header)
 digital_mode = st.sidebar.radio(dig_mode_label, [dig_opt1, dig_opt2], index=0)
 
 if digital_mode in [dig_opt1, "Detailed 3 Indicators"]:
-    broadband = st.sidebar.slider("Sabit Geniş Bant / Fixed Broadband" if is_tr else "Fixed Broadband", 0.0, 50.0, float(st.session_state.broadband_val), step=0.5)
-    internet_users = st.sidebar.slider("İnternet Kullanımı / Internet Users (%)" if is_tr else "Internet Users (%)", 10.0, 100.0, float(st.session_state.internet_val), step=1.0)
-    mobile_sub = st.sidebar.slider("Mobil Abonelik / Mobile Subscriptions" if is_tr else "Mobile Subscriptions", 30.0, 200.0, float(st.session_state.mobile_val), step=1.0)
+    broadband = st.sidebar.slider("Sabit Geniş Bant" if is_tr else "Fixed Broadband", 0.0, 50.0, float(st.session_state.broadband_val), step=0.5)
+    internet_users = st.sidebar.slider("İnternet Kullanımı (%)" if is_tr else "Internet Users (%)", 10.0, 100.0, float(st.session_state.internet_val), step=1.0)
+    mobile_sub = st.sidebar.slider("Mobil Abonelik" if is_tr else "Mobile Subscriptions", 30.0, 200.0, float(st.session_state.mobile_val), step=1.0)
 else:
-    dig_single = st.sidebar.slider("Dijitalleşme İndeksi / Digitalization Index (%)" if is_tr else "Digitalization Index (%)", 10.0, 100.0, float(st.session_state.internet_val), step=1.0)
+    dig_single = st.sidebar.slider("Dijitalleşme İndeksi (%)" if is_tr else "Digitalization Index (%)", 10.0, 100.0, float(st.session_state.internet_val), step=1.0)
     broadband = (dig_single / 100.0) * 45.0
     internet_users = dig_single
     mobile_sub = (dig_single / 100.0) * 160.0
@@ -465,7 +554,7 @@ with st.sidebar.expander("🌐 " + ("Ziyaretçi Ülke Dağılımı" if is_tr els
 pred_emission = predict_emissions(gdp, energy_intensity, gvc_output, trade_openness, manufacturing, renewable_energy, broadband, internet_users, mobile_sub)
 
 if mode_choice in [mod_opt1, "Select from Global Country List"]:
-    base_c = COUNTRIES_DATA[selected_country]
+    base_c = COUNTRIES_DATA[selected_country_tr]
     base_country_emission = predict_emissions(base_c["gdp"], base_c["energy"], base_c["gvc"], base_c["trade"], base_c["manuf"], base_c["renew"], base_c["broadband"], base_c["internet"], base_c["mobile"])
 else:
     prof_c = PROFILE_DETAILS[selected_profile]
@@ -494,7 +583,7 @@ country_policy_diff = pred_emission - base_country_emission
 country_policy_pct = ((country_policy_diff / base_country_emission) * 100.0) if base_country_emission > 0 else 0.0
 
 # DYNAMIC RECOMMENDATION CALCULATIONS
-c_info_cur = COUNTRIES_DATA[selected_country] if mode_choice in [mod_opt1, 'Select from Global Country List'] else PROFILE_DETAILS[selected_profile]
+c_info_cur = COUNTRIES_DATA[selected_country_tr] if mode_choice in [mod_opt1, 'Select from Global Country List'] else PROFILE_DETAILS[selected_profile]
 corp_export_default = 5000000
 b_factor = (c_info_cur["energy"] / 10.0) * (1.0 - (c_info_cur["renew"] / 100.0)) * 0.08
 s_factor = (energy_intensity / 10.0) * (1.0 - (renewable_energy / 100.0)) * 0.08
@@ -509,7 +598,7 @@ st.caption(sub_title)
 col_sc1, col_sc2 = st.columns(2)
 with col_sc2:
     if st.button("💾 " + ("Senaryoyu Hafızaya Kaydet" if is_tr else "Save Scenario to Memory")):
-        s_name = f"{selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile} - {pred_emission:.1f} Mt"
+        s_name = f"{get_country_name(selected_country_tr, is_tr) if mode_choice in [mod_opt1, 'Select from Global Country List'] else (selected_profile if is_tr else PROFILE_DETAILS[selected_profile]['title_en'])} - {pred_emission:.1f} Mt"
         st.session_state.saved_scenarios.append({
             "Senaryo Adı": s_name,
             "Tahmini Emisyon (Mt)": round(pred_emission, 2),
@@ -529,24 +618,26 @@ with col_sc2:
         st.success("✅ " + ("Senaryo kaydedildi!" if is_tr else "Scenario saved!"))
 
 if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
+    p_title = selected_profile if is_tr else PROFILE_DETAILS[selected_profile]["title_en"]
     p_desc = PROFILE_DETAILS[selected_profile]["desc" if is_tr else "desc_en"]
     p_badge = PROFILE_DETAILS[selected_profile]["badge" if is_tr else "badge_en"]
-    p_peers = ", ".join(PROFILE_DETAILS[selected_profile]["peers" if is_tr else "peers_en"])
+    p_peers = ", ".join([get_country_name(p, is_tr) for p in PROFILE_DETAILS[selected_profile]["peers" if is_tr else "peers_en"]])
     p_risk = PROFILE_DETAILS[selected_profile]["skdm_risk" if is_tr else "skdm_risk_en"]
     p_recipe = PROFILE_DETAILS[selected_profile]["recipe" if is_tr else "recipe_en"]
     
-    st.info(f"🏛️ **{'Seçili Tipoloji' if is_tr else 'Selected Typology'}:** {selected_profile} | **{'Rozet' if is_tr else 'Badge'}:** {p_badge}\n\n"
+    st.info(f"🏛️️ **{'Seçili Tipoloji' if is_tr else 'Selected Typology'}:** {p_title} | **{'Rozet' if is_tr else 'Badge'}:** {p_badge}\n\n"
             f"💡 *{p_desc}*\n\n"
             f"👥 **{'Akran Ülkeler' if is_tr else 'Peer Countries'}:** {p_peers} | 🛡️ **{'SKDM Riski' if is_tr else 'CBAM Risk'}:** {p_risk}\n\n"
             f"🎯 **{'Karbonsuzlaşma Reçetesi' if is_tr else 'Decarbonization Recipe'}:** {p_recipe}")
 else:
-    st.success(f"📌 **{'Seçili Ülke' if is_tr else 'Selected Country'}:** {selected_country} | **{'Mevcut Gerçek Emisyonu' if is_tr else 'Baseline Emission'}:** {base_country_emission:.2f} Mt CO₂eq")
+    c_disp = get_country_name(selected_country_tr, is_tr)
+    st.success(f"📌 **{'Seçili Ülke' if is_tr else 'Selected Country'}:** {c_disp} | **{'Mevcut Gerçek Emisyonu' if is_tr else 'Baseline Emission'}:** {base_country_emission:.2f} Mt CO₂eq")
 
 # METRIC CARDS
 col1, col2, col3, col4 = st.columns(4)
 
 col1.metric(
-    label="Yeni Politika Tahmini / New Prediction" if is_tr else "New Policy Prediction",
+    label="Yeni Politika Tahmini" if is_tr else "New Policy Prediction",
     value=f"{pred_emission:.2f} Mt CO₂eq",
     delta=f"{emission_pct_change:+.1f}% vs Baseline",
     delta_color="inverse"
@@ -554,7 +645,7 @@ col1.metric(
 
 if mode_choice in [mod_opt1, "Select from Global Country List"]:
     col2.metric(
-        label=f"{selected_country} (Baseline)",
+        label=f"{get_country_name(selected_country_tr, is_tr)} (Baseline)",
         value=f"{base_country_emission:.2f} Mt CO₂eq",
         delta=f"{country_policy_pct:+.1f}% Scenario",
         delta_color="inverse"
@@ -590,9 +681,10 @@ def eval_skdm_risk(manuf_val, renew_val, energy_val):
     else:
         return ("Yüksek Risk / SKDM Karbon Vergisi Yükü 🔴" if is_tr else "High Risk / CBAM Tax Exposure 🔴"), "8.5/10", "glass-card-red"
 
-# ENHANCED MULTI-SCENARIO PDF GENERATOR
+# ENHANCED MULTI-SCENARIO PDF GENERATOR WITH FULL UNTRUNCATED TEXT
 def generate_pdf_report():
     pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     pdf.set_font("Helvetica", 'B', 16)
     title_p = "KURESEL KARBON AYAK IZI & SKDM RISK RAPORU" if is_tr else "GLOBAL CARBON FOOTPRINT & CBAM RISK REPORT"
@@ -601,9 +693,9 @@ def generate_pdf_report():
     
     saved_scs = st.session_state.saved_scenarios
     if not saved_scs:
-        # Generate active screen scenario
+        c_disp = get_country_name(selected_country_tr, is_tr) if mode_choice in [mod_opt1, 'Select from Global Country List'] else (selected_profile if is_tr else PROFILE_DETAILS[selected_profile]['title_en'])
         saved_scs = [{
-            "Senaryo Adı": selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile,
+            "Senaryo Adı": c_disp,
             "Tahmini Emisyon (Mt)": round(pred_emission, 2),
             "Baseline Farkı (%)": round(emission_pct_change, 1),
             "Alt Güven": round(lower_bound, 1),
@@ -624,43 +716,73 @@ def generate_pdf_report():
     pdf.ln(10)
 
     for idx, sc in enumerate(saved_scs):
-        pdf.set_font("Helvetica", 'B', 14)
-        pdf.cell(190, 8, clean_pdf_text(f"SENARYO {idx+1}: {sc['Senaryo Adı']}"))
+        pdf.set_font("Helvetica", 'B', 13)
+        sc_hdr = f"SENARYO {idx+1}: {sc['Senaryo Adı']}" if is_tr else f"SCENARIO {idx+1}: {sc['Senaryo Adı']}"
+        pdf.cell(190, 8, clean_pdf_text(sc_hdr))
         pdf.ln(8)
 
         pdf.set_font("Helvetica", '', 10)
-        pdf.cell(190, 6, clean_pdf_text(f"- Tahmini GHG Emisyonu: {sc['Tahmini Emisyon (Mt)']} Mt CO2eq"))
+        lbl_pred = f"- Tahmini GHG Emisyonu: {sc['Tahmini Emisyon (Mt)']} Mt CO2eq" if is_tr else f"- Predicted GHG Emissions: {sc['Tahmini Emisyon (Mt)']} Mt CO2eq"
+        pdf.cell(190, 6, clean_pdf_text(lbl_pred))
         pdf.ln(6)
-        pdf.cell(190, 6, clean_pdf_text(f"- Baseline Farki: {sc.get('Baseline Farkı (%)', 0.0):+.1f}%"))
+        
+        lbl_base = f"- Baseline Farki: {sc.get('Baseline Farkı (%)', 0.0):+.1f}%" if is_tr else f"- Baseline Delta: {sc.get('Baseline Farkı (%)', 0.0):+.1f}%"
+        pdf.cell(190, 6, clean_pdf_text(lbl_base))
         pdf.ln(6)
-        pdf.cell(190, 6, clean_pdf_text(f"- Monte Carlo Guven Sinaralari (%95): {sc.get('Alt Güven', 0.0)} - {sc.get('Üst Güven', 0.0)} Mt CO2eq"))
+        
+        lbl_mc = f"- Monte Carlo Guven Sinirlari (%95): {sc.get('Alt Güven', 0.0)} - {sc.get('Üst Güven', 0.0)} Mt CO2eq" if is_tr else f"- Monte Carlo Confidence Interval (95%): {sc.get('Alt Güven', 0.0)} - {sc.get('Üst Güven', 0.0)} Mt CO2eq"
+        pdf.cell(190, 6, clean_pdf_text(lbl_mc))
         pdf.ln(8)
 
-        pdf.set_font("Helvetica", 'B', 11)
-        pdf.cell(190, 6, clean_pdf_text("MAKRO VE POLITIKA PARAMETRELERI:"))
+        pdf.set_font("Helvetica", 'B', 10)
+        lbl_phead = "MAKRO VE POLITIKA PARAMETRELERI:" if is_tr else "MACRO AND POLICY PARAMETERS:"
+        pdf.cell(190, 6, clean_pdf_text(lbl_phead))
         pdf.ln(6)
-        pdf.set_font("Helvetica", '', 10)
-        pdf.cell(190, 5, clean_pdf_text(f"  * GSYH: ${sc.get('GSYH ($)', 0):,.0f} | Enerji Yogunlugu: {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$"))
-        pdf.ln(5)
-        pdf.cell(190, 5, clean_pdf_text(f"  * Yenilenebilir Enerji: %{sc.get('Yenilenebilir Enerji (%)', 0):.1f} | Imalat Payi: %{sc.get('İmalat Payı (%)', 0):.1f}"))
-        pdf.ln(5)
-        pdf.cell(190, 5, clean_pdf_text(f"  * Ticari Aciklik: %{sc.get('Ticari Açıklık (%)', 0):.1f}"))
-        pdf.ln(8)
-
-        pdf.set_font("Helvetica", 'B', 11)
-        pdf.cell(190, 6, clean_pdf_text("YAPAY ZEKA DESTEKLI POLITIKA CIKTILARI & ONERILER:"))
-        pdf.ln(6)
+        
         pdf.set_font("Helvetica", '', 9)
-        pdf.multi_cell(190, 5, clean_pdf_text(f"  1. Yenilenebilir Enerji: %{sc.get('Yenilenebilir Enerji (%)', 0):.1f} seviyesi net {sc.get('c_renew', 0.0):+.1f} Mt CO2eq etki yaratir."))
-        pdf.multi_cell(190, 5, clean_pdf_text(f"  2. Enerji Verimliligi: {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$ seviyesi ile EUR 5M ihracatcida EUR {sc.get('dyn_tax_savings', 0):,.0f} net vergi tasarrufu saglanir."))
-        pdf.multi_cell(190, 5, clean_pdf_text(f"  3. Temiz Imalat Donusumu: Kapsam 3 tedarik zinciri iklim riski %{sc.get('dyn_scope3_reduction', 0.0):.1f} azalmaktadir."))
+        p_row1 = f"  * GSYH / GDP: ${sc.get('GSYH ($)', 0):,.0f} | Enerji Yogunlugu / Energy Intensity: {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$"
+        pdf.cell(190, 5, clean_pdf_text(p_row1))
+        pdf.ln(5)
+        
+        p_row2 = f"  * Yenilenebilir Enerji / Renewables: %{sc.get('Yenilenebilir Enerji (%)', 0):.1f} | Imalat Payi / Manufacturing: %{sc.get('İmalat Payı (%)', 0):.1f}"
+        pdf.cell(190, 5, clean_pdf_text(p_row2))
+        pdf.ln(5)
+        
+        p_row3 = f"  * Ticari Aciklik / Trade Openness: %{sc.get('Ticari Açıklık (%)', 0):.1f}"
+        pdf.cell(190, 5, clean_pdf_text(p_row3))
+        pdf.ln(8)
+
+        pdf.set_font("Helvetica", 'B', 10)
+        lbl_aihead = "YAPAY ZEKA DESTEKLI POLITIKA CIKTILARI & ONERILER:" if is_tr else "AI-DRIVEN POLICY LEVERS & RECOMMENDATIONS:"
+        pdf.cell(190, 6, clean_pdf_text(lbl_aihead))
+        pdf.ln(6)
+        
+        pdf.set_font("Helvetica", '', 9)
+        
+        if is_tr:
+            r1_txt = f"  1. Yenilenebilir Enerji Hamlesi: Yenilenebilir enerji oraninin %{sc.get('Yenilenebilir Enerji (%)', 0):.1f} seviyesine ayarlanmasi emisyon tahminini net {sc.get('c_renew', 0.0):+.1f} Mt CO2eq etkilemektedir."
+            r2_txt = f"  2. Enerji Verimliligi & Sebeke: Enerji yogunlugunun {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$ seviyesine ayarlanmasi, EUR 5M ihracatcida EUR {sc.get('dyn_tax_savings', 0):,.0f} net vergi tasarrufu yaratir."
+            r3_txt = f"  3. Temiz Imalat Donusumu: Imalat payinin %{sc.get('İmalat Payı (%)', 0):.1f} ve temiz enerjinin %{sc.get('Yenilenebilir Enerji (%)', 0):.1f} oldugu bu senaryoda Kapsam 3 iklim riski %{sc.get('dyn_scope3_reduction', 0.0):.1f} azalmaktadir."
+        else:
+            r1_txt = f"  1. Renewable Energy Push: Setting renewable share to {sc.get('Yenilenebilir Enerji (%)', 0):.1f}% impacts predicted emissions by a net {sc.get('c_renew', 0.0):+.1f} Mt CO2eq."
+            r2_txt = f"  2. Energy Efficiency & Grid: Setting energy intensity to {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$ saves EUR {sc.get('dyn_tax_savings', 0):,.0f} in CBAM tax penalties for EUR 5M exporter."
+            r3_txt = f"  3. Clean Manufacturing Shift: With {sc.get('İmalat Payı (%)', 0):.1f}% manufacturing and {sc.get('Yenilenebilir Enerji (%)', 0):.1f}% renewables, Scope 3 climate risk drops by {sc.get('dyn_scope3_reduction', 0.0):.1f}%."
+
+        pdf.multi_cell(190, 5, clean_pdf_text(r1_txt))
+        pdf.ln(2)
+        pdf.multi_cell(190, 5, clean_pdf_text(r2_txt))
+        pdf.ln(2)
+        pdf.multi_cell(190, 5, clean_pdf_text(r3_txt))
         pdf.ln(10)
 
-    pdf.set_font("Helvetica", 'B', 11)
-    pdf.cell(190, 6, clean_pdf_text("METODOLOJIK DOGRULAMA NOTU"))
+    pdf.set_font("Helvetica", 'B', 10)
+    lbl_mhead = "METODOLOJIK DOGRULAMA NOTU" if is_tr else "METHODOLOGICAL VERIFICATION NOTE"
+    pdf.cell(190, 6, clean_pdf_text(lbl_mhead))
     pdf.ln(6)
+    
     pdf.set_font("Helvetica", '', 8)
-    pdf.multi_cell(190, 4, clean_pdf_text("Bu rapor RBF-SVR (Test R2 = 0.975) ve Monte Carlo simulesiyle uretilmistir. Sonuclar iliskisel ve tahminsel duyarliliklari temsil eder, dogrudan nedensellik iddiasi tasimaz."))
+    note_txt = "Bu rapor RBF-SVR (Test R2 = 0.975) ve Monte Carlo simulesiyle uretilmistir. Sonuclar iliskisel ve tahminsel duyarliliklari temsil eder, dogrudan nedensellik iddiasi tasimaz." if is_tr else "This report is generated using RBF-SVR (Test R2 = 0.975) and Monte Carlo simulations. Results represent associative/predictive marginal sensitivities and do not imply direct causality."
+    pdf.multi_cell(190, 4, clean_pdf_text(note_txt))
 
     return bytes(pdf.output())
 
@@ -679,17 +801,18 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
 # TAB 1: MAP, RADAR CHART & PRESET PROFILES HEATMAP
 with tab1:
     map_list = []
-    for c_name, c_data in COUNTRIES_DATA.items():
+    for c_name_tr, c_data in COUNTRIES_DATA.items():
         e_val = predict_emissions(c_data["gdp"], c_data["energy"], c_data["gvc"], c_data["trade"], c_data["manuf"], c_data["renew"], c_data["broadband"], c_data["internet"], c_data["mobile"])
-        map_list.append({"Ülke": c_name, "ISO": c_data["iso"], "Emisyon (Mt)": round(e_val, 1), "GSYH ($)": c_data["gdp"], "Yenilenebilir (%)": c_data["renew"], "Enerji Yoğunluğu": c_data["energy"], "İmalat (%)": c_data["manuf"]})
+        c_disp = get_country_name(c_name_tr, is_tr)
+        map_list.append({"Ülke / Country": c_disp, "ISO": c_data["iso"], "Emisyon (Mt)": round(e_val, 1), "GSYH ($)": c_data["gdp"], "Yenilenebilir (%)": c_data["renew"], "Enerji Yoğunluğu": c_data["energy"], "İmalat (%)": c_data["manuf"]})
     df_map = pd.DataFrame(map_list)
 
     fig_map = px.choropleth(
-        df_map, locations="ISO", color="Emisyon (Mt)", hover_name="Ülke",
+        df_map, locations="ISO", color="Emisyon (Mt)", hover_name="Ülke / Country",
         color_continuous_scale=[[0.0, "#2ca02c"], [0.35, "#ff7f0e"], [1.0, "#d62728"]],
         title="Küresel Ekonomilerin Tahmini Karbon Ayak İzi Dağılımı (Mt CO₂eq)" if is_tr else "Global Economies Estimated Carbon Footprint (Mt CO₂eq)"
     )
-    sel_iso = COUNTRIES_DATA[selected_country]["iso"] if mode_choice in [mod_opt1, "Select from Global Country List"] else "TUR"
+    sel_iso = COUNTRIES_DATA[selected_country_tr]["iso"] if mode_choice in [mod_opt1, "Select from Global Country List"] else "TUR"
     sel_row = df_map[df_map["ISO"] == sel_iso]
     if not sel_row.empty:
         fig_map.add_trace(go.Choropleth(locations=sel_row["ISO"], z=sel_row["Emisyon (Mt)"], colorscale=[[0, "#ffff00"], [1, "#ffff00"]], showscale=False, marker_line_color="#ffffff", marker_line_width=3.5))
@@ -698,20 +821,20 @@ with tab1:
     fig_map.update_layout(height=480, margin={"r":0,"t":40,"l":0,"b":0})
     st.plotly_chart(fig_map, use_container_width=True)
 
-    # RESTORED: MULTI-DIMENSIONAL SPIDER / RADAR CHART & PRESET PROFILES HEATMAP
+    # MULTI-DIMENSIONAL SPIDER / RADAR CHART & PRESET PROFILES HEATMAP
     st.markdown("---")
     
     if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
-        st.subheader(f"📌 {selected_profile} — {'Çok Boyutlu Profil Radarı & Profil Isı Haritası' if is_tr else 'Multidimensional Radar & Profile Heatmap'}")
+        p_title = selected_profile if is_tr else PROFILE_DETAILS[selected_profile]["title_en"]
+        st.subheader(f"📌 {p_title} — {'Çok Boyutlu Profil Radarı & Profil Isı Haritası' if is_tr else 'Multidimensional Radar & Profile Heatmap'}")
         
-        col_rad1, col_rad2 = st.columns([1, 1])
+        col_rad1, col_rad2 = st.columns(2)
         
         with col_rad1:
             st.markdown(f"#### 🕸️ {'Çok Boyutlu Profil Radarı (Örümcek Ağ Grafiği)' if is_tr else 'Multidimensional Radar Chart'}")
             
-            # Normalize Radar Categories
             p_curr = PROFILE_DETAILS[selected_profile]
-            categories = ['GSYH ($)', 'Enerji Yoğ.', 'GVC Payı', 'Ticaret Açıklık', 'İmalat Payı', 'Yenilenebilir %']
+            categories = ['GSYH ($)', 'Enerji Yoğ.', 'GVC Payı', 'Ticaret Açıklık', 'İmalat Payı', 'Yenilenebilir %'] if is_tr else ['GDP ($)', 'Energy Int.', 'GVC Share', 'Trade Openness', 'Manufacturing', 'Renewable %']
             
             val_selected = [
                 min(100, (p_curr["gdp"] / 70000) * 100),
@@ -732,7 +855,8 @@ with tab1:
             ]
 
             fig_radar = go.Figure()
-            fig_radar.add_trace(go.Scatterpolar(r=val_selected, theta=categories, fill='toself', name=selected_profile.split(' ')[0], fillcolor='rgba(43, 92, 143, 0.4)', line_color='#2b5c8f'))
+            trace_name = selected_profile.split(' ')[1] if len(selected_profile.split(' ')) > 1 else selected_profile
+            fig_radar.add_trace(go.Scatterpolar(r=val_selected, theta=categories, fill='toself', name=trace_name, fillcolor='rgba(43, 92, 143, 0.4)', line_color='#2b5c8f'))
             fig_radar.add_trace(go.Scatterpolar(r=val_base, theta=categories, fill='toself', name='Baseline (S0)', fillcolor='rgba(128, 128, 128, 0.2)', line_color='gray'))
             
             fig_radar.update_layout(
@@ -768,11 +892,12 @@ with tab1:
         prof_table_data = []
         for p_name, p_data in PROFILE_DETAILS.items():
             p_e = predict_emissions(p_data["gdp"], p_data["energy"], p_data["gvc"], p_data["trade"], p_data["manuf"], p_data["renew"], p_data["broadband"], p_data["internet"], p_data["mobile"])
+            peer_names = ", ".join([get_country_name(p, is_tr) for p in p_data["peers" if is_tr else "peers_en"]])
             prof_table_data.append({
-                "Hazır Profil / Tipoloji" if is_tr else "Typology Profile": p_name,
+                "Hazır Profil / Tipoloji" if is_tr else "Typology Profile": p_name if is_tr else p_data["title_en"],
                 "Rozet / Identity" if is_tr else "Badge": p_data["badge" if is_tr else "badge_en"],
                 "Tahmini Emisyon (Mt)" if is_tr else "Predicted Emission (Mt)": round(p_e, 1),
-                "Akran Ülkeler" if is_tr else "Peer Countries": ", ".join(p_data["peers" if is_tr else "peers_en"]),
+                "Akran Ülkeler" if is_tr else "Peer Countries": peer_names,
                 "SKDM Riski" if is_tr else "CBAM Risk": p_data["skdm_risk" if is_tr else "skdm_risk_en"],
                 "Karbonsuzlaşma Reçetesi" if is_tr else "Decarbonization Recipe": p_data["recipe" if is_tr else "recipe_en"]
             })
@@ -780,8 +905,8 @@ with tab1:
         st.dataframe(df_prof_table.sort_values("Tahmini Emisyon (Mt)" if is_tr else "Predicted Emission (Mt)", ascending=False), use_container_width=True, hide_index=True)
 
     else:
-        st.subheader(f"📌 {selected_country} — {'Göstergeler & Küresel Sıralama' if is_tr else 'Indicators & Global Ranking'}")
-        c_m = COUNTRIES_DATA[selected_country]
+        st.subheader(f"📌 {get_country_name(selected_country_tr, is_tr)} — {'Göstergeler & Küresel Sıralama' if is_tr else 'Indicators & Global Ranking'}")
+        c_m = COUNTRIES_DATA[selected_country_tr]
         
         col_m1, col_m2, col_m3, col_m4, col_m5 = st.columns(5)
         col_m1.metric("Milli Gelir (GSYH)" if is_tr else "GDP per Capita", f"${c_m['gdp']:,.0f}")
@@ -795,14 +920,14 @@ with tab1:
 
 # TAB 2: LIVE SCENARIO CBAM ANALYSIS & DYNAMIC AI RECOMMENDATIONS
 with tab2:
-    st.subheader(f"📊 {selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile} — {'Canlı Senaryo SKDM & Karşılaştırma Analizi' if is_tr else 'Live Scenario CBAM & Comparison Analysis'}")
+    st.subheader(f"📊 {get_country_name(selected_country_tr, is_tr) if mode_choice in [mod_opt1, 'Select from Global Country List'] else (selected_profile if is_tr else PROFILE_DETAILS[selected_profile]['title_en'])} — {'Canlı Senaryo SKDM & Karşılaştırma Analizi' if is_tr else 'Live Scenario CBAM & Comparison Analysis'}")
     
     base_skdm_label, base_skdm_score, base_skdm_class = eval_skdm_risk(c_info_cur["manuf"], c_info_cur["renew"], c_info_cur["energy"])
     scen_skdm_label, scen_skdm_score, scen_skdm_class = eval_skdm_risk(manufacturing, renewable_energy, energy_intensity)
 
     col_sk1, col_sk2 = st.columns(2)
-    col_sk1.info(f"🏛️ **{'Mevcut Durum SKDM Risk' if is_tr else 'Baseline CBAM Risk'}:** {base_skdm_label} | İmalat: %{c_info_cur['manuf']:.1f} | Yenilenebilir: %{c_info_cur['renew']:.1f}")
-    col_sk2.success(f"🎛️ **{'Yeni Senaryo SKDM Risk (Canlı)' if is_tr else 'New Scenario CBAM Risk (Live)'}:** {scen_skdm_label} | İmalat: %{manufacturing:.1f} | Yenilenebilir: %{renewable_energy:.1f}")
+    col_sk1.info(f"🏛️ **{'Mevcut Durum SKDM Risk' if is_tr else 'Baseline CBAM Risk'}:** {base_skdm_label} | İmalat/Mfg: %{c_info_cur['manuf']:.1f} | Yenilenebilir/Renew: %{c_info_cur['renew']:.1f}")
+    col_sk2.success(f"🎛️ **{'Yeni Senaryo SKDM Risk (Canlı)' if is_tr else 'New Scenario CBAM Risk (Live)'}:** {scen_skdm_label} | İmalat/Mfg: %{manufacturing:.1f} | Yenilenebilir/Renew: %{renewable_energy:.1f}")
 
     # SHAP MARGINAL CONTRIBUTIONS
     st.markdown(f"#### 🤖 {'Yapay Zeka SHAP Marjinal Politika Katkıları (Net Etki)' if is_tr else 'AI SHAP Marginal Policy Contributions (Net Effect)'}")
@@ -870,7 +995,7 @@ with tab3:
 
     # 1. CBAM TAX CALCULATOR
     st.markdown(f"#### 1. 💰 {'Şirket AB İhracatı & SKDM Vergi Cezası / Tasarruf Hesaplayıcı' if is_tr else 'Company EU Exports & CBAM Tax / Savings Calculator'}")
-    corp_export = st.number_input("Şirketinizin Yıllık AB İhracat Cirosu (\$ / €):" if is_tr else "Annual EU Export Revenue (\$ / €):", min_value=100000, max_value=1000000000, value=5000000, step=500000)
+    corp_export = st.number_input("Şirketinizin Yıllık AB İhracat Cirosu ($ / €):" if is_tr else "Annual EU Export Revenue ($ / €):", min_value=100000, max_value=1000000000, value=5000000, step=500000)
 
     c_cur_e = c_info_cur["energy"] if isinstance(c_info_cur, dict) and "energy" in c_info_cur else BASE_ENERGY
     c_cur_r = c_info_cur["renew"] if isinstance(c_info_cur, dict) and "renew" in c_info_cur else BASE_RENEW
@@ -894,19 +1019,26 @@ with tab3:
     loc_mode = st.radio("Lokasyon Analiz Yöntemini Seçiniz:" if is_tr else "Select Location Analysis Method:", loc_mode_opts, index=0)
 
     if "Manuel" in loc_mode or "Manual" in loc_mode:
-        selected_custom_countries = st.multiselect(
+        country_multiselect_tr = list(COUNTRIES_DATA.keys())
+        country_multiselect_disp = [get_country_name(c, is_tr) for c in country_multiselect_tr]
+        
+        default_defaults_tr = ["Türkiye", "Almanya", "Avusturya", "Çekya", "Polonya", "Meksika"]
+        default_defaults_disp = [get_country_name(c, is_tr) for c in default_defaults_tr]
+        
+        selected_custom_disp = st.multiselect(
             "Değerlendirmek İstediğiniz Ülkeleri Seçiniz:" if is_tr else "Select Countries to Evaluate:",
-            list(COUNTRIES_DATA.keys()),
-            default=["Türkiye", "Almanya", "Avusturya", "Çekya", "Polonya", "Meksika"]
+            country_multiselect_disp,
+            default=default_defaults_disp
         )
-        if selected_custom_countries:
+        if selected_custom_disp:
             custom_eval = []
-            for cname in selected_custom_countries:
-                cinfo = COUNTRIES_DATA[cname]
+            for cdisp in selected_custom_disp:
+                cname_tr = REVERSE_COUNTRY_TRANSLATIONS.get(cdisp, cdisp)
+                cinfo = COUNTRIES_DATA[cname_tr]
                 score = (cinfo["renew"] * 0.4) + ((15.0 - cinfo["energy"]) * 0.4) + (cinfo["gdp"]/1000 * 0.2)
                 cbam_risk, _, _ = eval_skdm_risk(cinfo["manuf"], cinfo["renew"], cinfo["energy"])
                 custom_eval.append({
-                    "Ülke / Country": cname,
+                    "Ülke / Country": cdisp,
                     "Uygunluk Skoru / Score": round(score, 1),
                     "Yenilenebilir Enerji (%) / Renewables": cinfo["renew"],
                     "Enerji Yoğunluğu / Energy Intensity": cinfo["energy"],
@@ -919,15 +1051,15 @@ with tab3:
             st.dataframe(df_custom_eval, use_container_width=True, hide_index=True)
     else:
         min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):" if is_tr else "Min Manufacturing Infrastructure Share (%):", 5.0, 40.0, 15.0)
-        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/\$):" if is_tr else "Max Acceptable Energy Intensity (MJ/\$):", 2.0, 10.0, 5.0)
+        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/$):" if is_tr else "Max Acceptable Energy Intensity (MJ/$):", 2.0, 10.0, 5.0)
 
         opt_candidates = []
-        for cname, cinfo in COUNTRIES_DATA.items():
+        for cname_tr, cinfo in COUNTRIES_DATA.items():
             if cinfo["manuf"] >= min_manuf_target and cinfo["energy"] <= max_energy_limit:
                 score = (cinfo["renew"] * 0.4) + ((15.0 - cinfo["energy"]) * 0.4) + (cinfo["gdp"]/1000 * 0.2)
                 cbam_risk, _, _ = eval_skdm_risk(cinfo["manuf"], cinfo["renew"], cinfo["energy"])
                 opt_candidates.append({
-                    "Ülke / Country": cname,
+                    "Ülke / Country": get_country_name(cname_tr, is_tr),
                     "Uygunluk Skoru / Score": round(score, 1),
                     "Yenilenebilir (%) / Renewables": cinfo["renew"],
                     "Enerji Yoğ. / Energy Int.": cinfo["energy"],
@@ -942,9 +1074,15 @@ with tab3:
 
     # 3. SCOPE 3 STRESS TEST
     st.markdown(f"#### 3. 📊 {'Kurumsal Kapsam 3 (Scope 3) İklim Riski Stres Testi' if is_tr else 'Corporate Scope 3 Climate Risk Stress Test'}")
-    supplier_countries = st.multiselect("Tedarikçilerinizin Bulunduğu Ana Ülkeleri Seçiniz:" if is_tr else "Select Main Supplier Countries:", list(COUNTRIES_DATA.keys()), default=["Türkiye", "Polonya"])
-    if supplier_countries:
-        avg_supp_renew = np.mean([COUNTRIES_DATA[c]["renew"] for c in supplier_countries])
+    
+    supp_list_tr = list(COUNTRIES_DATA.keys())
+    supp_list_disp = [get_country_name(c, is_tr) for c in supp_list_tr]
+    supp_defaults_disp = [get_country_name("Türkiye", is_tr), get_country_name("Polonya", is_tr)]
+    
+    selected_supp_disp = st.multiselect("Tedarikçilerinizin Bulunduğu Ana Ülkeleri Seçiniz:" if is_tr else "Select Main Supplier Countries:", supp_list_disp, default=supp_defaults_disp)
+    if selected_supp_disp:
+        selected_supp_tr = [REVERSE_COUNTRY_TRANSLATIONS.get(c, c) for c in selected_supp_disp]
+        avg_supp_renew = np.mean([COUNTRIES_DATA[c]["renew"] for c in selected_supp_tr])
         scen_scope3_reduction = (renewable_energy - avg_supp_renew) * 0.6
         st.info(f"💡 {'Tedarikçilerinizin bulunduğu ülkelerde yapılacak yeşil dönüşüm hamlesi, şirketinizin **Kapsam 3 (Scope 3) tedarik zinciri karbon ayak izini %' if is_tr else 'Green transformation in supplier countries reduces your **Scope 3 supply chain carbon footprint by '}{max(0.0, scen_scope3_reduction):.1f}%**.")
 
@@ -973,22 +1111,28 @@ with tab4:
 # TAB 5: PAIRWISE COUNTRY COMPARISON
 with tab5:
     st.subheader("⚔️ İkili Ülke Birebir Karşılaştırma Modu" if is_tr else "⚔️ Pairwise Country Head-to-Head Comparison")
+    
+    pair_list_tr = list(COUNTRIES_DATA.keys())
+    pair_list_disp = [get_country_name(c, is_tr) for c in pair_list_tr]
+    
     col_k1, col_k2 = st.columns(2)
     with col_k1:
-        country_A = st.selectbox("1. Ülkeyi Seçiniz:" if is_tr else "Select Country 1:", list(COUNTRIES_DATA.keys()), index=0)
+        country_A_disp = st.selectbox("1. Ülkeyi Seçiniz:" if is_tr else "Select Country 1:", pair_list_disp, index=0)
+        country_A_tr = REVERSE_COUNTRY_TRANSLATIONS.get(country_A_disp, country_A_disp)
     with col_k2:
-        country_B = st.selectbox("2. Ülkeyi Seçiniz:" if is_tr else "Select Country 2:", list(COUNTRIES_DATA.keys()), index=1)
+        country_B_disp = st.selectbox("2. Ülkeyi Seçiniz:" if is_tr else "Select Country 2:", pair_list_disp, index=1)
+        country_B_tr = REVERSE_COUNTRY_TRANSLATIONS.get(country_B_disp, country_B_disp)
 
-    cA_data = COUNTRIES_DATA[country_A]
-    cB_data = COUNTRIES_DATA[country_B]
+    cA_data = COUNTRIES_DATA[country_A_tr]
+    cB_data = COUNTRIES_DATA[country_B_tr]
     eA = predict_emissions(cA_data["gdp"], cA_data["energy"], cA_data["gvc"], cA_data["trade"], cA_data["manuf"], cA_data["renew"], cA_data["broadband"], cA_data["internet"], cA_data["mobile"])
     eB = predict_emissions(cB_data["gdp"], cB_data["energy"], cB_data["gvc"], cB_data["trade"], cB_data["manuf"], cB_data["renew"], cB_data["broadband"], cB_data["internet"], cB_data["mobile"])
 
     fig_two = go.Figure(data=[
-        go.Bar(name=country_A, x=["Emisyon (Mt)", "GSYH (\$k)", "Yenilenebilir (%)", "Enerji Yoğunluğu (x10)"], y=[eA, cA_data["gdp"]/1000, cA_data["renew"], cA_data["energy"]*10], marker_color="#1f77b4"),
-        go.Bar(name=country_B, x=["Emisyon (Mt)", "GSYH (\$k)", "Yenilenebilir (%)", "Enerji Yoğunluğu (x10)"], y=[eB, cB_data["gdp"]/1000, cB_data["renew"], cB_data["energy"]*10], marker_color="#ff7f0e")
+        go.Bar(name=country_A_disp, x=["Emisyon / Emissions (Mt)", "GSYH / GDP (\$k)", "Yenilenebilir / Renewables (%)", "Enerji Yoğunluğu / Energy Int. (x10)"], y=[eA, cA_data["gdp"]/1000, cA_data["renew"], cA_data["energy"]*10], marker_color="#1f77b4"),
+        go.Bar(name=country_B_disp, x=["Emisyon / Emissions (Mt)", "GSYH / GDP (\$k)", "Yenilenebilir / Renewables (%)", "Enerji Yoğunluğu / Energy Int. (x10)"], y=[eB, cB_data["gdp"]/1000, cB_data["renew"], cB_data["energy"]*10], marker_color="#ff7f0e")
     ])
-    fig_two.update_layout(barmode='group', title=f"{country_A} vs {country_B} Indicator Comparison", template="plotly_white", height=420)
+    fig_two.update_layout(barmode='group', title=f"{country_A_disp} vs {country_B_disp} Indicator Comparison", template="plotly_white", height=420)
     st.plotly_chart(fig_two, use_container_width=True)
 
 # TAB 6: GLOBAL BUBBLE CHART & MATRIX
@@ -996,18 +1140,19 @@ with tab6:
     st.subheader("🔥 Tüm Ülkelerin Etkileşimli Kabarcık Grafiği & Normalize Isı Haritası" if is_tr else "🔥 Interactive Global Bubble Chart & Normalized Heatmap")
     
     all_c_list = []
-    for cname, cinfo in COUNTRIES_DATA.items():
+    for cname_tr, cinfo in COUNTRIES_DATA.items():
         ce = predict_emissions(cinfo["gdp"], cinfo["energy"], cinfo["gvc"], cinfo["trade"], cinfo["manuf"], cinfo["renew"], cinfo["broadband"], cinfo["internet"], cinfo["mobile"])
+        cdisp = get_country_name(cname_tr, is_tr)
         all_c_list.append({
-            "Ülke": cname, "Emisyon (Mt)": round(ce, 1), "GSYH (\$)": cinfo["gdp"],
-            "Enerji Yoğunluğu": cinfo["energy"], "Yenilenebilir (%)": cinfo["renew"], "İmalat (%)": cinfo["manuf"]
+            "Ülke / Country": cdisp, "Emisyon / Emissions (Mt)": round(ce, 1), "GSYH / GDP (\$)": cinfo["gdp"],
+            "Enerji Yoğunluğu / Energy Int.": cinfo["energy"], "Yenilenebilir / Renewables (%)": cinfo["renew"], "İmalat / Mfg (%)": cinfo["manuf"]
         })
     df_all_raw = pd.DataFrame(all_c_list)
 
     # BUBBLE CHART
     fig_bubble = px.scatter(
-        df_all_raw, x="GSYH (\$)", y="Enerji Yoğunluğu", size="Emisyon (Mt)", color="Yenilenebilir (%)",
-        hover_name="Ülke", size_max=45, color_continuous_scale="Viridis",
+        df_all_raw, x="GSYH / GDP (\$)", y="Enerji Yoğunluğu / Energy Int.", size="Emisyon / Emissions (Mt)", color="Yenilenebilir / Renewables (%)",
+        hover_name="Ülke / Country", size_max=45, color_continuous_scale="Viridis",
         title="Ülkelerin GSYH, Enerji Yoğunluğu ve Emisyon Büyüklüklerine Göre Kabarcık Dağılımı" if is_tr else "Countries Distribution by GDP, Energy Intensity, and GHG Emission Size"
     )
     fig_bubble.update_layout(template="plotly_white", height=500)
@@ -1015,7 +1160,7 @@ with tab6:
 
     st.markdown("---")
     st.markdown(f"#### 📊 {'Normalize Ülke Karşılaştırma Matrisi (0-100 Skorlar)' if is_tr else 'Normalized Country Comparison Matrix (0-100 Scores)'}")
-    df_all_hm_raw = df_all_raw.set_index("Ülke")
+    df_all_hm_raw = df_all_raw.set_index("Ülke / Country")
     df_all_norm = (df_all_hm_raw - df_all_hm_raw.min()) / (df_all_hm_raw.max() - df_all_hm_raw.min() + 1e-9) * 100.0
 
     fig_all_hm = px.imshow(df_all_norm, text_auto=".0f", color_continuous_scale="Viridis", aspect="auto", title="Küresel Ülke Karşılaştırma Matrisi (0-100 Normalize Skorlar)" if is_tr else "Global Country Comparison Matrix (0-100 Normalized Scores)")
@@ -1055,21 +1200,21 @@ with tab7:
 with tab8:
     st.subheader("📜 Metodoloji, Şeffaf Hesaplama & XAI Notları" if is_tr else "📜 Methodology, Transparent Calculation & XAI Notes")
     st.markdown(r"""
-    ### 🔬 5-Kademeli Şeffaf Hesaplama ve Yapay Zeka Metodolojisi
+    ### 🔬 5-Kademeli Şeffaf Hesaplama ve Yapay Zeka Metodolojisi / 5-Stage Transparent Calculation Methodology
 
-    1. **Temel Bileşenler Analizi (PCA):** Sabit Genişbant (\\(X_1\\)), İnternet Kullanımı (\\(X_2\\)) ve Mobil Abonelik (\\(X_3\\)) göstergeleri özdeğeri \\(\lambda_1 = 2.13\\) olan birincil bileşene dönüştürülür:
+    1. **Temel Bileşenler Analizi (PCA) / Principal Component Analysis:** Sabit Genişbant (\\(X_1\\)), İnternet Kullanımı (\\(X_2\\)) ve Mobil Abonelik (\\(X_3\\)) göstergeleri özdeğeri \\(\lambda_1 = 2.13\\) olan birincil bileşene dönüştürülür:
        \\[PC_1 = 0.621 \cdot Z(X_1) + 0.649 \cdot Z(X_2) + 0.439 \cdot Z(X_3)\\]
 
-    2. **SVR Makro Tahmin Modeli:** RBF çekirdekli Destek Vektör Regresyonu (\\(R^2 = 0.975\\), \\(RMSE = 101.24 \text{ Mt CO}_2\text{eq}\\)).
+    2. **SVR Makro Tahmin Modeli / SVR Macro Prediction Model:** RBF çekirdekli Destek Vektör Regresyonu (\\(R^2 = 0.975\\), \\(RMSE = 101.24 \text{ Mt CO}_2\text{eq}\\)).
 
-    3. **XAI / SHAP Marjinal Katkı:** Her bir politikanın emisyon üzerindeki net etkisi (\\(c_k\\)) diğer değişkenler \\(S_0\\) Baseline seviyesinde sabit tutularak tekil ayrıştırılır.
+    3. **XAI / SHAP Marjinal Katkı / Marginal Effect:** Her bir politikanın emisyon üzerindeki net etkisi (\\(c_k\\)) diğer değişkenler \\(S_0\\) Baseline seviyesinde sabit tutularak tekil ayrıştırılır.
 
-    4. **Monte Carlo Risk Simülasyonu:** 10.000 iterasyonlu rassal gürültü eklenerek %5 ve %95 olasılık güven aralıkları hesaplanır.
+    4. **Monte Carlo Risk Simülasyonu / Risk Simulation:** 10.000 iterasyonlu rassal gürültü eklenerek %5 ve %95 olasılık güven aralıkları hesaplanır.
 
-    5. **Macro-to-Micro Downscaling & SKDM / Kapsam 3 (Scope 3):** Ülke düzeyindeki emisyon ve enerji yoğunluğu, ihracatçı şirketlerin AB SKDM vergi yükü (€) ve Kapsam 3 tedarik zinciri iklim risklerine indirgenir.
+    5. **Macro-to-Micro Downscaling & SKDM / CBAM & Kapsam 3 (Scope 3):** Ülke düzeyindeki emisyon ve enerji yoğunluğu, ihracatçı şirketlerin AB SKDM vergi yükü (€) ve Kapsam 3 tedarik zinciri iklim risklerine indirgenir.
 
     ---
-    ⚠️ **Nedensellik Sınırı:** Bu platformdaki tahminler ilişkisel ve tahminsel (*associative / predictive marginal effects*) duyarlılıklara dayanır; doğrudan neden-sonuç iddiası taşımaz.
+    ⚠️ **Nedensellik Sınırı / Non-Causal Note:** Bu platformdaki tahminler ilişkisel ve tahminsel (*associative / predictive marginal effects*) duyarlılıklara dayanır; doğrudan neden-sonuç iddiası taşımaz.
     """)
 
 # SIDEBAR PDF DOWNLOAD BUTTON
