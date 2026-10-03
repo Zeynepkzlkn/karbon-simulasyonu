@@ -443,7 +443,8 @@ if mode_choice in [mod_opt1, "Select from Global Country List"]:
     base_c = COUNTRIES_DATA[selected_country]
     base_country_emission = predict_emissions(base_c["gdp"], base_c["energy"], base_c["gvc"], base_c["trade"], base_c["manuf"], base_c["renew"], base_c["broadband"], base_c["internet"], base_c["mobile"])
 else:
-    base_country_emission = BASE_EMISSION
+    prof_c = PROFILE_DETAILS[selected_profile]
+    base_country_emission = predict_emissions(prof_c["gdp"], prof_c["energy"], prof_c["gvc"], prof_c["trade"], prof_c["manuf"], prof_c["renew"], prof_c["broadband"], prof_c["internet"], prof_c["mobile"])
 
 # SHAP WATERFALL CONTRIBUTIONS
 c_gdp = predict_emissions(gdp, BASE_ENERGY, BASE_GVC, BASE_TRADE, BASE_MANUF, BASE_RENEW, BASE_BROADBAND, BASE_INTERNET, BASE_MOBILE) - BASE_EMISSION
@@ -479,8 +480,8 @@ with col_sc2:
         st.session_state.saved_scenarios.append({
             "Senaryo Adı": s_name,
             "Tahmini Emisyon (Mt)": round(pred_emission, 2),
-            "GSYH (\$)": gdp,
-            "Enerji Yoğunluğu (MJ/\$)": energy_intensity,
+            "GSYH ($)": gdp,
+            "Enerji Yoğunluğu (MJ/$)": energy_intensity,
             "Yenilenebilir Enerji (%)": renewable_energy,
             "İmalat Payı (%)": manufacturing,
             "Ticari Açıklık (%)": trade_openness
@@ -489,7 +490,15 @@ with col_sc2:
 
 if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
     p_desc = PROFILE_DETAILS[selected_profile]["desc"]
-    st.info(f"💡 **{'Seçili Hazır Profil' if is_tr else 'Selected Profile'}:** {selected_profile} — *{p_desc}*")
+    p_badge = PROFILE_DETAILS[selected_profile]["badge"]
+    p_peers = ", ".join(PROFILE_DETAILS[selected_profile]["peers"])
+    p_risk = PROFILE_DETAILS[selected_profile]["skdm_risk"]
+    p_recipe = PROFILE_DETAILS[selected_profile]["recipe"]
+    
+    st.info(f"🏛️ **Seçili Tipoloji:** {selected_profile} | **Rozet:** {p_badge}\n\n"
+            f"💡 *{p_desc}*\n\n"
+            f"👥 **Akran Ülkeler:** {p_peers} | 🛡️ **SKDM Riski:** {p_risk}\n\n"
+            f"🎯 **Karbonsuzlaşma Reçetesi:** {p_recipe}")
 else:
     st.success(f"📌 **{'Seçili Ülke' if is_tr else 'Selected Country'}:** {selected_country} | **{'Mevcut Gerçek Emisyonu' if is_tr else 'Baseline Emission'}:** {base_country_emission:.2f} Mt CO₂eq")
 
@@ -512,9 +521,9 @@ if mode_choice in [mod_opt1, "Select from Global Country List"]:
     )
 else:
     col2.metric(
-        label="S0 Referans / Baseline S0",
-        value=f"{BASE_EMISSION:.2f} Mt CO₂eq",
-        delta=f"{emission_diff:+.2f} Mt CO₂eq Fark",
+        label=f"{selected_profile.split(' ')[0]} Profil Baseline",
+        value=f"{base_country_emission:.2f} Mt CO₂eq",
+        delta=f"{country_policy_pct:+.1f}% Senaryo / Scenario",
         delta_color="inverse"
     )
 
@@ -617,9 +626,9 @@ with tab1:
     fig_map.update_layout(height=520, margin={"r":0,"t":40,"l":0,"b":0})
     st.plotly_chart(fig_map, use_container_width=True)
 
-    # RESTORED: ALTTTAKİ ÜLKE GÖSTERGELERİ VE DETAYLI MATRİS
+    # ALTTTAKİ ÜLKE GÖSTERGELERİ VE DETAYLI MATRİS
     st.markdown("---")
-    st.subheader(f"📌 {selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else 'Referans'} Ülke Göstergeleri & Küresel Sıralama")
+    st.subheader(f"📌 {selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile} Göstergeleri & Küresel Sıralama")
     
     col_m1, col_m2, col_m3, col_m4, col_m5 = st.columns(5)
     c_m = COUNTRIES_DATA[selected_country] if mode_choice in [mod_opt1, 'Select from Global Country List'] else PROFILE_DETAILS[selected_profile]
@@ -633,7 +642,7 @@ with tab1:
     st.markdown("#### 📊 Küresel Ülke Emisyon & Politika Listesi")
     st.dataframe(df_map.sort_values("Emisyon (Mt)", ascending=False), use_container_width=True, hide_index=True)
 
-# TAB 2: CANLI SENARYO SKDM ANALİZİ & YAPAY ZEKA DESTEKLİ ÖNERİLER
+# TAB 2: CANLI SENARYO SKDM ANALİZİ & DİNAMİK YAPAY ZEKA DESTEKLİ ÖNERİLER
 with tab2:
     st.subheader(f"📊 {selected_country if mode_choice in [mod_opt1, 'Select from Global Country List'] else selected_profile} — Canlı Senaryo SKDM & Karşılaştırma Analizi")
     c_info_cur = COUNTRIES_DATA[selected_country] if mode_choice in [mod_opt1, 'Select from Global Country List'] else PROFILE_DETAILS[selected_profile]
@@ -644,7 +653,7 @@ with tab2:
     col_sk1.info(f"🏛️ **Mevcut Durum SKDM Risk:** {base_skdm_label} | İmalat: %{c_info_cur['manuf']:.1f} | Yenilenebilir: %{c_info_cur['renew']:.1f}")
     col_sk2.success(f"🎛️ **Yeni Senaryo SKDM Risk (Canlı):** {scen_skdm_label} | İmalat: %{manufacturing:.1f} | Yenilenebilir: %{renewable_energy:.1f}")
 
-    # RESTORED: SHAP MARJİNAL KATKI WATERFALL/BAR GRAFİĞİ
+    # SHAP MARJİNAL KATKI WATERFALL/BAR GRAFİĞİ
     st.markdown("#### 🤖 Yapay Zeka SHAP Marjinal Politika Katkıları (Net Etki)")
     shap_contributions = {
         "Kişi Başı GSYH": c_gdp,
@@ -664,31 +673,40 @@ with tab2:
     fig_shap.update_layout(template="plotly_white", height=380)
     st.plotly_chart(fig_shap, use_container_width=True)
 
-    # RESTORED: YAPAY ZEKA DESTEKLİ SEKTÖREL ÖNERİ KOLONLARI
-    st.markdown("#### 💡 Yapay Zeka Destekli Politika Kaldıraçları & Öneriler")
+    # %100 DİNAMİK YAPAY ZEKA DESTEKLİ SEKTÖREL ÖNERİ KOLONLARI
+    st.markdown("#### 💡 Yapay Zeka Destekli Politika Kaldıraçları & Canlı Öneriler")
+    
+    # DYNAMIC CALCULATIONS FOR CARDS
+    dyn_renew_impact = c_renew
+    corp_export_default = 5000000
+    b_factor = (c_info_cur["energy"] / 10.0) * (1.0 - (c_info_cur["renew"] / 100.0)) * 0.08
+    s_factor = (energy_intensity / 10.0) * (1.0 - (renewable_energy / 100.0)) * 0.08
+    dyn_tax_savings = (b_factor - s_factor) * corp_export_default
+    dyn_scope3_reduction = max(0.0, (renewable_energy - c_info_cur["renew"]) * 0.6 + (c_info_cur["manuf"] - manufacturing) * 0.4)
+
     rec_c1, rec_c2, rec_c3 = st.columns(3)
     
     with rec_c1:
-        st.markdown("""
+        st.markdown(f"""
         <div class='glass-card-green'>
             <h4>🍃 1. Yenilenebilir Enerji Hamlesi</h4>
-            <p><b>Aksiyon:</b> Yenilenebilir enerji payının %35 üzerine çıkarılması emisyon tahminini doğrudan <b>-%18.4 Mt</b> düşürmektedir.</p>
+            <p><b>Aksiyon:</b> Yenilenebilir enerji oranının <b>%{renewable_energy:.1f}</b> seviyesine ayarlanması emisyon tahminini net <b>{dyn_renew_impact:+.1f} Mt CO₂eq</b> etkilemektedir.</p>
         </div>
         """, unsafe_allow_html=True)
     
     with rec_c2:
-        st.markdown("""
+        st.markdown(f"""
         <div class='glass-card-blue'>
             <h4>⚡ 2. Enerji Verimliliği & Şebeke</h4>
-            <p><b>Aksiyon:</b> Enerji yoğunluğunun 1.0 MJ/\$ düşürülmesi, SKDM vergi cezasını yıllık ortalama <b>€420.000</b> azaltmaktadır.</p>
+            <p><b>Aksiyon:</b> Enerji yoğunluğunun <b>{energy_intensity:.1f} MJ/\$</b> seviyesine ayarlanması, €5M ihracat yapan bir işletme için tahmini SKDM cezasında <b>€{max(0.0, dyn_tax_savings):,.0f}</b> net tasarruf yaratmaktadır.</p>
         </div>
         """, unsafe_allow_html=True)
         
     with rec_c3:
-        st.markdown("""
+        st.markdown(f"""
         <div class='glass-card-yellow'>
             <h4>🏭 3. Temiz İmalat Dönüşümü</h4>
-            <p><b>Aksiyon:</b> Sanayi süreçlerinde elektrikleşme ve yeşil hidrojen kullanımı Kapsam 3 tedarik zinciri riskini sıfırlar.</p>
+            <p><b>Aksiyon:</b> İmalat payının <b>%{manufacturing:.1f}</b> ve temiz enerjinin <b>%{renewable_energy:.1f}</b> olduğu bu senaryoda Kapsam 3 tedarik zinciri iklim riski <b>%{dyn_scope3_reduction:.1f}</b> azalmaktadır.</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -796,7 +814,7 @@ with tab6:
         })
     df_all_raw = pd.DataFrame(all_c_list)
 
-    # RESTORED: KABARCIK (BUBBLE) GRAFİĞİ
+    # KABARCIK (BUBBLE) GRAFİĞİ
     fig_bubble = px.scatter(
         df_all_raw, x="GSYH (\$)", y="Enerji Yoğunluğu", size="Emisyon (Mt)", color="Yenilenebilir (%)",
         hover_name="Ülke", size_max=45, color_continuous_scale="Viridis",
@@ -814,7 +832,7 @@ with tab6:
     fig_all_hm.update_layout(height=1100, margin=dict(l=160, r=40, t=50, b=50), yaxis=dict(tickfont=dict(size=11), autorange="reversed"))
     st.plotly_chart(fig_all_hm, use_container_width=True)
 
-# TAB 7: RESTORED SENARYO DEPOSU & İNDİR (CSV / PDF)
+# TAB 7: SENARYO DEPOSU & İNDİR (CSV / PDF)
 with tab7:
     st.subheader("💾 Kaydedilen Senaryolar Deposu & Dışa Aktar")
     st.markdown("Simülatörde hazırlayıp **'Senaryoyu Hafızaya Kaydet'** butonu ile sakladığınız tüm senaryolar burada listelenir:")
