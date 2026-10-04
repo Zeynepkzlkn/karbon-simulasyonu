@@ -628,7 +628,7 @@ with col_sc2:
         st.success("✅ " + ("Senaryo kaydedildi!" if is_tr else "Scenario saved!"))
 
 if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
-    p_title = selected_profile if is_tr else PROFILE_DETAILS[selected_profile]["title_en"]
+    p_title = PROFILE_DETAILS[selected_profile]["title_tr"] if is_tr else PROFILE_DETAILS[selected_profile]["title_en"]
     p_desc = PROFILE_DETAILS[selected_profile]["desc" if is_tr else "desc_en"]
     p_badge = PROFILE_DETAILS[selected_profile]["badge" if is_tr else "badge_en"]
     p_peers = ", ".join([get_country_name(p, is_tr) for p in PROFILE_DETAILS[selected_profile]["peers" if is_tr else "peers_en"]])
@@ -703,7 +703,7 @@ def generate_pdf_report():
     
     saved_scs = st.session_state.saved_scenarios
     if not saved_scs:
-        c_disp = get_country_name(selected_country_tr, is_tr) if mode_choice in [mod_opt1, 'Select from Global Country List'] else (selected_profile if is_tr else PROFILE_DETAILS[selected_profile]['title_en'])
+        c_disp = get_country_name(selected_country_tr, is_tr) if mode_choice in [mod_opt1, 'Select from Global Country List'] else (PROFILE_DETAILS[selected_profile]['title_tr'] if is_tr else PROFILE_DETAILS[selected_profile]['title_en'])
         saved_scs = [{
             "Senaryo Adı": c_disp,
             "Tahmini Emisyon (Mt)": round(pred_emission, 2),
@@ -834,7 +834,7 @@ with tab1:
     st.markdown("---")
     
     if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
-        p_title = selected_profile if is_tr else PROFILE_DETAILS[selected_profile]["title_en"]
+        p_title = PROFILE_DETAILS[selected_profile]["title_tr"] if is_tr else PROFILE_DETAILS[selected_profile]["title_en"]
         st.subheader(f"📌 {p_title} — {'Çok Boyutlu Profil Radarı & Profil Isı Haritası' if is_tr else 'Multidimensional Radar & Profile Heatmap'}")
         
         col_rad1, col_rad2 = st.columns(2)
@@ -864,7 +864,7 @@ with tab1:
             ]
 
             fig_radar = go.Figure()
-            trace_name = selected_profile.split(' ') if len(selected_profile.split(' ')) > 1 else selected_profile
+            trace_name = p_curr["title_tr"] if is_tr else p_curr["title_en"]
             fig_radar.add_trace(go.Scatterpolar(r=val_selected, theta=categories, fill='toself', name=trace_name, fillcolor='rgba(43, 92, 143, 0.4)', line_color='#2b5c8f'))
             fig_radar.add_trace(go.Scatterpolar(r=val_base, theta=categories, fill='toself', name='Baseline (S0)', fillcolor='rgba(128, 128, 128, 0.2)', line_color='gray'))
             
@@ -881,7 +881,7 @@ with tab1:
             st.markdown(f"#### 📊 {'Hazır Ülke Profilleri Isı Haritası Matrisi' if is_tr else 'Preset Profiles Heatmap Matrix'}")
             prof_matrix_rows = []
             for p_k, p_v in PROFILE_DETAILS.items():
-                p_short = p_k.split(" ") if len(p_k.split(" ")) > 1 else p_k
+                p_short = p_v["title_tr"] if is_tr else p_v["title_en"]
                 prof_matrix_rows.append({
                     "Profil": p_short,
                     "GSYH": p_v["gdp"]/1000,
@@ -903,7 +903,7 @@ with tab1:
             p_e = predict_emissions(p_data["gdp"], p_data["energy"], p_data["gvc"], p_data["trade"], p_data["manuf"], p_data["renew"], p_data["broadband"], p_data["internet"], p_data["mobile"])
             peer_names = ", ".join([get_country_name(p, is_tr) for p in p_data["peers" if is_tr else "peers_en"]])
             prof_table_data.append({
-                "Hazır Profil / Tipoloji" if is_tr else "Typology Profile": p_name if is_tr else p_data["title_en"],
+                "Hazır Profil / Tipoloji" if is_tr else "Typology Profile": p_data["title_tr"] if is_tr else p_data["title_en"],
                 "Rozet / Identity" if is_tr else "Badge": p_data["badge" if is_tr else "badge_en"],
                 "Tahmini Emisyon (Mt)" if is_tr else "Predicted Emission (Mt)": round(p_e, 1),
                 "Akran Ülkeler" if is_tr else "Peer Countries": peer_names,
@@ -929,7 +929,7 @@ with tab1:
 
 # TAB 2: LIVE SCENARIO CBAM ANALYSIS & DYNAMIC AI RECOMMENDATIONS
 with tab2:
-    st.subheader(f"📊 {get_country_name(selected_country_tr, is_tr) if mode_choice in [mod_opt1, 'Select from Global Country List'] else (selected_profile if is_tr else PROFILE_DETAILS[selected_profile]['title_en'])} — {'Canlı Senaryo SKDM & Karşılaştırma Analizi' if is_tr else 'Live Scenario CBAM & Comparison Analysis'}")
+    st.subheader(f"📊 {get_country_name(selected_country_tr, is_tr) if mode_choice in [mod_opt1, 'Select from Global Country List'] else (PROFILE_DETAILS[selected_profile]['title_tr'] if is_tr else PROFILE_DETAILS[selected_profile]['title_en'])} — {'Canlı Senaryo SKDM & Karşılaştırma Analizi' if is_tr else 'Live Scenario CBAM & Comparison Analysis'}")
     
     base_skdm_label, base_skdm_score, base_skdm_class = eval_skdm_risk(c_info_cur["manuf"], c_info_cur["renew"], c_info_cur["energy"])
     scen_skdm_label, scen_skdm_score, scen_skdm_class = eval_skdm_risk(manufacturing, renewable_energy, energy_intensity)
@@ -1004,7 +1004,7 @@ with tab3:
 
     # 1. CBAM TAX CALCULATOR
     st.markdown(f"#### 1. 💰 {'Şirket AB İhracatı & SKDM Vergi Cezası / Tasarruf Hesaplayıcı' if is_tr else 'Company EU Exports & CBAM Tax / Savings Calculator'}")
-    corp_export = st.number_input("Şirketinizin Yıllık AB İhracat Cirosu ($ / €):" if is_tr else "Annual EU Export Revenue ($ / €):", min_value=100000, max_value=1000000000, value=5000000, step=500000)
+    corp_export = st.number_input("Şirketinizin Yıllık AB İhracat Cirosu ($ / €):" if is_tr else "Annual EU Export Revenue (\$ / €):", min_value=100000, max_value=1000000000, value=5000000, step=500000)
 
     c_cur_e = c_info_cur["energy"] if isinstance(c_info_cur, dict) and "energy" in c_info_cur else BASE_ENERGY
     c_cur_r = c_info_cur["renew"] if isinstance(c_info_cur, dict) and "renew" in c_info_cur else BASE_RENEW
@@ -1060,7 +1060,7 @@ with tab3:
             st.dataframe(df_custom_eval, use_container_width=True, hide_index=True)
     else:
         min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):" if is_tr else "Min Manufacturing Infrastructure Share (%):", 5.0, 40.0, 15.0)
-        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/$):" if is_tr else "Max Acceptable Energy Intensity (MJ/$):", 2.0, 10.0, 5.0)
+        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/\$):" if is_tr else "Max Acceptable Energy Intensity (MJ/\$):", 2.0, 10.0, 5.0)
 
         opt_candidates = []
         for cname_tr, cinfo in COUNTRIES_DATA.items():
