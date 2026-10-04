@@ -608,7 +608,7 @@ with col_sc2:
             "Baseline Farkı (%)": round(country_policy_pct, 1),
             "Alt Güven": round(lower_bound, 1),
             "Üst Güven": round(upper_bound, 1),
-            "GSYH ($)": gdp,
+            "GSYH (\$)": gdp,
             "Enerji Yoğunluğu (MJ/$)": energy_intensity,
             "Yenilenebilir Enerji (%)": renewable_energy,
             "İmalat Payı (%)": manufacturing,
@@ -743,7 +743,7 @@ def generate_pdf_report():
         pdf.ln(6)
         
         pdf.set_font("Helvetica", '', 9)
-        p_row1 = f"  * GSYH / GDP: ${sc.get('GSYH ($)', 0):,.0f} | Enerji Yogunlugu / Energy Intensity: {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$"
+        p_row1 = f"  * GSYH / GDP: ${sc.get('GSYH (\$)', 0):,.0f} | Enerji Yogunlugu / Energy Intensity: {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$"
         pdf.cell(190, 5, clean_pdf_text(p_row1))
         pdf.ln(5)
         
@@ -948,17 +948,15 @@ with tab2:
     st.markdown(f"#### 💡 {'Yapay Zeka Destekli Politika Kaldıraçları & Canlı Öneriler' if is_tr else 'AI-Driven Policy Levers & Live Recommendations'}")
     
     rec_c1, rec_c2, rec_c3 = st.columns(3)
+    
     if is_tr:
-        card1_html = f"""
-    <div class='glass-card-green'>
-        <h4>Yeşil Dönüşüm Durumu</h4>
-        <p>Emisyon Azaltım Oranı: %{emission_reduction:.1f}</p>
-    </div>
-    """<h4>🍃 1. Yenilenebilir Enerji Hamlesi</h4><p><b>Aksiyon:</b> Yenilenebilir enerji oranının <b>%{renewable_energy:.1f}</b> seviyesine ayarlanması emisyon tahminini net <b>{c_renew:+.1f} Mt CO₂eq</b> etkilemektedir.</p>
+        card1_html = f\"\"\"<div class='glass-card-green'>
+            <h4>🍃 1. Yenilenebilir Enerji Hamlesi</h4>
+            <p><b>Aksiyon:</b> Yenilenebilir enerji oranının <b>%{renewable_energy:.1f}</b> seviyesine ayarlanması emisyon tahminini net <b>{c_renew:+.1f} Mt CO₂eq</b> etkilemektedir.</p>
         </div>\"\"\"
         card2_html = f\"\"\"<div class='glass-card-blue'>
-        <h4>⚡ 2. Enerji Verimliliği & Şebeke</h4>
-        <p><b>Aksiyon:</b> Enerji yoğunluğunun <b>{energy_intensity:.2f} MJ/$</b> seviyesine ayarlanması, €5M ihracat yapan bir işletme için tahmini SKDM cezasında <b>€{max(0.0, dyn_tax_savings):,.0f}</b> net tasarruf yaratmaktadır.</p>
+            <h4>⚡ 2. Enerji Verimliliği & Şebeke</h4>
+            <p><b>Aksiyon:</b> Enerji yoğunluğunun <b>{energy_intensity:.2f} MJ/$</b> seviyesine ayarlanması, €5M ihracat yapan bir işletme için tahmini SKDM cezasında <b>€{max(0.0, dyn_tax_savings):,.0f}</b> net tasarruf yaratmaktadır.</p>
         </div>\"\"\"
         card3_html = f\"\"\"<div class='glass-card-yellow'>
             <h4>🏭 3. Temiz İmalat Dönüşümü</h4>
