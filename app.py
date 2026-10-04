@@ -25,7 +25,7 @@ css_style = """
     .stMetric {
         background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(10px);
-        padding: 18px;
+        padding: 16px;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.6);
@@ -160,6 +160,7 @@ BASE_RENEW = 21.8922
 BASE_BROADBAND = 30.4640
 BASE_INTERNET = 85.7827
 BASE_MOBILE = 127.7108
+BASE_DIGITAL_INDEX = 85.78
 BASE_EMISSION = 768.9743
 BASE_MC_SD = 31.4652
 
@@ -188,58 +189,58 @@ def get_country_name(name_tr, is_tr):
     return COUNTRY_TRANSLATIONS.get(name_tr, name_tr)
 
 EMPIRICAL_52_COUNTRIES = {
-    "Avustralya": {"iso": "AUS", "emission": 531.853, "gdp": 59465.54, "energy": 4.10, "gvc": 8.88, "trade": 40.20, "manuf": 5.43, "renew": 12.30, "broadband": 35.84, "internet": 96.97, "mobile": 105.12},
-    "Avusturya": {"iso": "AUT", "emission": 109.953, "gdp": 45368.64, "energy": 2.86, "gvc": 27.95, "trade": 111.03, "manuf": 16.98, "renew": 36.00, "broadband": 29.25, "internet": 92.53, "mobile": 121.36},
-    "Bangladeş": {"iso": "BGD", "emission": 246.576, "gdp": 1702.08, "energy": 1.93, "gvc": 5.07, "trade": 27.72, "manuf": 21.24, "renew": 25.00, "broadband": 6.64, "internet": 38.92, "mobile": 110.01},
-    "Belçika": {"iso": "BEL", "emission": 146.907, "gdp": 43140.97, "energy": 3.86, "gvc": 40.39, "trade": 177.38, "manuf": 10.74, "renew": 11.70, "broadband": 43.02, "internet": 92.79, "mobile": 101.46},
-    "Brezilya": {"iso": "BRA", "emission": 1058.203, "gdp": 8799.23, "energy": 3.96, "gvc": 9.73, "trade": 37.66, "manuf": 11.90, "renew": 46.50, "broadband": 19.84, "internet": 80.69, "mobile": 104.82},
-    "Brunei": {"iso": "BRN", "emission": 9.082, "gdp": 29256.18, "energy": 6.33, "gvc": 31.75, "trade": 147.12, "manuf": 9.68, "renew": 0.00, "broadband": 17.58, "internet": 97.63, "mobile": 133.60},
-    "Kamboçya": {"iso": "KHM", "emission": 32.642, "gdp": 1938.76, "energy": 4.96, "gvc": 26.93, "trade": 146.18, "manuf": 26.65, "renew": 52.40, "broadband": 1.98, "internet": 60.76, "mobile": 117.23},
-    "Kanada": {"iso": "CAN", "emission": 612.381, "gdp": 44639.24, "energy": 6.55, "gvc": 12.11, "trade": 62.25, "manuf": 9.53, "renew": 23.80, "broadband": 41.69, "internet": 93.94, "mobile": 87.41},
-    "Çin": {"iso": "CHN", "emission": 13000.425, "gdp": 11469.32, "energy": 6.30, "gvc": 8.60, "trade": 36.64, "manuf": 26.62, "renew": 15.20, "broadband": 37.56, "internet": 73.05, "mobile": 121.49},
-    "Hırvatistan": {"iso": "HRV", "emission": 30.132, "gdp": 15395.29, "energy": 2.91, "gvc": 25.00, "trade": 102.33, "manuf": 11.66, "renew": 34.10, "broadband": 26.72, "internet": 81.25, "mobile": 112.17},
-    "Kıbrıs": {"iso": "CYP", "emission": 11.786, "gdp": 29517.06, "energy": 2.45, "gvc": 38.76, "trade": 176.83, "manuf": 4.99, "renew": 15.60, "broadband": 36.65, "internet": 90.76, "mobile": 142.05},
-    "Çekya": {"iso": "CZE", "emission": 109.324, "gdp": 20373.88, "energy": 4.16, "gvc": 33.10, "trade": 137.38, "manuf": 19.64, "renew": 17.20, "broadband": 37.50, "internet": 82.67, "mobile": 126.17},
-    "Danimarka": {"iso": "DNK", "emission": 70.102, "gdp": 59312.82, "energy": 1.96, "gvc": 26.57, "trade": 112.32, "manuf": 12.55, "renew": 39.50, "broadband": 44.96, "internet": 98.87, "mobile": 125.60},
-    "Estonya": {"iso": "EST", "emission": 15.514, "gdp": 21570.67, "energy": 3.73, "gvc": 36.07, "trade": 160.47, "manuf": 13.03, "renew": 38.00, "broadband": 37.36, "internet": 90.98, "mobile": 148.74},
-    "Finlandiya": {"iso": "FIN", "emission": 64.848, "gdp": 45792.05, "energy": 5.15, "gvc": 22.00, "trade": 79.79, "manuf": 14.94, "renew": 50.20, "broadband": 33.64, "internet": 92.81, "mobile": 129.04},
-    "Fransa": {"iso": "FRA", "emission": 585.218, "gdp": 38030.86, "energy": 3.23, "gvc": 16.14, "trade": 63.79, "manuf": 9.10, "renew": 16.20, "broadband": 47.64, "internet": 86.10, "mobile": 113.95},
-    "Almanya": {"iso": "DEU", "emission": 1037.631, "gdp": 44011.02, "energy": 2.70, "gvc": 21.91, "trade": 79.92, "manuf": 18.57, "renew": 17.60, "broadband": 44.06, "internet": 91.43, "mobile": 127.13},
-    "Yunanistan": {"iso": "GRC", "emission": 95.526, "gdp": 19231.29, "energy": 2.71, "gvc": 20.61, "trade": 88.01, "manuf": 8.67, "renew": 21.50, "broadband": 41.92, "internet": 78.49, "mobile": 108.64},
-    "Hong Kong": {"iso": "HKG", "emission": 87.108, "gdp": 44530.92, "energy": 1.17, "gvc": 14.54, "trade": 402.46, "manuf": 0.91, "renew": 0.40, "broadband": 39.22, "internet": 93.09, "mobile": 319.85},
-    "Macaristan": {"iso": "HUN", "emission": 72.501, "gdp": 15787.95, "energy": 3.48, "gvc": 37.81, "trade": 159.19, "manuf": 16.53, "renew": 15.30, "broadband": 34.84, "internet": 88.64, "mobile": 105.14},
-    "Hindistan": {"iso": "IND", "emission": 3412.358, "gdp": 1965.31, "energy": 4.21, "gvc": 10.37, "trade": 45.42, "manuf": 14.38, "renew": 34.90, "broadband": 1.95, "internet": 49.26, "mobile": 81.60},
-    "Endonezya": {"iso": "IDN", "emission": 857.834, "gdp": 3850.69, "energy": 3.04, "gvc": 8.97, "trade": 40.20, "manuf": 19.24, "renew": 20.20, "broadband": 4.49, "internet": 62.10, "mobile": 132.20},
-    "İrlanda": {"iso": "IRL", "emission": 74.680, "gdp": 92781.23, "energy": 1.09, "gvc": 48.31, "trade": 231.03, "manuf": 34.31, "renew": 12.70, "broadband": 31.36, "internet": 93.51, "mobile": 106.87},
-    "İtalya": {"iso": "ITA", "emission": 553.500, "gdp": 32267.71, "energy": 2.51, "gvc": 17.14, "trade": 60.30, "manuf": 15.37, "renew": 17.50, "broadband": 31.29, "internet": 74.86, "mobile": 130.78},
-    "Japonya": {"iso": "JPN", "emission": 1330.888, "gdp": 36792.56, "energy": 3.25, "gvc": 9.19, "trade": 35.43, "manuf": 19.68, "renew": 8.80, "broadband": 35.94, "internet": 82.91, "mobile": 159.52},
-    "Kazakistan": {"iso": "KAZ", "emission": 310.664, "gdp": 10873.39, "energy": 5.81, "gvc": 15.94, "trade": 58.67, "manuf": 13.61, "renew": 2.00, "broadband": 13.95, "internet": 90.92, "mobile": 123.94},
-    "Letonya": {"iso": "LVA", "emission": 18.008, "gdp": 16070.17, "energy": 3.10, "gvc": 31.93, "trade": 136.80, "manuf": 12.85, "renew": 44.00, "broadband": 25.98, "internet": 91.18, "mobile": 114.64},
-    "Litvanya": {"iso": "LTU", "emission": 29.675, "gdp": 18572.29, "energy": 2.94, "gvc": 35.08, "trade": 154.73, "manuf": 15.91, "renew": 33.20, "broadband": 28.71, "internet": 86.93, "mobile": 133.36},
-    "Lüksemburg": {"iso": "LUX", "emission": 11.564, "gdp": 110873.12, "energy": 1.98, "gvc": 67.12, "trade": 397.51, "manuf": 4.65, "renew": 20.50, "broadband": 38.04, "internet": 98.66, "mobile": 136.87},
-    "Malezya": {"iso": "MYS", "emission": 257.090, "gdp": 10388.27, "energy": 4.49, "gvc": 24.65, "trade": 134.04, "manuf": 23.36, "renew": 7.50, "broadband": 10.89, "internet": 96.75, "mobile": 137.68},
-    "Malta": {"iso": "MLT", "emission": 3.924, "gdp": 31419.50, "energy": 1.21, "gvc": 55.01, "trade": 220.07, "manuf": 6.16, "renew": 8.60, "broadband": 42.18, "internet": 87.47, "mobile": 123.94},
-    "Meksika": {"iso": "MEX", "emission": 730.756, "gdp": 9728.06, "energy": 2.99, "gvc": 16.32, "trade": 83.07, "manuf": 20.84, "renew": 13.00, "broadband": 19.28, "internet": 75.63, "mobile": 99.09},
-    "Hollanda": {"iso": "NLD", "emission": 217.000, "gdp": 49780.83, "energy": 2.95, "gvc": 37.16, "trade": 163.15, "manuf": 10.75, "renew": 12.20, "broadband": 42.95, "internet": 92.05, "mobile": 123.45},
-    "Norveç": {"iso": "NOR", "emission": 76.984, "gdp": 81199.34, "energy": 3.43, "gvc": 19.46, "trade": 69.11, "manuf": 5.51, "renew": 61.40, "broadband": 44.94, "internet": 99.00, "mobile": 109.59},
-    "Pakistan": {"iso": "PAK", "emission": 490.772, "gdp": 1526.01, "energy": 4.17, "gvc": 3.95, "trade": 26.72, "manuf": 11.42, "renew": 42.70, "broadband": 1.04, "internet": 18.93, "mobile": 74.73},
-    "Filipinler": {"iso": "PHL", "emission": 300.021, "gdp": 3350.98, "energy": 2.78, "gvc": 12.14, "trade": 63.48, "manuf": 17.64, "renew": 28.00, "broadband": 8.51, "internet": 66.91, "mobile": 144.42},
-    "Polonya": {"iso": "POL", "emission": 392.197, "gdp": 16368.62, "energy": 3.42, "gvc": 27.52, "trade": 110.87, "manuf": 17.30, "renew": 15.20, "broadband": 22.82, "internet": 85.37, "mobile": 132.99},
-    "Portekiz": {"iso": "PRT", "emission": 70.787, "gdp": 20747.70, "energy": 2.42, "gvc": 21.33, "trade": 85.87, "manuf": 12.44, "renew": 32.30, "broadband": 41.51, "internet": 82.31, "mobile": 119.77},
-    "Romanya": {"iso": "ROU", "emission": 134.760, "gdp": 11546.32, "energy": 2.40, "gvc": 21.88, "trade": 87.07, "manuf": 15.71, "renew": 23.60, "broadband": 31.69, "internet": 83.59, "mobile": 119.12},
-    "Rusya": {"iso": "RUS", "emission": 1623.424, "gdp": 10231.32, "energy": 8.46, "gvc": 14.51, "trade": 50.59, "manuf": 13.13, "renew": 3.50, "broadband": 23.74, "internet": 88.21, "mobile": 169.07},
-    "Singapur": {"iso": "SGP", "emission": 104.455, "gdp": 67846.86, "energy": 2.51, "gvc": 45.74, "trade": 326.53, "manuf": 20.61, "renew": 1.10, "broadband": 27.52, "internet": 96.92, "mobile": 157.98},
-    "Slovakya": {"iso": "SVK", "emission": 45.898, "gdp": 18808.45, "energy": 4.14, "gvc": 39.52, "trade": 181.98, "manuf": 16.63, "renew": 17.90, "broadband": 32.61, "internet": 88.93, "mobile": 135.27},
-    "Slovenya": {"iso": "SVN", "emission": 19.614, "gdp": 24665.44, "energy": 3.26, "gvc": 39.66, "trade": 161.79, "manuf": 19.92, "renew": 23.40, "broadband": 31.55, "internet": 89.00, "mobile": 123.36},
-    "Güney Kore": {"iso": "KOR", "emission": 769.763, "gdp": 34792.94, "energy": 5.32, "gvc": 20.85, "trade": 75.31, "manuf": 26.25, "renew": 3.60, "broadband": 44.25, "internet": 97.57, "mobile": 140.52},
-    "İspanya": {"iso": "ESP", "emission": 363.717, "gdp": 26705.36, "energy": 2.66, "gvc": 17.32, "trade": 66.52, "manuf": 11.26, "renew": 19.00, "broadband": 34.93, "internet": 93.90, "mobile": 119.00},
-    "İsveç": {"iso": "SWE", "emission": 91.289, "gdp": 53997.13, "energy": 3.49, "gvc": 22.60, "trade": 91.11, "manuf": 12.90, "renew": 57.90, "broadband": 40.84, "internet": 94.67, "mobile": 124.96},
-    "İsviçre": {"iso": "CHE", "emission": 128.422, "gdp": 90924.93, "energy": 1.53, "gvc": 28.46, "trade": 128.00, "manuf": 20.69, "renew": 27.70, "broadband": 47.94, "internet": 95.57, "mobile": 123.21},
-    "Tayland": {"iso": "THA", "emission": 378.992, "gdp": 6119.11, "energy": 4.44, "gvc": 24.77, "trade": 117.13, "manuf": 27.16, "renew": 19.00, "broadband": 17.32, "internet": 85.27, "mobile": 168.49},
-    "Türkiye": {"iso": "TUR", "emission": 628.525, "gdp": 13670.94, "energy": 2.48, "gvc": 16.73, "trade": 69.61, "manuf": 22.12, "renew": 12.00, "broadband": 20.92, "internet": 81.41, "mobile": 99.54},
-    "İngiltere": {"iso": "GBR", "emission": 671.411, "gdp": 46491.51, "energy": 2.20, "gvc": 14.57, "trade": 58.54, "manuf": 8.73, "renew": 12.20, "broadband": 41.11, "internet": 96.20, "mobile": 117.89},
-    "Amerika Birleşik Devletleri": {"iso": "USA", "emission": 7241.366, "gdp": 63096.79, "energy": 4.24, "gvc": 5.60, "trade": 25.23, "manuf": 10.53, "renew": 10.90, "broadband": 37.01, "internet": 91.27, "mobile": 106.32},
-    "Vietnam": {"iso": "VNM", "emission": 440.411, "gdp": 3358.22, "energy": 3.85, "gvc": 34.88, "trade": 186.68, "manuf": 24.46, "renew": 24.20, "broadband": 19.54, "internet": 74.21, "mobile": 136.81},
+    "Avustralya": {"iso": "AUS", "emission": 531.853, "gdp": 59465.54, "energy": 4.10, "gvc": 8.88, "trade": 40.20, "manuf": 5.43, "renew": 12.30, "broadband": 35.84, "internet": 96.97, "mobile": 105.12, "digital_index": 87.21},
+    "Avusturya": {"iso": "AUT", "emission": 109.953, "gdp": 45368.64, "energy": 2.86, "gvc": 27.95, "trade": 111.03, "manuf": 16.98, "renew": 36.00, "broadband": 29.25, "internet": 92.53, "mobile": 121.36, "digital_index": 82.35},
+    "Bangladeş": {"iso": "BGD", "emission": 246.576, "gdp": 1702.08, "energy": 1.93, "gvc": 5.07, "trade": 27.72, "manuf": 21.24, "renew": 25.00, "broadband": 6.64, "internet": 38.92, "mobile": 110.01, "digital_index": 37.36},
+    "Belçika": {"iso": "BEL", "emission": 146.907, "gdp": 43140.97, "energy": 3.86, "gvc": 40.39, "trade": 177.38, "manuf": 10.74, "renew": 11.70, "broadband": 43.02, "internet": 92.79, "mobile": 101.46, "digital_index": 85.97},
+    "Brezilya": {"iso": "BRA", "emission": 1058.203, "gdp": 8799.23, "energy": 3.96, "gvc": 9.73, "trade": 37.66, "manuf": 11.90, "renew": 46.50, "broadband": 19.84, "internet": 80.69, "mobile": 104.82, "digital_index": 65.84},
+    "Brunei": {"iso": "BRN", "emission": 9.082, "gdp": 29256.18, "energy": 6.33, "gvc": 31.75, "trade": 147.12, "manuf": 9.68, "renew": 0.00, "broadband": 17.58, "internet": 97.63, "mobile": 133.60, "digital_index": 76.51},
+    "Kamboçya": {"iso": "KHM", "emission": 32.642, "gdp": 1938.76, "energy": 4.96, "gvc": 26.93, "trade": 146.18, "manuf": 26.65, "renew": 52.40, "broadband": 1.98, "internet": 60.76, "mobile": 117.23, "digital_index": 46.28},
+    "Kanada": {"iso": "CAN", "emission": 612.381, "gdp": 44639.24, "energy": 6.55, "gvc": 12.11, "trade": 62.25, "manuf": 9.53, "renew": 23.80, "broadband": 41.69, "internet": 93.94, "mobile": 87.41, "digital_index": 83.95},
+    "Çin": {"iso": "CHN", "emission": 13000.425, "gdp": 11469.32, "energy": 6.30, "gvc": 8.60, "trade": 36.64, "manuf": 26.62, "renew": 15.20, "broadband": 37.56, "internet": 73.05, "mobile": 121.49, "digital_index": 75.20},
+    "Hırvatistan": {"iso": "HRV", "emission": 30.132, "gdp": 15395.29, "energy": 2.91, "gvc": 25.00, "trade": 102.33, "manuf": 11.66, "renew": 34.10, "broadband": 26.72, "internet": 81.25, "mobile": 112.17, "digital_index": 71.32},
+    "Kıbrıs": {"iso": "CYP", "emission": 11.786, "gdp": 29517.06, "energy": 2.45, "gvc": 38.76, "trade": 176.83, "manuf": 4.99, "renew": 15.60, "broadband": 36.65, "internet": 90.76, "mobile": 142.05, "digital_index": 86.05},
+    "Çekya": {"iso": "CZE", "emission": 109.324, "gdp": 20373.88, "energy": 4.16, "gvc": 33.10, "trade": 137.38, "manuf": 19.64, "renew": 17.20, "broadband": 37.50, "internet": 82.67, "mobile": 126.17, "digital_index": 80.54},
+    "Danimarka": {"iso": "DNK", "emission": 70.102, "gdp": 59312.82, "energy": 1.96, "gvc": 26.57, "trade": 112.32, "manuf": 12.55, "renew": 39.50, "broadband": 44.96, "internet": 98.87, "mobile": 125.60, "digital_index": 93.24},
+    "Estonya": {"iso": "EST", "emission": 15.514, "gdp": 21570.67, "energy": 3.73, "gvc": 36.07, "trade": 160.47, "manuf": 13.03, "renew": 38.00, "broadband": 37.36, "internet": 90.98, "mobile": 148.74, "digital_index": 87.42},
+    "Finlandiya": {"iso": "FIN", "emission": 64.848, "gdp": 45792.05, "energy": 5.15, "gvc": 22.00, "trade": 79.79, "manuf": 14.94, "renew": 50.20, "broadband": 33.64, "internet": 92.81, "mobile": 129.04, "digital_index": 83.56},
+    "Fransa": {"iso": "FRA", "emission": 585.218, "gdp": 38030.86, "energy": 3.23, "gvc": 16.14, "trade": 63.79, "manuf": 9.10, "renew": 16.20, "broadband": 47.64, "internet": 86.10, "mobile": 113.95, "digital_index": 87.08},
+    "Almanya": {"iso": "DEU", "emission": 1037.631, "gdp": 44011.02, "energy": 2.70, "gvc": 21.91, "trade": 79.92, "manuf": 18.57, "renew": 17.60, "broadband": 44.06, "internet": 91.43, "mobile": 127.13, "digital_index": 89.15},
+    "Yunanistan": {"iso": "GRC", "emission": 95.526, "gdp": 19231.29, "energy": 2.71, "gvc": 20.61, "trade": 88.01, "manuf": 8.67, "renew": 21.50, "broadband": 41.92, "internet": 78.49, "mobile": 108.64, "digital_index": 78.92},
+    "Hong Kong": {"iso": "HKG", "emission": 87.108, "gdp": 44530.92, "energy": 1.17, "gvc": 14.54, "trade": 402.46, "manuf": 0.91, "renew": 0.40, "broadband": 39.22, "internet": 93.09, "mobile": 319.85, "digital_index": 100.00},
+    "Macaristan": {"iso": "HUN", "emission": 72.501, "gdp": 15787.95, "energy": 3.48, "gvc": 37.81, "trade": 159.19, "manuf": 16.53, "renew": 15.30, "broadband": 34.84, "internet": 88.64, "mobile": 105.14, "digital_index": 79.24},
+    "Hindistan": {"iso": "IND", "emission": 3412.358, "gdp": 1965.31, "energy": 4.21, "gvc": 10.37, "trade": 45.42, "manuf": 14.38, "renew": 34.90, "broadband": 1.95, "internet": 49.26, "mobile": 81.60, "digital_index": 36.05},
+    "Endonezya": {"iso": "IDN", "emission": 857.834, "gdp": 3850.69, "energy": 3.04, "gvc": 8.97, "trade": 40.20, "manuf": 19.24, "renew": 20.20, "broadband": 4.49, "internet": 62.10, "mobile": 132.20, "digital_index": 50.36},
+    "İrlanda": {"iso": "IRL", "emission": 74.680, "gdp": 92781.23, "energy": 1.09, "gvc": 48.31, "trade": 231.03, "manuf": 34.31, "renew": 12.70, "broadband": 31.36, "internet": 93.51, "mobile": 106.87, "digital_index": 79.72},
+    "İtalya": {"iso": "ITA", "emission": 553.500, "gdp": 32267.71, "energy": 2.51, "gvc": 17.14, "trade": 60.30, "manuf": 15.37, "renew": 17.50, "broadband": 31.29, "internet": 74.86, "mobile": 130.78, "digital_index": 73.32},
+    "Japonya": {"iso": "JPN", "emission": 1330.888, "gdp": 36792.56, "energy": 3.25, "gvc": 9.19, "trade": 35.43, "manuf": 19.68, "renew": 8.80, "broadband": 35.94, "internet": 82.91, "mobile": 159.52, "digital_index": 83.87},
+    "Kazakistan": {"iso": "KAZ", "emission": 310.664, "gdp": 10873.39, "energy": 5.81, "gvc": 15.94, "trade": 58.67, "manuf": 13.61, "renew": 2.00, "broadband": 13.95, "internet": 90.92, "mobile": 123.94, "digital_index": 69.65},
+    "Letonya": {"iso": "LVA", "emission": 18.008, "gdp": 16070.17, "energy": 3.10, "gvc": 31.93, "trade": 136.80, "manuf": 12.85, "renew": 44.00, "broadband": 25.98, "internet": 91.18, "mobile": 114.64, "digital_index": 76.15},
+    "Litvanya": {"iso": "LTU", "emission": 29.675, "gdp": 18572.29, "energy": 2.94, "gvc": 35.08, "trade": 154.73, "manuf": 15.91, "renew": 33.20, "broadband": 28.71, "internet": 86.93, "mobile": 133.36, "digital_index": 78.08},
+    "Lüksemburg": {"iso": "LUX", "emission": 11.564, "gdp": 110873.12, "energy": 1.98, "gvc": 67.12, "trade": 397.51, "manuf": 4.65, "renew": 20.50, "broadband": 38.04, "internet": 98.66, "mobile": 136.87, "digital_index": 90.21},
+    "Malezya": {"iso": "MYS", "emission": 257.090, "gdp": 10388.27, "energy": 4.49, "gvc": 24.65, "trade": 134.04, "manuf": 23.36, "renew": 7.50, "broadband": 10.89, "internet": 96.75, "mobile": 137.68, "digital_index": 72.38},
+    "Malta": {"iso": "MLT", "emission": 3.924, "gdp": 31419.50, "energy": 1.21, "gvc": 55.01, "trade": 220.07, "manuf": 6.16, "renew": 8.60, "broadband": 42.18, "internet": 87.47, "mobile": 123.94, "digital_index": 85.58},
+    "Meksika": {"iso": "MEX", "emission": 730.756, "gdp": 9728.06, "energy": 2.99, "gvc": 16.32, "trade": 83.07, "manuf": 20.84, "renew": 13.00, "broadband": 19.28, "internet": 75.63, "mobile": 99.09, "digital_index": 62.25},
+    "Hollanda": {"iso": "NLD", "emission": 217.000, "gdp": 49780.83, "energy": 2.95, "gvc": 37.16, "trade": 163.15, "manuf": 10.75, "renew": 12.20, "broadband": 42.95, "internet": 92.05, "mobile": 123.45, "digital_index": 88.32},
+    "Norveç": {"iso": "NOR", "emission": 76.984, "gdp": 81199.34, "energy": 3.43, "gvc": 19.46, "trade": 69.11, "manuf": 5.51, "renew": 61.40, "broadband": 44.94, "internet": 99.00, "mobile": 109.59, "digital_index": 91.28},
+    "Pakistan": {"iso": "PAK", "emission": 490.772, "gdp": 1526.01, "energy": 4.17, "gvc": 3.95, "trade": 26.72, "manuf": 11.42, "renew": 42.70, "broadband": 1.04, "internet": 18.93, "mobile": 74.73, "digital_index": 19.45},
+    "Filipinler": {"iso": "PHL", "emission": 300.021, "gdp": 3350.98, "energy": 2.78, "gvc": 12.14, "trade": 63.48, "manuf": 17.64, "renew": 28.00, "broadband": 8.51, "internet": 66.91, "mobile": 144.42, "digital_index": 56.82},
+    "Polonya": {"iso": "POL", "emission": 392.197, "gdp": 16368.62, "energy": 3.42, "gvc": 27.52, "trade": 110.87, "manuf": 17.30, "renew": 15.20, "broadband": 22.82, "internet": 85.37, "mobile": 132.99, "digital_index": 73.58},
+    "Portekiz": {"iso": "PRT", "emission": 70.787, "gdp": 20747.70, "energy": 2.42, "gvc": 21.33, "trade": 85.87, "manuf": 12.44, "renew": 32.30, "broadband": 41.51, "internet": 82.31, "mobile": 119.77, "digital_index": 82.04},
+    "Romanya": {"iso": "ROU", "emission": 134.760, "gdp": 11546.32, "energy": 2.40, "gvc": 21.88, "trade": 87.07, "manuf": 15.71, "renew": 23.60, "broadband": 31.69, "internet": 83.59, "mobile": 119.12, "digital_index": 76.48},
+    "Rusya": {"iso": "RUS", "emission": 1623.424, "gdp": 10231.32, "energy": 8.46, "gvc": 14.51, "trade": 50.59, "manuf": 13.13, "renew": 3.50, "broadband": 23.74, "internet": 88.21, "mobile": 169.07, "digital_index": 80.08},
+    "Singapur": {"iso": "SGP", "emission": 104.455, "gdp": 67846.86, "energy": 2.51, "gvc": 45.74, "trade": 326.53, "manuf": 20.61, "renew": 1.10, "broadband": 27.52, "internet": 96.92, "mobile": 157.98, "digital_index": 85.38},
+    "Slovakya": {"iso": "SVK", "emission": 45.898, "gdp": 18808.45, "energy": 4.14, "gvc": 39.52, "trade": 181.98, "manuf": 16.63, "renew": 17.90, "broadband": 32.61, "internet": 88.93, "mobile": 135.27, "digital_index": 81.78},
+    "Slovenya": {"iso": "SVN", "emission": 19.614, "gdp": 24665.44, "energy": 3.26, "gvc": 39.66, "trade": 161.79, "manuf": 19.92, "renew": 23.40, "broadband": 31.55, "internet": 89.00, "mobile": 123.36, "digital_index": 79.62},
+    "Güney Kore": {"iso": "KOR", "emission": 769.763, "gdp": 34792.94, "energy": 5.32, "gvc": 20.85, "trade": 75.31, "manuf": 26.25, "renew": 3.60, "broadband": 44.25, "internet": 97.57, "mobile": 140.52, "digital_index": 94.02},
+    "İspanya": {"iso": "ESP", "emission": 363.717, "gdp": 26705.36, "energy": 2.66, "gvc": 17.32, "trade": 66.52, "manuf": 11.26, "renew": 19.00, "broadband": 34.93, "internet": 93.90, "mobile": 119.00, "digital_index": 83.65},
+    "İsveç": {"iso": "SWE", "emission": 91.289, "gdp": 53997.13, "energy": 3.49, "gvc": 22.60, "trade": 91.11, "manuf": 12.90, "renew": 57.90, "broadband": 40.84, "internet": 94.67, "mobile": 124.96, "digital_index": 88.48},
+    "İsviçre": {"iso": "CHE", "emission": 128.422, "gdp": 90924.93, "energy": 1.53, "gvc": 28.46, "trade": 128.00, "manuf": 20.69, "renew": 27.70, "broadband": 47.94, "internet": 95.57, "mobile": 123.21, "digital_index": 93.12},
+    "Tayland": {"iso": "THA", "emission": 378.992, "gdp": 6119.11, "energy": 4.44, "gvc": 24.77, "trade": 117.13, "manuf": 27.16, "renew": 19.00, "broadband": 17.32, "internet": 85.27, "mobile": 168.49, "digital_index": 74.52},
+    "Türkiye": {"iso": "TUR", "emission": 628.525, "gdp": 13670.94, "energy": 2.48, "gvc": 16.73, "trade": 69.61, "manuf": 22.12, "renew": 12.00, "broadband": 20.92, "internet": 81.41, "mobile": 99.54, "digital_index": 66.22},
+    "İngiltere": {"iso": "GBR", "emission": 671.411, "gdp": 46491.51, "energy": 2.20, "gvc": 14.57, "trade": 58.54, "manuf": 8.73, "renew": 12.20, "broadband": 41.11, "internet": 96.20, "mobile": 117.89, "digital_index": 88.45},
+    "Amerika Birleşik Devletleri": {"iso": "USA", "emission": 7241.366, "gdp": 63096.79, "energy": 4.24, "gvc": 5.60, "trade": 25.23, "manuf": 10.53, "renew": 10.90, "broadband": 37.01, "internet": 91.27, "mobile": 106.32, "digital_index": 82.05},
+    "Vietnam": {"iso": "VNM", "emission": 440.411, "gdp": 3358.22, "energy": 3.85, "gvc": 34.88, "trade": 186.68, "manuf": 24.46, "renew": 24.20, "broadband": 19.54, "internet": 74.21, "mobile": 136.81, "digital_index": 66.42},
 }
 
 @st.cache_data
@@ -270,6 +271,10 @@ def load_country_dataset():
                     for _, row in df_latest.iterrows():
                         en_name = str(row['Country Name']).strip()
                         tr_name = REVERSE_COUNTRY_TRANSLATIONS.get(en_name, en_name)
+                        bb = float(row['DIG1_Fixed_Broadband_Subscriptions'])
+                        net = float(row['DIG2_Individuals_Using_the_Internet'])
+                        mob = float(row['DIG3_Mobile_Cellular_Subscriptions'])
+                        dig_idx = round((bb/48.0 * 0.3 + net/100.0 * 0.5 + mob/160.0 * 0.2) * 100.0, 2)
                         c_map[tr_name] = {
                             "iso": str(row.get('ISO', en_name[:3])).upper(),
                             "emission": float(row['Demand-Based GHG Footprint']),
@@ -279,9 +284,10 @@ def load_country_dataset():
                             "trade": float(row['Trade Openness']),
                             "manuf": float(row['Manufacturing']),
                             "renew": float(row['Renewable Energy']),
-                            "broadband": float(row['DIG1_Fixed_Broadband_Subscriptions']),
-                            "internet": float(row['DIG2_Individuals_Using_the_Internet']),
-                            "mobile": float(row['DIG3_Mobile_Cellular_Subscriptions'])
+                            "broadband": bb,
+                            "internet": net,
+                            "mobile": mob,
+                            "digital_index": dig_idx
                         }
                     return c_map
             except Exception:
@@ -308,7 +314,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Düşük / Nötr",
         "skdm_risk_en": "Low / Neutral",
         "skdm_score": "2/10",
-        "emission": BASE_EMISSION, "gdp": BASE_GDP, "energy": BASE_ENERGY, "gvc": BASE_GVC, "trade": BASE_TRADE, "manuf": BASE_MANUF, "renew": BASE_RENEW, "broadband": BASE_BROADBAND, "internet": BASE_INTERNET, "mobile": BASE_MOBILE
+        "emission": BASE_EMISSION, "gdp": BASE_GDP, "energy": BASE_ENERGY, "gvc": BASE_GVC, "trade": BASE_TRADE, "manuf": BASE_MANUF, "renew": BASE_RENEW, "broadband": BASE_BROADBAND, "internet": BASE_INTERNET, "mobile": BASE_MOBILE, "digital_index": BASE_DIGITAL_INDEX
     },
     "🇪🇺 AB Yeşil Mutabakat Ülkesi": {
         "title_tr": "🇪🇺 AB Yeşil Mutabakat Ülkesi",
@@ -325,7 +331,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Çok Düşük / Muafiyet Avantajı",
         "skdm_risk_en": "Very Low / Exemption Advantage",
         "skdm_score": "1/10",
-        "emission": 420.0, "gdp": 48500.0, "energy": 3.10, "gvc": 35.0, "trade": 88.0, "manuf": 14.0, "renew": 46.0, "broadband": 44.0, "internet": 93.0, "mobile": 128.0
+        "emission": 420.0, "gdp": 48500.0, "energy": 3.10, "gvc": 35.0, "trade": 88.0, "manuf": 14.0, "renew": 46.0, "broadband": 44.0, "internet": 93.0, "mobile": 128.0, "digital_index": 89.50
     },
     "🏭 Gelişmekte Olan Sanayi Ekonomisi": {
         "title_tr": "🏭 Gelişmekte Olan Sanayi Ekonomisi",
@@ -342,7 +348,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Yüksek Risk / Karbon Vergisi Maruziyeti",
         "skdm_risk_en": "High Risk / CBAM Tax Exposure",
         "skdm_score": "8.5/10",
-        "emission": 628.525, "gdp": 13670.94, "energy": 2.48, "gvc": 16.73, "trade": 69.61, "manuf": 22.12, "renew": 12.0, "broadband": 20.92, "internet": 81.41, "mobile": 99.54
+        "emission": 628.525, "gdp": 13670.94, "energy": 2.48, "gvc": 16.73, "trade": 69.61, "manuf": 22.12, "renew": 12.0, "broadband": 20.92, "internet": 81.41, "mobile": 99.54, "digital_index": 66.22
     },
     "🐉 Yüksek Dijitalleşmiş Asya Ekonomisi": {
         "title_tr": "🐉 Yüksek Dijitalleşmiş Asya Ekonomisi",
@@ -359,7 +365,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Orta - Yüksek Risk",
         "skdm_risk_en": "Medium - High Risk",
         "skdm_score": "6.8/10",
-        "emission": 685.0, "gdp": 33000.0, "energy": 5.20, "gvc": 41.0, "trade": 80.0, "manuf": 25.5, "renew": 8.5, "broadband": 43.0, "internet": 97.0, "mobile": 142.0
+        "emission": 685.0, "gdp": 33000.0, "energy": 5.20, "gvc": 41.0, "trade": 80.0, "manuf": 25.5, "renew": 8.5, "broadband": 43.0, "internet": 97.0, "mobile": 142.0, "digital_index": 92.80
     },
     "⚡ Düşük Gelirli & Yüksek Enerji Yoğunluklu Ülke": {
         "title_tr": "⚡ Düşük Gelirli & Yüksek Enerji Yoğunluklu Ülke",
@@ -376,14 +382,14 @@ PROFILE_DETAILS = {
         "skdm_risk": "Kritik Derecede Yüksek Risk",
         "skdm_risk_en": "Critically High Risk",
         "skdm_score": "9.5/10",
-        "emission": 950.0, "gdp": 2400.0, "energy": 9.20, "gvc": 20.0, "trade": 45.0, "manuf": 14.5, "renew": 21.0, "broadband": 2.2, "internet": 46.0, "mobile": 84.0
+        "emission": 950.0, "gdp": 2400.0, "energy": 9.20, "gvc": 20.0, "trade": 45.0, "manuf": 14.5, "renew": 21.0, "broadband": 2.2, "internet": 46.0, "mobile": 84.0, "digital_index": 35.20
     },
     "🍃 Yeşil İkiz Dönüşüm Öncüsü": {
         "title_tr": "🍃 Yeşil İkiz Dönüşüm Öncüsü",
         "title_en": "🍃 Green Twin Transition Pioneer",
         "desc": "Yüksek yenilenebilir enerji (%65) ve ileri dijital altyapının sinerji oluşturduğu ideal karbonsuzlaşma modeli.",
         "desc_en": "Ideal decarbonization model combining high renewable energy (65%) and advanced digital infrastructure.",
-        "badge": "Geleceğin İdeal Modeli",
+        "badge": "Geleceğin İideal Modeli",
         "badge_en": "Ideal Future Model",
         "focus": "Sıfır Karbon Büyüme ve Yeşil Dijital Entegrasyon",
         "recipe": "Akıllı şehirler, yeşil veri merkezleri ve %100 karbonsuz üretim ile küresel iklim standartlarını belirlemek.",
@@ -393,7 +399,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Sıfır Risk / Lider Konum",
         "skdm_risk_en": "Zero Risk / Leader Position",
         "skdm_score": "0.5/10",
-        "emission": 180.0, "gdp": 56000.0, "energy": 3.80, "gvc": 34.0, "trade": 92.0, "manuf": 13.0, "renew": 66.0, "broadband": 41.0, "internet": 95.0, "mobile": 126.0
+        "emission": 180.0, "gdp": 56000.0, "energy": 3.80, "gvc": 34.0, "trade": 92.0, "manuf": 13.0, "renew": 66.0, "broadband": 41.0, "internet": 95.0, "mobile": 126.0, "digital_index": 91.50
     }
 }
 
@@ -411,7 +417,7 @@ def load_models():
 
 svr_model, scaler, pca, y_scaler = load_models()
 
-# ANCHORED PREDICTION FUNCTION
+# ANCHORED PREDICTION FUNCTION (PRESERVES EXACT EMPIRICAL BASELINE)
 def predict_emissions_anchored(base_emission, base_vals, cur_vals):
     d_gdp = (cur_vals['gdp'] - base_vals['gdp']) * 0.015
     d_energy = (cur_vals['energy'] - base_vals['energy']) * 120.0
@@ -493,7 +499,8 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
     base_vals = {
         'gdp': p_info["gdp"], 'energy': p_info["energy"], 'gvc': p_info["gvc"],
         'trade': p_info["trade"], 'manuf': p_info["manuf"], 'renew': p_info["renew"],
-        'broadband': p_info["broadband"], 'internet': p_info["internet"], 'mobile': p_info["mobile"]
+        'broadband': p_info["broadband"], 'internet': p_info["internet"], 'mobile': p_info["mobile"],
+        'digital_index': p_info.get("digital_index", BASE_DIGITAL_INDEX)
     }
     st.session_state.gdp_val = p_info["gdp"]
     st.session_state.energy_val = p_info["energy"]
@@ -520,7 +527,8 @@ else:
     base_vals = {
         'gdp': c_info["gdp"], 'energy': c_info["energy"], 'gvc': c_info["gvc"],
         'trade': c_info["trade"], 'manuf': c_info["manuf"], 'renew': c_info["renew"],
-        'broadband': c_info["broadband"], 'internet': c_info["internet"], 'mobile': c_info["mobile"]
+        'broadband': c_info["broadband"], 'internet': c_info["internet"], 'mobile': c_info["mobile"],
+        'digital_index': c_info.get("digital_index", BASE_DIGITAL_INDEX)
     }
     st.session_state.gdp_val = c_info["gdp"]
     st.session_state.energy_val = c_info["energy"]
@@ -534,7 +542,7 @@ else:
 
 gdp = st.sidebar.slider("Kişi Başı GSYH ($)" if is_tr else "GDP per Capita ($)", 1000, 115000, int(st.session_state.gdp_val), step=500)
 energy_intensity = st.sidebar.slider("Enerji Yoğunluğu (MJ/$)" if is_tr else "Energy Intensity (MJ/$)", 0.5, 15.0, float(st.session_state.energy_val), step=0.1)
-gvc_output = st.sidebar.slider("GVC Çıktısı (%)" if is_tr else "GVC Output Share (%)", 1.0, 70.0, float(st.session_state.gvc_val), step=0.5)
+gvc_output = st.sidebar.slider("GVC Çıktısı (% / Küresel Değer Zinciri)" if is_tr else "GVC Output Share (%)", 1.0, 70.0, float(st.session_state.gvc_val), step=0.5)
 trade_openness = st.sidebar.slider("Ticari Açıklık (% GDP)" if is_tr else "Trade Openness (% GDP)", 10.0, 450.0, float(st.session_state.trade_val), step=1.0)
 manufacturing = st.sidebar.slider("İmalat Sanayi (% GDP)" if is_tr else "Manufacturing Share (% GDP)", 0.5, 45.0, float(st.session_state.manuf_val), step=0.5)
 renewable_energy = st.sidebar.slider("Yenilenebilir Enerji (%)" if is_tr else "Renewable Share (%)", 0.0, 85.0, float(st.session_state.renew_val), step=0.5)
@@ -543,14 +551,15 @@ st.sidebar.subheader(dig_header)
 digital_mode = st.sidebar.radio(dig_mode_label, [dig_opt1, dig_opt2], index=0)
 
 if digital_mode in [dig_opt1, "Detailed 3 Indicators"]:
-    broadband = st.sidebar.slider("Sabit Geniş Bant" if is_tr else "Fixed Broadband", 0.0, 50.0, float(st.session_state.broadband_val), step=0.5)
-    internet_users = st.sidebar.slider("İnternet Kullanımı (%)" if is_tr else "Internet Users (%)", 0.0, 100.0, float(st.session_state.internet_val), step=1.0)
-    mobile_sub = st.sidebar.slider("Mobil Abonelik" if is_tr else "Mobile Subscriptions", 15.0, 320.0, float(st.session_state.mobile_val), step=1.0)
+    broadband = st.sidebar.slider("Sabit Geniş Bant (DIG1)" if is_tr else "Fixed Broadband (DIG1)", 0.0, 50.0, float(st.session_state.broadband_val), step=0.5)
+    internet_users = st.sidebar.slider("İnternet Kullanımı (%) (DIG2)" if is_tr else "Internet Users (%) (DIG2)", 0.0, 100.0, float(st.session_state.internet_val), step=1.0)
+    mobile_sub = st.sidebar.slider("Mobil Abonelik (DIG3)" if is_tr else "Mobile Subscriptions (DIG3)", 15.0, 320.0, float(st.session_state.mobile_val), step=1.0)
+    calculated_digital_index = round((broadband/48.0 * 0.3 + internet_users/100.0 * 0.5 + mobile_sub/160.0 * 0.2) * 100.0, 2)
 else:
-    dig_single = st.sidebar.slider("Dijitalleşme İndeksi (%)" if is_tr else "Digitalization Index (%)", 0.0, 100.0, float(st.session_state.internet_val), step=1.0)
-    broadband = (dig_single / 100.0) * 48.0
-    internet_users = dig_single
-    mobile_sub = (dig_single / 100.0) * 160.0
+    calculated_digital_index = st.sidebar.slider("Dijitalleşme İndeksi (%)" if is_tr else "Digitalization Index (%)", 0.0, 100.0, float(st.session_state.internet_val), step=1.0)
+    broadband = (calculated_digital_index / 100.0) * 48.0
+    internet_users = calculated_digital_index
+    mobile_sub = (calculated_digital_index / 100.0) * 160.0
 
 st.sidebar.markdown("---")
 st.sidebar.markdown(f"👁️ **{'Canlı Ziyaretçi Sayısı' if is_tr else 'Live Visitors'}:** `{visitor_info['total_visits']}`")
@@ -562,7 +571,8 @@ with st.sidebar.expander("🌐 " + ("Ziyaretçi Ülke Dağılımı" if is_tr els
 cur_vals = {
     'gdp': gdp, 'energy': energy_intensity, 'gvc': gvc_output,
     'trade': trade_openness, 'manuf': manufacturing, 'renew': renewable_energy,
-    'broadband': broadband, 'internet': internet_users, 'mobile': mobile_sub
+    'broadband': broadband, 'internet': internet_users, 'mobile': mobile_sub,
+    'digital_index': calculated_digital_index
 }
 
 pred_emission = predict_emissions_anchored(base_country_emission, base_vals, cur_vals)
@@ -605,19 +615,23 @@ with col_sc2:
             "Senaryo Adı": s_name,
             "Tahmini Emisyon (Mt)": round(pred_emission, 2),
             "Baseline Farkı (%)": round(country_policy_pct, 1),
-            "Alt Güven": round(lower_bound, 1),
-            "Üst Güven": round(upper_bound, 1),
-            "GSYH (\$)": gdp,
+            "Alt Güven (%5)": round(lower_bound, 1),
+            "Üst Güven (%95)": round(upper_bound, 1),
+            "GSYH ($)": gdp,
             "Enerji Yoğunluğu (MJ/$)": energy_intensity,
-            "Yenilenebilir Enerji (%)": renewable_energy,
-            "İmalat Payı (%)": manufacturing,
+            "GVC Çıktı Payı (%)": gvc_output,
             "Ticari Açıklık (%)": trade_openness,
-            "GVC Çıktısı (%)": gvc_output,
+            "İmalat Payı (%)": manufacturing,
+            "Yenilenebilir Enerji (%)": renewable_energy,
+            "Dijitalleşme İndeksi (%)": calculated_digital_index,
+            "Sabit Genişbant (DIG1)": round(broadband, 2),
+            "İnternet Kullanımı (DIG2)": round(internet_users, 1),
+            "Mobil Abonelik (DIG3)": round(mobile_sub, 1),
             "c_renew": round(c_renew, 1),
             "dyn_tax_savings": round(max(0.0, dyn_tax_savings), 0),
             "dyn_scope3_reduction": round(dyn_scope3_reduction, 1)
         })
-        st.success("✅ " + ("Senaryo kaydedildi!" if is_tr else "Scenario saved!"))
+        st.success("✅ " + ("Senaryo başarıyla hafızaya kaydedildi!" if is_tr else "Scenario saved to memory successfully!"))
 
 if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
     p_title = PROFILE_DETAILS[selected_profile]["title_tr"] if is_tr else PROFILE_DETAILS[selected_profile]["title_en"]
@@ -638,41 +652,20 @@ else:
     c_disp = get_country_name(selected_country_tr, is_tr)
     st.success(f"📌 **{'Seçili Ülke' if is_tr else 'Selected Country'}:** {c_disp} | **{'Mevcut Gerçek Emisyonu' if is_tr else 'Baseline Emission'}:** {base_country_emission:.2f} Mt CO₂eq")
 
+# COMPREHENSIVE 8-METRIC KPI DASHBOARD ROW
+st.markdown("### 📊 " + ("Canlı Performans & Tüm Değişkenler Gösterge Paneli" if is_tr else "Live Performance & All Variables Dashboard"))
+
 col1, col2, col3, col4 = st.columns(4)
+col1.metric("Tahmini GHG Emisyonu" if is_tr else "Predicted GHG Emission", f"{pred_emission:.2f} Mt", delta=f"{country_policy_pct:+.1f}% vs Baseline", delta_color="inverse")
+col2.metric("Milli Gelir (GSYH / GDP)" if is_tr else "GDP per Capita", f"${gdp:,.0f}", delta=f"{((gdp - base_vals['gdp'])/base_vals['gdp'])*100:+.1f}%")
+col3.metric("Enerji Yoğunluğu" if is_tr else "Energy Intensity", f"{energy_intensity:.2f} MJ/$", delta=f"{((energy_intensity - base_vals['energy'])/base_vals['energy'])*100:+.1f}%", delta_color="inverse")
+col4.metric("GVC Çıktı Payı (Tedarik Zinciri)" if is_tr else "GVC-related Output Share", f"%{gvc_output:.2f}", delta=f"{((gvc_output - base_vals['gvc'])/base_vals['gvc'])*100:+.1f}%")
 
-col1.metric(
-    label="Yeni Politika Tahmini" if is_tr else "New Policy Prediction",
-    value=f"{pred_emission:.2f} Mt CO₂eq",
-    delta=f"{country_policy_pct:+.1f}% vs Baseline",
-    delta_color="inverse"
-)
-
-if mode_choice in [mod_opt1, "Select from Global Country List"]:
-    col2.metric(
-        label=f"{get_country_name(selected_country_tr, is_tr)} (Baseline)",
-        value=f"{base_country_emission:.2f} Mt CO₂eq",
-        delta=f"{country_policy_pct:+.1f}% Scenario",
-        delta_color="inverse"
-    )
-else:
-    col2.metric(
-        label="Seçili Profil Baseline" if is_tr else "Selected Profile Baseline",
-        value=f"{base_country_emission:.2f} Mt CO₂eq",
-        delta=f"{country_policy_pct:+.1f}% Scenario",
-        delta_color="inverse"
-    )
-
-col3.metric(
-    label="Alt Güven Sınırı (%5)" if is_tr else "Lower Bound (5%)",
-    value=f"{lower_bound:.2f} Mt CO₂eq",
-    help="%5 olasılık alt sınırı" if is_tr else "5% probability lower bound"
-)
-
-col4.metric(
-    label="Üst Güven Sınırı (%95)" if is_tr else "Upper Bound (95%)",
-    value=f"{upper_bound:.2f} Mt CO₂eq",
-    help="%95 olasılık üst sınırı" if is_tr else "95% probability upper bound"
-)
+col5, col6, col7, col8 = st.columns(4)
+col5.metric("Ticari Açıklık / Trade Openness" if is_tr else "Trade Openness", f"%{trade_openness:.2f}", delta=f"{((trade_openness - base_vals['trade'])/base_vals['trade'])*100:+.1f}%")
+col6.metric("İmalat Sanayi / Manufacturing" if is_tr else "Manufacturing Share", f"%{manufacturing:.2f}", delta=f"{((manufacturing - base_vals['manuf'])/base_vals['manuf'])*100:+.1f}%")
+col7.metric("Yenilenebilir Enerji / Renewables" if is_tr else "Renewable Share", f"%{renewable_energy:.2f}", delta=f"{((renewable_energy - base_vals['renew'])/base_vals['renew'])*100:+.1f}%")
+col8.metric("Dijitalleşme İndeksi (Composite)" if is_tr else "Digitalization Index", f"%{calculated_digital_index:.2f}", delta=f"{((calculated_digital_index - base_vals.get('digital_index', BASE_DIGITAL_INDEX))/base_vals.get('digital_index', BASE_DIGITAL_INDEX))*100:+.1f}%")
 
 st.markdown("---")
 
@@ -700,13 +693,15 @@ def generate_pdf_report():
             "Senaryo Adı": c_disp,
             "Tahmini Emisyon (Mt)": round(pred_emission, 2),
             "Baseline Farkı (%)": round(country_policy_pct, 1),
-            "Alt Güven": round(lower_bound, 1),
-            "Üst Güven": round(upper_bound, 1),
+            "Alt Güven (%5)": round(lower_bound, 1),
+            "Üst Güven (%95)": round(upper_bound, 1),
             "GSYH (\$)": gdp,
             "Enerji Yoğunluğu (MJ/$)": energy_intensity,
-            "Yenilenebilir Enerji (%)": renewable_energy,
-            "İmalat Payı (%)": manufacturing,
+            "GVC Çıktı Payı (%)": gvc_output,
             "Ticari Açıklık (%)": trade_openness,
+            "İmalat Payı (%)": manufacturing,
+            "Yenilenebilir Enerji (%)": renewable_energy,
+            "Dijitalleşme İndeksi (%)": calculated_digital_index,
             "c_renew": round(c_renew, 1),
             "dyn_tax_savings": round(max(0.0, dyn_tax_savings), 0),
             "dyn_scope3_reduction": round(dyn_scope3_reduction, 1)
@@ -732,27 +727,27 @@ def generate_pdf_report():
         pdf.cell(190, 6, clean_pdf_text(lbl_base))
         pdf.ln(6)
         
-        lbl_mc = f"- Monte Carlo Guven Sinirlari (%95): {sc.get('Alt Güven', 0.0)} - {sc.get('Üst Güven', 0.0)} Mt CO2eq" if is_tr else f"- Monte Carlo Confidence Interval (95%): {sc.get('Alt Güven', 0.0)} - {sc.get('Üst Güven', 0.0)} Mt CO2eq"
+        lbl_mc = f"- Monte Carlo Guven Sinirlari (%95): {sc.get('Alt Güven (%5)', 0.0)} - {sc.get('Üst Güven (%95)', 0.0)} Mt CO2eq" if is_tr else f"- Monte Carlo Confidence Interval (95%): {sc.get('Alt Güven (%5)', 0.0)} - {sc.get('Üst Güven (%95)', 0.0)} Mt CO2eq"
         pdf.cell(190, 6, clean_pdf_text(lbl_mc))
         pdf.ln(8)
 
         pdf.set_font("Helvetica", 'B', 10)
-        lbl_phead = "MAKRO VE POLITIKA PARAMETRELERI:" if is_tr else "MACRO AND POLICY PARAMETERS:"
+        lbl_phead = "TUM MAKRO, TICARET VE DIJITALLESTE PARAMETRELERI:" if is_tr else "ALL MACRO, TRADE AND DIGITALIZATION PARAMETERS:"
         pdf.cell(190, 6, clean_pdf_text(lbl_phead))
         pdf.ln(6)
         
         pdf.set_font("Helvetica", '', 9)
-        val_gdp_sc = sc.get('GSYH (\$)', sc.get('GSYH (\$)', 0))
+        val_gdp_sc = sc.get('GSYH (\$)', 0)
         val_energy_sc = sc.get('Enerji Yoğunluğu (MJ/$)', 0)
-        p_row1 = f"  * GSYH / GDP: ${val_gdp_sc:,.0f} | Enerji Yogunlugu / Energy Intensity: {val_energy_sc:.1f} MJ/$"
+        p_row1 = f"  * GSYH: ${val_gdp_sc:,.0f} | Enerji Yogunlugu: {val_energy_sc:.1f} MJ/$ | GVC Cikti Payi: %{sc.get('GVC Çıktı Payı (%)', 0):.1f}"
         pdf.cell(190, 5, clean_pdf_text(p_row1))
         pdf.ln(5)
         
-        p_row2 = f"  * Yenilenebilir Enerji / Renewables: %{sc.get('Yenilenebilir Enerji (%)', 0):.1f} | Imalat Payi / Manufacturing: %{sc.get('İmalat Payı (%)', 0):.1f}"
+        p_row2 = f"  * Ticari Aciklik: %{sc.get('Ticari Açıklık (%)', 0):.1f} | Imalat Payi: %{sc.get('İmalat Payı (%)', 0):.1f} | Yenilenebilir: %{sc.get('Yenilenebilir Enerji (%)', 0):.1f}"
         pdf.cell(190, 5, clean_pdf_text(p_row2))
         pdf.ln(5)
-        
-        p_row3 = f"  * Ticari Aciklik / Trade Openness: %{sc.get('Ticari Açıklık (%)', 0):.1f}"
+
+        p_row3 = f"  * Dijitalleste Indeksi: %{sc.get('Dijitalleşme İndeksi (%)', 0):.1f}"
         pdf.cell(190, 5, clean_pdf_text(p_row3))
         pdf.ln(8)
 
@@ -805,7 +800,18 @@ with tab1:
     map_list = []
     for c_name_tr, c_data in COUNTRIES_DATA.items():
         c_disp = get_country_name(c_name_tr, is_tr)
-        map_list.append({"Ülke / Country": c_disp, "ISO": c_data["iso"], "Emisyon (Mt)": round(c_data["emission"], 1), "GSYH (\$)": c_data["gdp"], "Yenilenebilir (%)": c_data["renew"], "Enerji Yoğunluğu": c_data["energy"], "İmalat (%)": c_data["manuf"]})
+        map_list.append({
+            "Ülke / Country": c_disp,
+            "ISO": c_data["iso"],
+            "Emisyon (Mt)": round(c_data["emission"], 1),
+            "GSYH (\$)": c_data["gdp"],
+            "Enerji Yoğunluğu": c_data["energy"],
+            "GVC Payı (%)": c_data["gvc"],
+            "Ticaret Açıklığı (%)": c_data["trade"],
+            "İmalat Payı (%)": c_data["manuf"],
+            "Yenilenebilir (%)": c_data["renew"],
+            "Dijitalleşme İndeksi (%)": c_data["digital_index"]
+        })
     df_map = pd.DataFrame(map_list)
 
     fig_map = px.choropleth(
@@ -834,7 +840,7 @@ with tab1:
             st.markdown(f"#### 🕸️ {'Çok Boyutlu Profil Radarı (Örümcek Ağ Grafiği)' if is_tr else 'Multidimensional Radar Chart'}")
             
             p_curr = PROFILE_DETAILS[selected_profile]
-            categories = ['GSYH (\$)', 'Enerji Yoğ.', 'GVC Payı', 'Ticaret Açıklık', 'İmalat Payı', 'Yenilenebilir %'] if is_tr else ['GDP (\$)', 'Energy Int.', 'GVC Share', 'Trade Openness', 'Manufacturing', 'Renewable %']
+            categories = ['GSYH (\$)', 'Enerji Yoğ.', 'GVC Payı', 'Ticaret Açıklık', 'İmalat Payı', 'Yenilenebilir %', 'Dijitalleşme %'] if is_tr else ['GDP (\$)', 'Energy Int.', 'GVC Share', 'Trade Openness', 'Manufacturing', 'Renewable %', 'Digitalization %']
             
             val_selected = [
                 min(100, (p_curr["gdp"] / 70000) * 100),
@@ -842,7 +848,8 @@ with tab1:
                 min(100, (p_curr["gvc"] / 50) * 100),
                 min(100, (p_curr["trade"] / 150) * 100),
                 min(100, (p_curr["manuf"] / 35) * 100),
-                min(100, p_curr["renew"])
+                min(100, p_curr["renew"]),
+                min(100, p_curr.get("digital_index", BASE_DIGITAL_INDEX))
             ]
             
             val_base = [
@@ -851,7 +858,8 @@ with tab1:
                 min(100, (BASE_GVC / 50) * 100),
                 min(100, (BASE_TRADE / 150) * 100),
                 min(100, (BASE_MANUF / 35) * 100),
-                min(100, BASE_RENEW)
+                min(100, BASE_RENEW),
+                min(100, BASE_DIGITAL_INDEX)
             ]
 
             fig_radar = go.Figure()
@@ -877,9 +885,11 @@ with tab1:
                     "Profil": p_short,
                     "GSYH": p_v["gdp"]/1000,
                     "Enerji Y.": p_v["energy"],
-                    "Yenilenebilir": p_v["renew"],
+                    "GVC Payı": p_v["gvc"],
+                    "Ticaret": p_v["trade"],
                     "İmalat": p_v["manuf"],
-                    "Ticaret": p_v["trade"]
+                    "Yenilenebilir": p_v["renew"],
+                    "Dijitalleşme": p_v.get("digital_index", BASE_DIGITAL_INDEX)
                 })
             df_pm = pd.DataFrame(prof_matrix_rows).set_index("Profil")
             df_pm_norm = (df_pm - df_pm.min()) / (df_pm.max() - df_pm.min() + 1e-9) * 100.0
@@ -896,9 +906,11 @@ with tab1:
                 "Hazır Profil / Tipoloji" if is_tr else "Typology Profile": p_data["title_tr"] if is_tr else p_data["title_en"],
                 "Rozet / Identity" if is_tr else "Badge": p_data["badge" if is_tr else "badge_en"],
                 "Tahmini Emisyon (Mt)" if is_tr else "Predicted Emission (Mt)": round(p_data["emission"], 1),
+                "GVC Payı (%)" if is_tr else "GVC Share (%)": p_data["gvc"],
+                "Ticaret Açıklığı (%)" if is_tr else "Trade Openness (%)": p_data["trade"],
+                "Dijitalleşme İndeksi (%)" if is_tr else "Digitalization Index (%)": p_data.get("digital_index", BASE_DIGITAL_INDEX),
                 "Akran Ülkeler" if is_tr else "Peer Countries": peer_names,
-                "SKDM Riski" if is_tr else "CBAM Risk": p_data["skdm_risk" if is_tr else "skdm_risk_en"],
-                "Karbonsuzlaşma Reçetesi" if is_tr else "Decarbonization Recipe": p_data["recipe" if is_tr else "recipe_en"]
+                "SKDM Riski" if is_tr else "CBAM Risk": p_data["skdm_risk" if is_tr else "skdm_risk_en"]
             })
         df_prof_table = pd.DataFrame(prof_table_data)
         st.dataframe(df_prof_table.sort_values("Tahmini Emisyon (Mt)" if is_tr else "Predicted Emission (Mt)", ascending=False), use_container_width=True, hide_index=True)
@@ -907,14 +919,7 @@ with tab1:
         st.subheader(f"📌 {get_country_name(selected_country_tr, is_tr)} — {'Göstergeler & Küresel Sıralama' if is_tr else 'Indicators & Global Ranking'}")
         c_m = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values())[0])
         
-        col_m1, col_m2, col_m3, col_m4, col_m5 = st.columns(5)
-        col_m1.metric("Milli Gelir (GSYH)" if is_tr else "GDP per Capita", f"${c_m['gdp']:,.0f}")
-        col_m2.metric("Enerji Yoğunluğu" if is_tr else "Energy Intensity", f"{c_m['energy']:.2f} MJ/$")
-        col_m3.metric("Yenilenebilir Enerji" if is_tr else "Renewable Share", f"%{c_m['renew']:.1f}")
-        col_m4.metric("İmalat Sanayi Payı" if is_tr else "Manufacturing Share", f"%{c_m['manuf']:.1f}")
-        col_m5.metric("Ticari Açıklık" if is_tr else "Trade Openness", f"%{c_m['trade']:.1f}")
-
-        st.markdown(f"#### 📊 {'Küresel Ülke Emisyon & Politika Listesi' if is_tr else 'Global Country Emission & Policy List'}")
+        st.markdown(f"#### 📊 {'Küresel Ülke Emisyon, Tedarik Zinciri & Dijitalleşme Listesi' if is_tr else 'Global Country Emission, Supply Chain & Digitalization List'}")
         st.dataframe(df_map.sort_values("Emisyon (Mt)", ascending=False), use_container_width=True, hide_index=True)
 
 with tab2:
@@ -1028,19 +1033,20 @@ with tab3:
             for cdisp in selected_custom_disp:
                 cname_tr = REVERSE_COUNTRY_TRANSLATIONS.get(cdisp, cdisp)
                 cinfo = COUNTRIES_DATA.get(cname_tr, list(COUNTRIES_DATA.values())[0])
-                score = (cinfo["renew"] * 0.4) + ((15.0 - cinfo["energy"]) * 0.4) + (cinfo["gdp"]/1000 * 0.2)
+                score = (cinfo["renew"] * 0.3) + ((15.0 - cinfo["energy"]) * 0.3) + (cinfo["gvc"] * 0.2) + (cinfo.get("digital_index", BASE_DIGITAL_INDEX) * 0.2)
                 cbam_risk, _, _ = eval_skdm_risk(cinfo["manuf"], cinfo["renew"], cinfo["energy"])
                 custom_eval.append({
                     "Ülke / Country": cdisp,
                     "Uygunluk Skoru / Score": round(score, 1),
+                    "GVC Çıktı Payı (%) / GVC": cinfo["gvc"],
+                    "Ticari Açıklık (%) / Trade": cinfo["trade"],
+                    "Dijitalleşme İndeksi (%) / Digital": cinfo.get("digital_index", BASE_DIGITAL_INDEX),
                     "Yenilenebilir Enerji (%) / Renewables": cinfo["renew"],
                     "Enerji Yoğunluğu / Energy Intensity": cinfo["energy"],
-                    "İmalat Payı (%) / Manufacturing": cinfo["manuf"],
-                    "GSYH (\$) / GDP": cinfo["gdp"],
                     "SKDM Risk Durumu / CBAM Risk": cbam_risk
                 })
             df_custom_eval = pd.DataFrame(custom_eval).sort_values("Uygunluk Skoru / Score", ascending=False)
-            st.success("🎯 **Seçtiğiniz Ülkelerin Detaylı İklim & Yatırım Analiz Tablosu:**" if is_tr else "🎯 **Detailed Climate & Investment Analysis Table of Selected Countries:**")
+            st.success("🎯 **Seçtiğiniz Ülkelerin Detaylı İklim & Tedarik Zinciri Analiz Tablosu:**" if is_tr else "🎯 **Detailed Climate & Supply Chain Analysis Table of Selected Countries:**")
             st.dataframe(df_custom_eval, use_container_width=True, hide_index=True)
     else:
         min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):" if is_tr else "Min Manufacturing Infrastructure Share (%):", 5.0, 40.0, 15.0)
@@ -1049,14 +1055,16 @@ with tab3:
         opt_candidates = []
         for cname_tr, cinfo in COUNTRIES_DATA.items():
             if cinfo["manuf"] >= min_manuf_target and cinfo["energy"] <= max_energy_limit:
-                score = (cinfo["renew"] * 0.4) + ((15.0 - cinfo["energy"]) * 0.4) + (cinfo["gdp"]/1000 * 0.2)
+                score = (cinfo["renew"] * 0.3) + ((15.0 - cinfo["energy"]) * 0.3) + (cinfo["gvc"] * 0.2) + (cinfo.get("digital_index", BASE_DIGITAL_INDEX) * 0.2)
                 cbam_risk, _, _ = eval_skdm_risk(cinfo["manuf"], cinfo["renew"], cinfo["energy"])
                 opt_candidates.append({
                     "Ülke / Country": get_country_name(cname_tr, is_tr),
                     "Uygunluk Skoru / Score": round(score, 1),
-                    "Yenilenebilir (%) / Renewables": cinfo["renew"],
-                    "Enerji Yoğ. / Energy Int.": cinfo["energy"],
-                    "İmalat Payı (%) / Manufacturing": cinfo["manuf"],
+                    "GVC Çıktı Payı (%)": cinfo["gvc"],
+                    "Ticari Açıklık (%)": cinfo["trade"],
+                    "Dijitalleşme (%)": cinfo.get("digital_index", BASE_DIGITAL_INDEX),
+                    "Yenilenebilir (%)": cinfo["renew"],
+                    "Enerji Yoğ.": cinfo["energy"],
                     "SKDM Riski / CBAM Risk": cbam_risk
                 })
         
@@ -1120,10 +1128,10 @@ with tab5:
     eB = cB_data["emission"]
 
     fig_two = go.Figure(data=[
-        go.Bar(name=country_A_disp, x=["Emisyon / Emissions (Mt)", "GSYH / GDP ($k)", "Yenilenebilir / Renewables (%)", "Enerji Yoğunluğu / Energy Int. (x10)"], y=[eA, cA_data["gdp"]/1000, cA_data["renew"], cA_data["energy"]*10], marker_color="#1f77b4"),
-        go.Bar(name=country_B_disp, x=["Emisyon / Emissions (Mt)", "GSYH / GDP ($k)", "Yenilenebilir / Renewables (%)", "Enerji Yoğunluğu / Energy Int. (x10)"], y=[eB, cB_data["gdp"]/1000, cB_data["renew"], cB_data["energy"]*10], marker_color="#ff7f0e")
+        go.Bar(name=country_A_disp, x=["Emisyon / Emissions (Mt)", "GSYH / GDP ($k)", "GVC Çıktı Payı (%)", "Ticari Açıklık (%)", "Yenilenebilir (%)", "Dijitalleşme (%)"], y=[eA, cA_data["gdp"]/1000, cA_data["gvc"], cA_data["trade"], cA_data["renew"], cA_data.get("digital_index", BASE_DIGITAL_INDEX)], marker_color="#1f77b4"),
+        go.Bar(name=country_B_disp, x=["Emisyon / Emissions (Mt)", "GSYH / GDP ($k)", "GVC Çıktı Payı (%)", "Ticari Açıklık (%)", "Yenilenebilir (%)", "Dijitalleşme (%)"], y=[eB, cB_data["gdp"]/1000, cB_data["gvc"], cB_data["trade"], cB_data["renew"], cB_data.get("digital_index", BASE_DIGITAL_INDEX)], marker_color="#ff7f0e")
     ])
-    fig_two.update_layout(barmode='group', title=f"{country_A_disp} vs {country_B_disp} Indicator Comparison", template="plotly_white", height=420)
+    fig_two.update_layout(barmode='group', title=f"{country_A_disp} vs {country_B_disp} Full Indicator Comparison", template="plotly_white", height=420)
     st.plotly_chart(fig_two, use_container_width=True)
 
 with tab6:
@@ -1133,15 +1141,22 @@ with tab6:
     for cname_tr, cinfo in COUNTRIES_DATA.items():
         cdisp = get_country_name(cname_tr, is_tr)
         all_c_list.append({
-            "Ülke / Country": cdisp, "Emisyon / Emissions (Mt)": round(cinfo["emission"], 1), "GSYH (\$)": cinfo["gdp"],
-            "Enerji Yoğunluğu / Energy Int.": cinfo["energy"], "Yenilenebilir / Renewables (%)": cinfo["renew"], "İmalat / Mfg (%)": cinfo["manuf"]
+            "Ülke / Country": cdisp,
+            "Emisyon / Emissions (Mt)": round(cinfo["emission"], 1),
+            "GSYH / GDP (\$)": cinfo["gdp"],
+            "Enerji Yoğunluğu / Energy Int.": cinfo["energy"],
+            "GVC Çıktı Payı / GVC (%)": cinfo["gvc"],
+            "Ticari Açıklık / Trade (%)": cinfo["trade"],
+            "Yenilenebilir / Renewables (%)": cinfo["renew"],
+            "İmalat / Mfg (%)": cinfo["manuf"],
+            "Dijitalleşme İndeksi / Digital (%)": cinfo.get("digital_index", BASE_DIGITAL_INDEX)
         })
     df_all_raw = pd.DataFrame(all_c_list)
 
     fig_bubble = px.scatter(
-        df_all_raw, x="GSYH (\$)", y="Enerji Yoğunluğu / Energy Int.", size="Emisyon / Emissions (Mt)", color="Yenilenebilir / Renewables (%)",
+        df_all_raw, x="GSYH / GDP (\$)", y="Enerji Yoğunluğu / Energy Int.", size="Emisyon / Emissions (Mt)", color="GVC Çıktı Payı / GVC (%)",
         hover_name="Ülke / Country", size_max=45, color_continuous_scale="Viridis",
-        title="Ülkelerin GSYH, Enerji Yoğunluğu ve Emisyon Büyüklüklerine Göre Kabarcık Dağılımı" if is_tr else "Countries Distribution by GDP, Energy Intensity, and GHG Emission Size"
+        title="Ülkelerin GSYH, Enerji Yoğunluğu, GVC Payı ve Emisyon Dağılımı" if is_tr else "Countries Distribution by GDP, Energy Intensity, GVC Share, and GHG Emissions"
     )
     fig_bubble.update_layout(template="plotly_white", height=500)
     st.plotly_chart(fig_bubble, use_container_width=True)
@@ -1151,13 +1166,13 @@ with tab6:
     df_all_hm_raw = df_all_raw.set_index("Ülke / Country")
     df_all_norm = (df_all_hm_raw - df_all_hm_raw.min()) / (df_all_hm_raw.max() - df_all_hm_raw.min() + 1e-9) * 100.0
 
-    fig_all_hm = px.imshow(df_all_norm, text_auto=".0f", color_continuous_scale="Viridis", aspect="auto", title="Küresel Ülke Karşılaştırma Matrisi (0-100 Normalize Skorlar)" if is_tr else "Global Country Comparison Matrix (0-100 Normalized Scores)")
+    fig_all_hm = px.imshow(df_all_norm, text_auto=".0f", color_continuous_scale="Viridis", aspect="auto", title="Küresel Ülke Karşılaştırma Matrisi (Tüm 10 Değişkenle Normalize Skorlar)" if is_tr else "Global Country Comparison Matrix (All 10 Variables Normalized Scores)")
     fig_all_hm.update_layout(height=1100, margin=dict(l=160, r=40, t=50, b=50), yaxis=dict(tickfont=dict(size=11), autorange="reversed"))
     st.plotly_chart(fig_all_hm, use_container_width=True)
 
 with tab7:
-    st.subheader("💾 Kaydedilen Senaryolar Deposu & İndir" if is_tr else "💾 Saved Scenario Vault & Export")
-    st.markdown("Simülatörde hazırlayıp **'Senaryoyu Hafızaya Kaydet'** butonu ile sakladığınız tüm senaryolar burada listelenir:" if is_tr else "All scenarios saved via 'Save Scenario to Memory' are listed here:")
+    st.subheader("💾 Kaydedilen Senaryolar Deposu & İndir (Tüm Değişkenler Eksiksiz)" if is_tr else "💾 Saved Scenario Vault & Export (All Variables Complete)")
+    st.markdown("Simülatörde hazırlayıp **'Senaryoyu Hafızaya Kaydet'** butonu ile sakladığınız tüm senaryolar ve tüm değişken sütunları burada listelenir:" if is_tr else "All scenarios saved via 'Save Scenario to Memory' and all variable columns are listed here:")
 
     if st.session_state.saved_scenarios:
         df_saved = pd.DataFrame(st.session_state.saved_scenarios)
