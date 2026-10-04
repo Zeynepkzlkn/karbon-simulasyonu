@@ -136,7 +136,7 @@ def track_new_visit():
 
 visitor_info = track_new_visit()
 
-# HELPER FUNCTION TO CLEAN TEXT FOR PDF (PREVENTS UNICODE ENCODING ERROR INCLUDING EMOJIS)
+# HELPER FUNCTION TO CLEAN TEXT FOR PDF
 def clean_pdf_text(text):
     if not isinstance(text, str):
         text = str(text)
@@ -148,20 +148,21 @@ def clean_pdf_text(text):
     }
     for tr_char, clean_char in replacements.items():
         text = text.replace(tr_char, clean_char)
-    # Strip emojis and non-latin-1 characters safely
     return text.encode("latin-1", "ignore").decode("latin-1")
 
-# BASELINE S0 CONSTANTS
-BASE_GDP = 25000.0
-BASE_ENERGY = 5.2
-BASE_GVC = 25.0
-BASE_TRADE = 85.0
-BASE_MANUF = 18.0
-BASE_RENEW = 22.0
-BASE_BROADBAND = 20.0
-BASE_INTERNET = 75.0
-BASE_MOBILE = 110.0
-BASE_EMISSION = 822.40  # Mt CO2eq
+# ACTUAL EMPIRICAL BASELINE CONSTANTS
+BASE_GDP = 28127.33
+BASE_ENERGY = 3.9382
+BASE_GVC = 21.8556
+BASE_TRADE = 108.6762
+BASE_MANUF = 15.1818
+BASE_RENEW = 19.8950
+BASE_BROADBAND = 23.3729
+BASE_INTERNET = 67.4960
+BASE_MOBILE = 117.7696
+BASE_EMISSION = 791.4867  # Deterministik S0 Baseline
+BASE_MC_EMISSION = 818.6360  # Monte Carlo Mean S0 Baseline
+BASE_MC_SD = 31.4652
 
 # TRANSLATION MAP FOR COUNTRIES (TR <-> EN)
 COUNTRY_TRANSLATIONS = {
@@ -226,13 +227,13 @@ def get_country_name(name_tr, is_tr):
         return name_tr
     return COUNTRY_TRANSLATIONS.get(name_tr, name_tr)
 
-# PROFILE DETAILS
+# PROFILE DETAILS (TYPOLOGIES)
 PROFILE_DETAILS = {
     "🏛️ S0 Referans Küresel Durum (Baseline)": {
         "title_tr": "🏛️ S0 Referans Küresel Durum (Baseline)",
         "title_en": "🏛️ S0 Reference Global State (Baseline)",
-        "desc": "Veri setindeki tüm küresel ekonomilerin tam ortalamasını temsil eden nötr mihenk taşı.",
-        "desc_en": "Neutral benchmark representing the exact global average of all economies in the dataset.",
+        "desc": "Veri setindeki 52 küresel ekonominin tam ortalamasını temsil eden nötr mihenk taşı.",
+        "desc_en": "Neutral benchmark representing the exact global average of all 52 economies in the dataset.",
         "badge": "Mihenk Taşı / Referans",
         "badge_en": "Benchmark / Reference",
         "focus": "Küresel Ortalama Kıyaslaması",
@@ -243,7 +244,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Düşük / Nötr",
         "skdm_risk_en": "Low / Neutral",
         "skdm_score": "2/10",
-        "gdp": 25000.0, "energy": 5.2, "gvc": 25.0, "trade": 85.0, "manuf": 18.0, "renew": 22.0, "broadband": 20.0, "internet": 75.0, "mobile": 110.0
+        "gdp": 28127.33, "energy": 3.9382, "gvc": 21.8556, "trade": 108.6762, "manuf": 15.1818, "renew": 19.8950, "broadband": 23.3729, "internet": 67.4960, "mobile": 117.7696
     },
     "🇪🇺 AB Yeşil Mutabakat Ülkesi": {
         "title_tr": "🇪🇺 AB Yeşil Mutabakat Ülkesi",
@@ -260,7 +261,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Çok Düşük / Muafiyet Avantajı",
         "skdm_risk_en": "Very Low / Exemption Advantage",
         "skdm_score": "1/10",
-        "gdp": 48000.0, "energy": 3.2, "gvc": 32.0, "trade": 85.0, "manuf": 14.0, "renew": 58.0, "broadband": 38.0, "internet": 92.0, "mobile": 135.0
+        "gdp": 48500.0, "energy": 3.10, "gvc": 35.0, "trade": 88.0, "manuf": 14.0, "renew": 46.0, "broadband": 44.0, "internet": 93.0, "mobile": 128.0
     },
     "🏭 Gelişmekte Olan Sanayi Ekonomisi": {
         "title_tr": "🏭 Gelişmekte Olan Sanayi Ekonomisi",
@@ -277,7 +278,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Yüksek Risk / Karbon Vergisi Maruziyeti",
         "skdm_risk_en": "High Risk / CBAM Tax Exposure",
         "skdm_score": "8.5/10",
-        "gdp": 8500.0, "energy": 8.8, "gvc": 22.0, "trade": 55.0, "manuf": 28.0, "renew": 14.0, "broadband": 12.0, "internet": 58.0, "mobile": 95.0
+        "gdp": 10600.0, "energy": 5.40, "gvc": 24.5, "trade": 62.0, "manuf": 22.0, "renew": 21.5, "broadband": 21.0, "internet": 83.0, "mobile": 105.0
     },
     "🐉 Yüksek Dijitalleşmiş Asya Ekonomisi": {
         "title_tr": "🐉 Yüksek Dijitalleşmiş Asya Ekonomisi",
@@ -294,7 +295,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Orta - Yüksek Risk",
         "skdm_risk_en": "Medium - High Risk",
         "skdm_score": "6.8/10",
-        "gdp": 35000.0, "energy": 5.5, "gvc": 42.0, "trade": 130.0, "manuf": 26.0, "renew": 22.0, "broadband": 44.0, "internet": 96.0, "mobile": 160.0
+        "gdp": 33000.0, "energy": 5.20, "gvc": 41.0, "trade": 80.0, "manuf": 25.5, "renew": 8.5, "broadband": 43.0, "internet": 97.0, "mobile": 142.0
     },
     "⚡ Düşük Gelirli & Yüksek Enerji Yoğunluklu Ülke": {
         "title_tr": "⚡ Düşük Gelirli & Yüksek Enerji Yoğunluklu Ülke",
@@ -311,7 +312,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Kritik Derecede Yüksek Risk",
         "skdm_risk_en": "Critically High Risk",
         "skdm_score": "9.5/10",
-        "gdp": 3200.0, "energy": 12.5, "gvc": 12.0, "trade": 35.0, "manuf": 20.0, "renew": 8.0, "broadband": 4.0, "internet": 32.0, "mobile": 65.0
+        "gdp": 2400.0, "energy": 9.20, "gvc": 20.0, "trade": 45.0, "manuf": 14.5, "renew": 21.0, "broadband": 2.2, "internet": 46.0, "mobile": 84.0
     },
     "🍃 Yeşil İkiz Dönüşüm Öncüsü": {
         "title_tr": "🍃 Yeşil İkiz Dönüşüm Öncüsü",
@@ -328,7 +329,7 @@ PROFILE_DETAILS = {
         "skdm_risk": "Sıfır Risk / Lider Konum",
         "skdm_risk_en": "Zero Risk / Leader Position",
         "skdm_score": "0.5/10",
-        "gdp": 55000.0, "energy": 2.8, "gvc": 30.0, "trade": 90.0, "manuf": 15.0, "renew": 65.0, "broadband": 42.0, "internet": 95.0, "mobile": 140.0
+        "gdp": 56000.0, "energy": 3.80, "gvc": 34.0, "trade": 92.0, "manuf": 13.0, "renew": 66.0, "broadband": 41.0, "internet": 95.0, "mobile": 126.0
     }
 }
 
@@ -405,12 +406,12 @@ def load_models():
 
 svr_model, scaler, pca, y_scaler = load_models()
 
-# PREDICTION FUNCTION
+# PREDICTION FUNCTION (USING EXACT OLS AND SVR MARGINALS)
 def predict_emissions(gdp_i, energy_i, gvc_i, trade_i, manuf_i, renew_i, bb_i, net_i, mob_i):
     if svr_model is not None and scaler is not None and pca is not None:
-        z_bb = (bb_i - 18.5) / 12.5
-        z_net = (net_i - 65.0) / 25.0
-        z_mob = (mob_i - 105.0) / 32.0
+        z_bb = (bb_i - 23.37) / 12.82
+        z_net = (net_i - 67.50) / 24.73
+        z_mob = (mob_i - 117.77) / 30.32
         dig_z = np.array([[z_bb, z_net, z_mob]])
         try:
             dig_idx = float(np.asarray(pca.transform(dig_z)).item())
@@ -421,17 +422,27 @@ def predict_emissions(gdp_i, energy_i, gvc_i, trade_i, manuf_i, renew_i, bb_i, n
         scaled_feats = scaler.transform(raw_feats)
         pred_scaled = float(np.asarray(svr_model.predict(scaled_feats)).item())
         
-        Y_MEAN = 520.0
-        Y_STD = 530.0
         if y_scaler is not None:
             inv_p = y_scaler.inverse_transform(np.array([[pred_scaled]]))
             pred_e = float(np.asarray(inv_p).item())
         else:
-            pred_e = (pred_scaled * Y_STD) + Y_MEAN
+            pred_e = (pred_scaled * 1771.44) + 715.92
         return max(10.0, float(pred_e))
     else:
-        # Mathematical fallback for initial state
-        e_est = 800.0 + (gdp_i / 1000.0) * 2.5 + (energy_i * 35.0) + (manuf_i * 8.0) - (renew_i * 6.5)
+        # High-precision empirical OLS fallback formula
+        z_bb = (bb_i - 23.37) / 12.82
+        z_net = (net_i - 67.50) / 24.73
+        z_mob = (mob_i - 117.77) / 30.32
+        dig_idx = 0.6208*z_bb + 0.6493*z_net + 0.4394*z_mob
+        
+        e_est = (BASE_EMISSION + 
+                 0.023025 * (gdp_i - BASE_GDP) +
+                 376.8519 * (energy_i - BASE_ENERGY) -
+                 69.9070 * ((gvc_i - BASE_GVC)/100.0) +
+                 1.8930 * (trade_i - BASE_TRADE) +
+                 69.2182 * ((manuf_i - BASE_MANUF)/100.0) -
+                 23.9705 * ((renew_i - BASE_RENEW)/100.0) -
+                 132.0980 * dig_idx)
         return max(10.0, float(e_est))
 
 # SESSION STATE INITIALIZATION
@@ -523,23 +534,23 @@ else:
     st.session_state.internet_val = c_info["internet"]
     st.session_state.mobile_val = c_info["mobile"]
 
-gdp = st.sidebar.slider("Kişi Başı GSYH ($)" if is_tr else "GDP per Capita ($)", 1000, 95000, int(st.session_state.gdp_val), step=1000)
+gdp = st.sidebar.slider("Kişi Başı GSYH ($)" if is_tr else "GDP per Capita ($)", 1000, 115000, int(st.session_state.gdp_val), step=1000)
 energy_intensity = st.sidebar.slider("Enerji Yoğunluğu (MJ/$)" if is_tr else "Energy Intensity (MJ/$)", 1.0, 15.0, float(st.session_state.energy_val), step=0.1)
-gvc_output = st.sidebar.slider("GVC Çıktısı (%)" if is_tr else "GVC Output Share (%)", 5.0, 60.0, float(st.session_state.gvc_val), step=0.5)
-trade_openness = st.sidebar.slider("Ticari Açıklık (% GDP)" if is_tr else "Trade Openness (% GDP)", 20.0, 200.0, float(st.session_state.trade_val), step=1.0)
-manufacturing = st.sidebar.slider("İmalat Sanayi (% GDP)" if is_tr else "Manufacturing Share (% GDP)", 2.0, 45.0, float(st.session_state.manuf_val), step=0.5)
-renewable_energy = st.sidebar.slider("Yenilenebilir Enerji (%)" if is_tr else "Renewable Share (%)", 0.0, 80.0, float(st.session_state.renew_val), step=1.0)
+gvc_output = st.sidebar.slider("GVC Çıktısı (%)" if is_tr else "GVC Output Share (%)", 5.0, 70.0, float(st.session_state.gvc_val), step=0.5)
+trade_openness = st.sidebar.slider("Ticari Açıklık (% GDP)" if is_tr else "Trade Openness (% GDP)", 20.0, 450.0, float(st.session_state.trade_val), step=1.0)
+manufacturing = st.sidebar.slider("İmalat Sanayi (% GDP)" if is_tr else "Manufacturing Share (% GDP)", 1.0, 45.0, float(st.session_state.manuf_val), step=0.5)
+renewable_energy = st.sidebar.slider("Yenilenebilir Enerji (%)" if is_tr else "Renewable Share (%)", 0.0, 85.0, float(st.session_state.renew_val), step=1.0)
 
 st.sidebar.subheader(dig_header)
 digital_mode = st.sidebar.radio(dig_mode_label, [dig_opt1, dig_opt2], index=0)
 
 if digital_mode in [dig_opt1, "Detailed 3 Indicators"]:
     broadband = st.sidebar.slider("Sabit Geniş Bant" if is_tr else "Fixed Broadband", 0.0, 50.0, float(st.session_state.broadband_val), step=0.5)
-    internet_users = st.sidebar.slider("İnternet Kullanımı (%)" if is_tr else "Internet Users (%)", 10.0, 100.0, float(st.session_state.internet_val), step=1.0)
-    mobile_sub = st.sidebar.slider("Mobil Abonelik" if is_tr else "Mobile Subscriptions", 30.0, 200.0, float(st.session_state.mobile_val), step=1.0)
+    internet_users = st.sidebar.slider("İnternet Kullanımı (%)" if is_tr else "Internet Users (%)", 0.0, 100.0, float(st.session_state.internet_val), step=1.0)
+    mobile_sub = st.sidebar.slider("Mobil Abonelik" if is_tr else "Mobile Subscriptions", 15.0, 320.0, float(st.session_state.mobile_val), step=1.0)
 else:
-    dig_single = st.sidebar.slider("Dijitalleşme İndeksi (%)" if is_tr else "Digitalization Index (%)", 10.0, 100.0, float(st.session_state.internet_val), step=1.0)
-    broadband = (dig_single / 100.0) * 45.0
+    dig_single = st.sidebar.slider("Dijitalleşme İndeksi (%)" if is_tr else "Digitalization Index (%)", 0.0, 100.0, float(st.session_state.internet_val), step=1.0)
+    broadband = (dig_single / 100.0) * 48.0
     internet_users = dig_single
     mobile_sub = (dig_single / 100.0) * 160.0
 
@@ -560,7 +571,7 @@ else:
     prof_c = PROFILE_DETAILS[selected_profile]
     base_country_emission = predict_emissions(prof_c["gdp"], prof_c["energy"], prof_c["gvc"], prof_c["trade"], prof_c["manuf"], prof_c["renew"], prof_c["broadband"], prof_c["internet"], prof_c["mobile"])
 
-# SHAP WATERFALL CONTRIBUTIONS
+# SHAP MARGINAL CONTRIBUTIONS
 c_gdp = predict_emissions(gdp, BASE_ENERGY, BASE_GVC, BASE_TRADE, BASE_MANUF, BASE_RENEW, BASE_BROADBAND, BASE_INTERNET, BASE_MOBILE) - BASE_EMISSION
 c_energy = predict_emissions(BASE_GDP, energy_intensity, BASE_GVC, BASE_TRADE, BASE_MANUF, BASE_RENEW, BASE_BROADBAND, BASE_INTERNET, BASE_MOBILE) - BASE_EMISSION
 c_gvc = predict_emissions(BASE_GDP, BASE_ENERGY, gvc_output, BASE_TRADE, BASE_MANUF, BASE_RENEW, BASE_BROADBAND, BASE_INTERNET, BASE_MOBILE) - BASE_EMISSION
@@ -569,9 +580,9 @@ c_manuf = predict_emissions(BASE_GDP, BASE_ENERGY, BASE_GVC, BASE_TRADE, manufac
 c_renew = predict_emissions(BASE_GDP, BASE_ENERGY, BASE_GVC, BASE_TRADE, BASE_MANUF, renewable_energy, BASE_BROADBAND, BASE_INTERNET, BASE_MOBILE) - BASE_EMISSION
 c_dig = predict_emissions(BASE_GDP, BASE_ENERGY, BASE_GVC, BASE_TRADE, BASE_MANUF, BASE_RENEW, broadband, internet_users, mobile_sub) - BASE_EMISSION
 
-# MONTE CARLO
+# MONTE CARLO (31.47 Mt SD BASED ON EMPIRICAL RESULTS)
 np.random.seed(42)
-residuals = np.random.normal(0, 101.24, 10000)
+residuals = np.random.normal(0, BASE_MC_SD, 10000)
 mc_distribution = np.maximum(0.0, pred_emission + residuals)
 lower_bound = float(np.percentile(mc_distribution, 5).item())
 upper_bound = float(np.percentile(mc_distribution, 95).item())
@@ -625,7 +636,7 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
     p_risk = PROFILE_DETAILS[selected_profile]["skdm_risk" if is_tr else "skdm_risk_en"]
     p_recipe = PROFILE_DETAILS[selected_profile]["recipe" if is_tr else "recipe_en"]
     
-    st.info(f"🏛️️ **{'Seçili Tipoloji' if is_tr else 'Selected Typology'}:** {p_title} | **{'Rozet' if is_tr else 'Badge'}:** {p_badge}\n\n"
+    st.info(f"🏛️ **{'Seçili Tipoloji' if is_tr else 'Selected Typology'}:** {p_title} | **{'Rozet' if is_tr else 'Badge'}:** {p_badge}\n\n"
             f"💡 *{p_desc}*\n\n"
             f"👥 **{'Akran Ülkeler' if is_tr else 'Peer Countries'}:** {p_peers} | 🛡️ **{'SKDM Riski' if is_tr else 'CBAM Risk'}:** {p_risk}\n\n"
             f"🎯 **{'Karbonsuzlaşma Reçetesi' if is_tr else 'Decarbonization Recipe'}:** {p_recipe}")
@@ -681,7 +692,7 @@ def eval_skdm_risk(manuf_val, renew_val, energy_val):
     else:
         return ("Yüksek Risk / SKDM Karbon Vergisi Yükü 🔴" if is_tr else "High Risk / CBAM Tax Exposure 🔴"), "8.5/10", "glass-card-red"
 
-# ENHANCED MULTI-SCENARIO PDF GENERATOR WITH FULL UNTRUNCATED TEXT
+# ENHANCED MULTI-SCENARIO PDF GENERATOR
 def generate_pdf_report():
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -781,7 +792,7 @@ def generate_pdf_report():
     pdf.ln(6)
     
     pdf.set_font("Helvetica", '', 8)
-    note_txt = "Bu rapor RBF-SVR (Test R2 = 0.975) ve Monte Carlo simulesiyle uretilmistir. Sonuclar iliskisel ve tahminsel duyarliliklari temsil eder, dogrudan nedensellik iddiasi tasimaz." if is_tr else "This report is generated using RBF-SVR (Test R2 = 0.975) and Monte Carlo simulations. Results represent associative/predictive marginal sensitivities and do not imply direct causality."
+    note_txt = "Bu rapor RBF-SVR (Test R2 = 0.9771) ve Monte Carlo simulesiyle uretilmistir. Sonuclar iliskisel ve tahminsel duyarliliklari temsil eder, dogrudan nedensellik iddiasi tasimaz." if is_tr else "This report is generated using RBF-SVR (Test R2 = 0.9771) and Monte Carlo simulations. Results represent associative/predictive marginal sensitivities and do not imply direct causality."
     pdf.multi_cell(190, 4, clean_pdf_text(note_txt))
 
     return bytes(pdf.output())
@@ -821,7 +832,6 @@ with tab1:
     fig_map.update_layout(height=480, margin={"r":0,"t":40,"l":0,"b":0})
     st.plotly_chart(fig_map, use_container_width=True)
 
-    # MULTI-DIMENSIONAL SPIDER / RADAR CHART & PRESET PROFILES HEATMAP
     st.markdown("---")
     
     if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
@@ -855,12 +865,12 @@ with tab1:
             ]
 
             fig_radar = go.Figure()
-            trace_name = selected_profile.split(' ')[1] if len(selected_profile.split(' ')) > 1 else selected_profile
+            trace_name = selected_profile.split(' ') if len(selected_profile.split(' ')) > 1 else selected_profile
             fig_radar.add_trace(go.Scatterpolar(r=val_selected, theta=categories, fill='toself', name=trace_name, fillcolor='rgba(43, 92, 143, 0.4)', line_color='#2b5c8f'))
             fig_radar.add_trace(go.Scatterpolar(r=val_base, theta=categories, fill='toself', name='Baseline (S0)', fillcolor='rgba(128, 128, 128, 0.2)', line_color='gray'))
             
             fig_radar.update_layout(
-                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+                polar=dict(radialaxis=dict(visible=True, range=)),
                 showlegend=True,
                 height=380,
                 margin=dict(l=40, r=40, t=30, b=30),
@@ -872,7 +882,7 @@ with tab1:
             st.markdown(f"#### 📊 {'Hazır Ülke Profilleri Isı Haritası Matrisi' if is_tr else 'Preset Profiles Heatmap Matrix'}")
             prof_matrix_rows = []
             for p_k, p_v in PROFILE_DETAILS.items():
-                p_short = p_k.split(" ")[1] if len(p_k.split(" ")) > 1 else p_k
+                p_short = p_k.split(" ") if len(p_k.split(" ")) > 1 else p_k
                 prof_matrix_rows.append({
                     "Profil": p_short,
                     "GSYH": p_v["gdp"]/1000,
@@ -1090,9 +1100,9 @@ with tab3:
 with tab4:
     st.subheader("🎯 Net-Zero / Hedef Tabanlı Politika Reçetesi Motoru" if is_tr else "🎯 Net-Zero Target-Based Policy Recipe Engine")
     target_pct = st.slider("🎯 Hedeflenen Karbon Emisyonu Azaltım Oranı (%):" if is_tr else "Target Carbon Emission Reduction Rate (%):", 5, 50, 20, step=5)
-    rec_renew = min(80.0, BASE_RENEW + (target_pct * 0.8))
-    rec_energy = max(1.5, BASE_ENERGY - (target_pct * 0.08))
-    rec_manuf = max(8.0, BASE_MANUF - (target_pct * 0.15))
+    rec_renew = min(85.0, BASE_RENEW + (target_pct * 0.8))
+    rec_energy = max(1.0, BASE_ENERGY - (target_pct * 0.08))
+    rec_manuf = max(5.0, BASE_MANUF - (target_pct * 0.15))
 
     r_col1, r_col2, r_col3 = st.columns(3)
     r_col1.markdown(f"<div class='glass-card-green'><b>{'Gerekli Yenilenebilir Enerji' if is_tr else 'Required Renewable Energy'}</b><h3 style='color:#2ca02c;'>%{rec_renew:.1f}</h3></div>", unsafe_allow_html=True)
@@ -1102,7 +1112,7 @@ with tab4:
     st.markdown("---")
     st.subheader("📈 " + ("10.000 İterasyonlu Monte Carlo Olasılık Dağılımı" if is_tr else "10,000 Iteration Monte Carlo Probability Distribution"))
     fig_mc = go.Figure()
-    fig_mc.add_vline(x=BASE_EMISSION, line_width=2, line_dash="dot", line_color="gray", annotation_text=f"S0 Baseline ({BASE_EMISSION:.1f})")
+    fig_mc.add_vline(x=BASE_MC_EMISSION, line_width=2, line_dash="dot", line_color="gray", annotation_text=f"S0 Baseline ({BASE_MC_EMISSION:.1f})")
     fig_mc.add_trace(go.Histogram(x=mc_distribution, nbinsx=50, name="Scenario Distribution", marker_color="#2b5c8f" if emission_diff <= 0 else "#d9534f", opacity=0.75))
     fig_mc.add_vline(x=pred_emission, line_width=3, line_dash="dash", line_color="red", annotation_text=f"New Scenario ({pred_emission:.1f})")
     fig_mc.update_layout(xaxis_title="Demand-Based GHG Emissions (Mt CO₂eq)", yaxis_title="Simulation Frequency", template="plotly_white", height=380)
@@ -1194,7 +1204,7 @@ with tab7:
                 mime="application/pdf"
             )
     else:
-        st.info("Henüz hafızaya kaydedilmiş senaryo yok. Yan menüden parametreleri değiştirip **'Senaryoyu Hafızaya Kaydet'** butonuna basarak ekleyebilirsiniz." if is_tr else "No saved scenarios in memory yet. Change parameters in sidebar and click 'Save Scenario to Memory'.")
+        st.info("Henüz hafızaya kaydedilmiş senaryo yok. Yan menüden parametreleri değiştirip **'Senaryoyu Hafızaya Kaydet'** butonına basarak ekleyebilirsiniz." if is_tr else "No saved scenarios in memory yet. Change parameters in sidebar and click 'Save Scenario to Memory'.")
 
 # TAB 8: METHODOLOGY & XAI
 with tab8:
@@ -1202,14 +1212,14 @@ with tab8:
     st.markdown(r"""
     ### 🔬 5-Kademeli Şeffaf Hesaplama ve Yapay Zeka Metodolojisi / 5-Stage Transparent Calculation Methodology
 
-    1. **Temel Bileşenler Analizi (PCA) / Principal Component Analysis:** Sabit Genişbant (\\(X_1\\)), İnternet Kullanımı (\\(X_2\\)) ve Mobil Abonelik (\\(X_3\\)) göstergeleri özdeğeri \\(\lambda_1 = 2.13\\) olan birincil bileşene dönüştürülür:
-       \\[PC_1 = 0.621 \cdot Z(X_1) + 0.649 \cdot Z(X_2) + 0.439 \cdot Z(X_3)\\]
+    1. **Temel Bileşenler Analizi (PCA) / Principal Component Analysis:** Sabit Genişbant (\\(X_1\\)), İnternet Kullanımı (\\(X_2\\)) ve Mobil Abonelik (\\(X_3\\)) göstergeleri özdeğeri \\(\lambda_1 = 2.1308\\) olan birincil bileşene dönüştürülür (\\(\%70.93\\) varyans):
+       \\[PC_1 = 0.6208 \cdot Z(X_1) + 0.6493 \cdot Z(X_2) + 0.4394 \cdot Z(X_3)\\]
 
-    2. **SVR Makro Tahmin Modeli / SVR Macro Prediction Model:** RBF çekirdekli Destek Vektör Regresyonu (\\(R^2 = 0.975\\), \\(RMSE = 101.24 \text{ Mt CO}_2\text{eq}\\)).
+    2. **SVR Makro Tahmin Modeli / SVR Macro Prediction Model:** RBF çekirdekli Destek Vektör Regresyonu (\\(R^2 = 0.9771\\), \\(RMSE = 301.06 \text{ Mt CO}_2\text{eq}\\), \\(C=100, \epsilon=0.1\\)).
 
-    3. **XAI / SHAP Marjinal Katkı / Marginal Effect:** Her bir politikanın emisyon üzerindeki net etkisi (\\(c_k\\)) diğer değişkenler \\(S_0\\) Baseline seviyesinde sabit tutularak tekil ayrıştırılır.
+    3. **XAI / SHAP Marjinal Katkı / Marginal Effect:** Ticari Açıklık (\\(0.2172\\)), İmalat Sanayi (\\(0.1817\\)) ve Enerji Yoğunluğu (\\(0.1512\\)) öncülüğünde her bir politikanın emisyon üzerindeki net etkisi (\\(c_k\\)) tekil ayrıştırılır. Dijitalleşme İndeksi \\(\%83.87\\) pozitif SHAP payı ile Rebound etkisi sergiler.
 
-    4. **Monte Carlo Risk Simülasyonu / Risk Simulation:** 10.000 iterasyonlu rassal gürültü eklenerek %5 ve %95 olasılık güven aralıkları hesaplanır.
+    4. **Monte Carlo Risk Simülasyonu / Risk Simulation:** 10.000 iterasyonlu rassal gürültü (\\(SD = 31.47 \text{ Mt}\\)) eklenerek \\(\%5\\) ve \\(\%95\\) olasılık güven aralıkları hesaplanır.
 
     5. **Macro-to-Micro Downscaling & SKDM / CBAM & Kapsam 3 (Scope 3):** Ülke düzeyindeki emisyon ve enerji yoğunluğu, ihracatçı şirketlerin AB SKDM vergi yükü (€) ve Kapsam 3 tedarik zinciri iklim risklerine indirgenir.
 
