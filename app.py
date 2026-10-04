@@ -242,7 +242,6 @@ EMPIRICAL_52_COUNTRIES = {
     "Vietnam": {"iso": "VNM", "emission": 440.411, "gdp": 3358.22, "energy": 3.85, "gvc": 34.88, "trade": 186.68, "manuf": 24.46, "renew": 24.20, "broadband": 19.54, "internet": 74.21, "mobile": 136.81},
 }
 
-# LOAD COUNTRY DATA DIRECTLY FROM CSV OR FALLBACK TO FULL 52 COUNTRIES DICTIONARY
 @st.cache_data
 def load_country_dataset():
     csv_paths = [
@@ -384,7 +383,7 @@ PROFILE_DETAILS = {
         "title_en": "🍃 Green Twin Transition Pioneer",
         "desc": "Yüksek yenilenebilir enerji (%65) ve ileri dijital altyapının sinerji oluşturduğu ideal karbonsuzlaşma modeli.",
         "desc_en": "Ideal decarbonization model combining high renewable energy (65%) and advanced digital infrastructure.",
-        "badge": "Geleceğin İideal Modeli",
+        "badge": "Geleceğin İdeal Modeli",
         "badge_en": "Ideal Future Model",
         "focus": "Sıfır Karbon Büyüme ve Yeşil Dijital Entegrasyon",
         "recipe": "Akıllı şehirler, yeşil veri merkezleri ve %100 karbonsuz üretim ile küresel iklim standartlarını belirlemek.",
@@ -412,7 +411,7 @@ def load_models():
 
 svr_model, scaler, pca, y_scaler = load_models()
 
-# ANCHORED PREDICTION FUNCTION (PRESERVES EXACT EMPIRICAL BASELINE)
+# ANCHORED PREDICTION FUNCTION
 def predict_emissions_anchored(base_emission, base_vals, cur_vals):
     d_gdp = (cur_vals['gdp'] - base_vals['gdp']) * 0.015
     d_energy = (cur_vals['energy'] - base_vals['energy']) * 120.0
@@ -634,7 +633,7 @@ if mode_choice in [mod_opt2, "Use Preset Country Profile"]:
     lbl_risk = 'SKDM Riski' if is_tr else 'CBAM Risk'
     lbl_rec = 'Karbonsuzlaşma Reçetesi' if is_tr else 'Decarbonization Recipe'
     
-    st.info(f"🏛️ **{lbl_tip}:** {p_title} | **{lbl_bad}:** {p_badge}\\n\\n💡 *{p_desc}*\\n\\n👥 **{lbl_peer}:** {p_peers} | 🛡️ **{lbl_risk}:** {p_risk}\\n\\n🎯 **{lbl_rec}:** {p_recipe}")
+    st.info(f"🏛️ **{lbl_tip}:** {p_title} | **{lbl_bad}:** {p_badge}\n\n💡 *{p_desc}*\n\n👥 **{lbl_peer}:** {p_peers} | 🛡️ **{lbl_risk}:** {p_risk}\n\n🎯 **{lbl_rec}:** {p_recipe}")
 else:
     c_disp = get_country_name(selected_country_tr, is_tr)
     st.success(f"📌 **{'Seçili Ülke' if is_tr else 'Selected Country'}:** {c_disp} | **{'Mevcut Gerçek Emisyonu' if is_tr else 'Baseline Emission'}:** {base_country_emission:.2f} Mt CO₂eq")
@@ -743,7 +742,9 @@ def generate_pdf_report():
         pdf.ln(6)
         
         pdf.set_font("Helvetica", '', 9)
-        p_row1 = f"  * GSYH / GDP: ${sc.get('GSYH (\$)', 0):,.0f} | Enerji Yogunlugu / Energy Intensity: {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$"
+        val_gdp_sc = sc.get('GSYH (\$)', sc.get('GSYH (\$)', 0))
+        val_energy_sc = sc.get('Enerji Yoğunluğu (MJ/$)', 0)
+        p_row1 = f"  * GSYH / GDP: ${val_gdp_sc:,.0f} | Enerji Yogunlugu / Energy Intensity: {val_energy_sc:.1f} MJ/$"
         pdf.cell(190, 5, clean_pdf_text(p_row1))
         pdf.ln(5)
         
@@ -950,31 +951,31 @@ with tab2:
     rec_c1, rec_c2, rec_c3 = st.columns(3)
     
     if is_tr:
-        card1_html = f\"\"\"<div class='glass-card-green'>
+        card1_html = f"""<div class='glass-card-green'>
             <h4>🍃 1. Yenilenebilir Enerji Hamlesi</h4>
             <p><b>Aksiyon:</b> Yenilenebilir enerji oranının <b>%{renewable_energy:.1f}</b> seviyesine ayarlanması emisyon tahminini net <b>{c_renew:+.1f} Mt CO₂eq</b> etkilemektedir.</p>
-        </div>\"\"\"
-        card2_html = f\"\"\"<div class='glass-card-blue'>
+        </div>"""
+        card2_html = f"""<div class='glass-card-blue'>
             <h4>⚡ 2. Enerji Verimliliği & Şebeke</h4>
             <p><b>Aksiyon:</b> Enerji yoğunluğunun <b>{energy_intensity:.2f} MJ/$</b> seviyesine ayarlanması, €5M ihracat yapan bir işletme için tahmini SKDM cezasında <b>€{max(0.0, dyn_tax_savings):,.0f}</b> net tasarruf yaratmaktadır.</p>
-        </div>\"\"\"
-        card3_html = f\"\"\"<div class='glass-card-yellow'>
+        </div>"""
+        card3_html = f"""<div class='glass-card-yellow'>
             <h4>🏭 3. Temiz İmalat Dönüşümü</h4>
             <p><b>Aksiyon:</b> İmalat payının <b>%{manufacturing:.1f}</b> ve temiz enerjinin <b>%{renewable_energy:.1f}</b> olduğu bu senaryoda Kapsam 3 tedarik zinciri iklim riski <b>%{dyn_scope3_reduction:.1f}</b> azalmaktadır.</p>
-        </div>\"\"\"
+        </div>"""
     else:
-        card1_html = f\"\"\"<div class='glass-card-green'>
+        card1_html = f"""<div class='glass-card-green'>
             <h4>🍃 1. Renewable Energy Push</h4>
             <p><b>Action:</b> Setting renewable energy share to <b>{renewable_energy:.1f}%</b> impacts emission prediction by a net <b>{c_renew:+.1f} Mt CO₂eq</b>.</p>
-        </div>\"\"\"
-        card2_html = f\"\"\"<div class='glass-card-blue'>
+        </div>"""
+        card2_html = f"""<div class='glass-card-blue'>
             <h4>⚡ 2. Energy Efficiency & Grid</h4>
             <p><b>Action:</b> Setting energy intensity to <b>{energy_intensity:.2f} MJ/$</b> saves <b>€{max(0.0, dyn_tax_savings):,.0f}</b> in CBAM tax penalties for a €5M exporter.</p>
-        </div>\"\"\"
-        card3_html = f\"\"\"<div class='glass-card-yellow'>
+        </div>"""
+        card3_html = f"""<div class='glass-card-yellow'>
             <h4>🏭 3. Clean Manufacturing Shift</h4>
             <p><b>Action:</b> With <b>{manufacturing:.1f}%</b> manufacturing share and <b>{renewable_energy:.1f}%</b> clean energy, Scope 3 climate risk drops by <b>{dyn_scope3_reduction:.1f}%</b>.</p>
-        </div>\"\"\"
+        </div>"""
 
     with rec_c1:
         st.markdown(card1_html, unsafe_allow_html=True)
@@ -1132,13 +1133,13 @@ with tab6:
     for cname_tr, cinfo in COUNTRIES_DATA.items():
         cdisp = get_country_name(cname_tr, is_tr)
         all_c_list.append({
-            "Ülke / Country": cdisp, "Emisyon / Emissions (Mt)": round(cinfo["emission"], 1), "GSYH / GDP (\$)": cinfo["gdp"],
+            "Ülke / Country": cdisp, "Emisyon / Emissions (Mt)": round(cinfo["emission"], 1), "GSYH (\$)": cinfo["gdp"],
             "Enerji Yoğunluğu / Energy Int.": cinfo["energy"], "Yenilenebilir / Renewables (%)": cinfo["renew"], "İmalat / Mfg (%)": cinfo["manuf"]
         })
     df_all_raw = pd.DataFrame(all_c_list)
 
     fig_bubble = px.scatter(
-        df_all_raw, x="GSYH / GDP (\$)", y="Enerji Yoğunluğu / Energy Int.", size="Emisyon / Emissions (Mt)", color="Yenilenebilir / Renewables (%)",
+        df_all_raw, x="GSYH (\$)", y="Enerji Yoğunluğu / Energy Int.", size="Emisyon / Emissions (Mt)", color="Yenilenebilir / Renewables (%)",
         hover_name="Ülke / Country", size_max=45, color_continuous_scale="Viridis",
         title="Ülkelerin GSYH, Enerji Yoğunluğu ve Emisyon Büyüklüklerine Göre Kabarcık Dağılımı" if is_tr else "Countries Distribution by GDP, Energy Intensity, and GHG Emission Size"
     )
@@ -1187,14 +1188,14 @@ with tab8:
     st.markdown("""
     ### 🔬 5-Kademeli Şeffaf Hesaplama ve Yapay Zeka Metodolojisi / 5-Stage Transparent Calculation Methodology
 
-    1. **Temel Bileşenler Analizi (PCA) / Principal Component Analysis:** Sabit Genişbant (\\(X_1\\)), İnternet Kullanımı (\\(X_2\\)) ve Mobil Abonelik (\\(X_3\\)) göstergeleri özdeğeri $\lambda_1 = 2.1308$ olan birincil bileşene dönüştürülür ($\%70.93$ varyans):
-       $$PC_1 = 0.6208 \cdot Z(X_1) + 0.6493 \cdot Z(X_2) + 0.4394 \cdot Z(X_3)$$
+    1. **Temel Bileşenler Analizi (PCA) / Principal Component Analysis:** Sabit Genişbant (\\(X_1\\)), İnternet Kullanımı (\\(X_2\\)) ve Mobil Abonelik (\\(X_3\\)) göstergeleri özdeğeri $\\lambda_1 = 2.1308$ olan birincil bileşene dönüştürülür ($\\%70.93$ varyans):
+       $$PC_1 = 0.6208 \\cdot Z(X_1) + 0.6493 \\cdot Z(X_2) + 0.4394 \\cdot Z(X_3)$$
 
-    2. **SVR Makro Tahmin Modeli / SVR Macro Prediction Model:** RBF çekirdekli Destek Vektör Regresyonu ($R^2 = 0.9771$, $RMSE = 301.06 \text{ Mt CO}_2\text{eq}$, $C=100, \epsilon=0.1$).
+    2. **SVR Makro Tahmin Modeli / SVR Macro Prediction Model:** RBF çekirdekli Destek Vektör Regresyonu ($R^2 = 0.9771$, $RMSE = 301.06 \\text{ Mt CO}_2\\text{eq}$, $C=100, \\epsilon=0.1$).
 
     3. **XAI / SHAP Marjinal Katkı / Marginal Effect:** Ticari Açıklık (\\(0.2172\\)), İmalat Sanayi (\\(0.1817\\)) ve Enerji Yoğunluğu (\\(0.1512\\)) öncülüğünde her bir politikanın emisyon üzerindeki net etkisi (\\(c_k\\)) tekil ayrıştırılır. Dijitalleşme İndeksi $\%83.87$ pozitif SHAP payı ile Rebound etkisi sergiler.
 
-    4. **Monte Carlo Risk Simülasyonu / Risk Simulation:** 10.000 iterasyonlu rassal gürültü (\\(SD = 31.47 \text{ Mt}\\)) eklenerek $\%5$ ve $\%95$ olasılık güven aralıkları hesaplanır.
+    4. **Monte Carlo Risk Simülasyonu / Risk Simulation:** 10.000 iterasyonlu rassal gürültü (\\(SD = 31.47 \\text{ Mt}\\)) eklenerek $\%5$ ve $\%95$ olasılık güven aralıkları hesaplanır.
 
     5. **Macro-to-Micro Downscaling & SKDM / CBAM & Kapsam 3 (Scope 3):** Ülke düzeyindeki emisyon ve enerji yoğunluğu, ihracatçı şirketlerin AB SKDM vergi yükü (€) ve Kapsam 3 tedarik zinciri iklim risklerine indirgenir.
 
