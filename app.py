@@ -406,7 +406,7 @@ def load_models():
 
 svr_model, scaler, pca, y_scaler = load_models()
 
-# PREDICTION FUNCTION (USING EXACT OLS AND SVR MARGINALS)
+# PREDICTION FUNCTION
 def predict_emissions(gdp_i, energy_i, gvc_i, trade_i, manuf_i, renew_i, bb_i, net_i, mob_i):
     if svr_model is not None and scaler is not None and pca is not None:
         z_bb = (bb_i - 23.37) / 12.82
@@ -429,7 +429,6 @@ def predict_emissions(gdp_i, energy_i, gvc_i, trade_i, manuf_i, renew_i, bb_i, n
             pred_e = (pred_scaled * 1771.44) + 715.92
         return max(10.0, float(pred_e))
     else:
-        # High-precision empirical OLS fallback formula
         z_bb = (bb_i - 23.37) / 12.82
         z_net = (net_i - 67.50) / 24.73
         z_mob = (mob_i - 117.77) / 30.32
@@ -870,7 +869,7 @@ with tab1:
             fig_radar.add_trace(go.Scatterpolar(r=val_base, theta=categories, fill='toself', name='Baseline (S0)', fillcolor='rgba(128, 128, 128, 0.2)', line_color='gray'))
             
             fig_radar.update_layout(
-                polar=dict(radialaxis=dict(visible=True, range=)),
+                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
                 showlegend=True,
                 height=380,
                 margin=dict(l=40, r=40, t=30, b=30),
@@ -1179,7 +1178,7 @@ with tab6:
 
 # TAB 7: SCENARIO VAULT & EXPORT
 with tab7:
-    st.subheader("💾 Kaydedilen Senaryolar Deposu & Dışa Aktar" if is_tr else "💾 Saved Scenario Vault & Export")
+    st.subheader("💾 Kaydedilen Senaryolar Deposu & İndir" if is_tr else "💾 Saved Scenario Vault & Export")
     st.markdown("Simülatörde hazırlayıp **'Senaryoyu Hafızaya Kaydet'** butonu ile sakladığınız tüm senaryolar burada listelenir:" if is_tr else "All scenarios saved via 'Save Scenario to Memory' are listed here:")
 
     if st.session_state.saved_scenarios:
@@ -1204,7 +1203,7 @@ with tab7:
                 mime="application/pdf"
             )
     else:
-        st.info("Henüz hafızaya kaydedilmiş senaryo yok. Yan menüden parametreleri değiştirip **'Senaryoyu Hafızaya Kaydet'** butonına basarak ekleyebilirsiniz." if is_tr else "No saved scenarios in memory yet. Change parameters in sidebar and click 'Save Scenario to Memory'.")
+        st.info("Henüz hafızaya kaydedilmiş senaryo yok. Yan menüden parametreleri değiştirip **'Senaryoyu Hafızaya Kaydet'** butonuna basarak ekleyebilirsiniz." if is_tr else "No saved scenarios in memory yet. Change parameters in sidebar and click 'Save Scenario to Memory'.")
 
 # TAB 8: METHODOLOGY & XAI
 with tab8:
