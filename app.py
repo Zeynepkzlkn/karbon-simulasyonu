@@ -608,7 +608,7 @@ with col_sc2:
             "Baseline Farkı (%)": round(country_policy_pct, 1),
             "Alt Güven": round(lower_bound, 1),
             "Üst Güven": round(upper_bound, 1),
-            "GSYH (\$)": gdp,
+            "GSYH ($)": gdp,
             "Enerji Yoğunluğu (MJ/$)": energy_intensity,
             "Yenilenebilir Enerji (%)": renewable_energy,
             "İmalat Payı (%)": manufacturing,
@@ -743,7 +743,7 @@ def generate_pdf_report():
         pdf.ln(6)
         
         pdf.set_font("Helvetica", '', 9)
-        p_row1 = f"  * GSYH / GDP: ${sc.get('GSYH (\$)', 0):,.0f} | Enerji Yogunlugu / Energy Intensity: {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$"
+        p_row1 = f"  * GSYH / GDP: ${sc.get('GSYH ($)', 0):,.0f} | Enerji Yogunlugu / Energy Intensity: {sc.get('Enerji Yoğunluğu (MJ/$)', 0):.1f} MJ/$"
         pdf.cell(190, 5, clean_pdf_text(p_row1))
         pdf.ln(5)
         
