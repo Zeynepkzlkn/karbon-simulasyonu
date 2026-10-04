@@ -954,13 +954,11 @@ with tab2:
         <h4>Yeşil Dönüşüm Durumu</h4>
         <p>Emisyon Azaltım Oranı: %{emission_reduction:.1f}</p>
     </div>
-    """
-            <h4>🍃 1. Yenilenebilir Enerji Hamlesi</h4>
-            <p><b>Aksiyon:</b> Yenilenebilir enerji oranının <b>%{renewable_energy:.1f}</b> seviyesine ayarlanması emisyon tahminini net <b>{c_renew:+.1f} Mt CO₂eq</b> etkilemektedir.</p>
+    """<h4>🍃 1. Yenilenebilir Enerji Hamlesi</h4><p><b>Aksiyon:</b> Yenilenebilir enerji oranının <b>%{renewable_energy:.1f}</b> seviyesine ayarlanması emisyon tahminini net <b>{c_renew:+.1f} Mt CO₂eq</b> etkilemektedir.</p>
         </div>\"\"\"
         card2_html = f\"\"\"<div class='glass-card-blue'>
-            <h4>⚡ 2. Enerji Verimliliği & Şebeke</h4>
-            <p><b>Aksiyon:</b> Enerji yoğunluğunun <b>{energy_intensity:.2f} MJ/$</b> seviyesine ayarlanması, €5M ihracat yapan bir işletme için tahmini SKDM cezasında <b>€{max(0.0, dyn_tax_savings):,.0f}</b> net tasarruf yaratmaktadır.</p>
+        <h4>⚡ 2. Enerji Verimliliği & Şebeke</h4>
+        <p><b>Aksiyon:</b> Enerji yoğunluğunun <b>{energy_intensity:.2f} MJ/$</b> seviyesine ayarlanması, €5M ihracat yapan bir işletme için tahmini SKDM cezasında <b>€{max(0.0, dyn_tax_savings):,.0f}</b> net tasarruf yaratmaktadır.</p>
         </div>\"\"\"
         card3_html = f\"\"\"<div class='glass-card-yellow'>
             <h4>🏭 3. Temiz İmalat Dönüşümü</h4>
