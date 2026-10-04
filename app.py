@@ -950,7 +950,12 @@ with tab2:
     rec_c1, rec_c2, rec_c3 = st.columns(3)
     
     if is_tr:
-        card1_html = f\"\"\"<div class='glass-card-green'>
+        card1_html = f"""
+    <div class='glass-card-green'>
+        <h4>Yeşil Dönüşüm Durumu</h4>
+        <p>Emisyon Azaltım Oranı: %{emission_reduction:.1f}</p>
+    </div>
+    """
             <h4>🍃 1. Yenilenebilir Enerji Hamlesi</h4>
             <p><b>Aksiyon:</b> Yenilenebilir enerji oranının <b>%{renewable_energy:.1f}</b> seviyesine ayarlanması emisyon tahminini net <b>{c_renew:+.1f} Mt CO₂eq</b> etkilemektedir.</p>
         </div>\"\"\"
