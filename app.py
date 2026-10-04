@@ -948,7 +948,6 @@ with tab2:
     st.markdown(f"#### 💡 {'Yapay Zeka Destekli Politika Kaldıraçları & Canlı Öneriler' if is_tr else 'AI-Driven Policy Levers & Live Recommendations'}")
     
     rec_c1, rec_c2, rec_c3 = st.columns(3)
-    
     if is_tr:
         card1_html = f"""
     <div class='glass-card-green'>
