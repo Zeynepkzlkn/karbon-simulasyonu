@@ -51,16 +51,6 @@ css_style = """
     background: linear-gradient(135deg, #1d3e61 0%, #122840 100%);
     color: white;
 }
-header[data-testid="stHeader"] {
-    visibility: hidden;
-    height: 0px;
-}
-footer {
-    visibility: hidden;
-}
-div[data-testid="stDecoration"] {
-    visibility: hidden;
-}
 .glass-card-green {
     background: linear-gradient(135deg, rgba(235, 247, 238, 0.95) 0%, rgba(210, 240, 218, 0.95) 100%);
     padding: 16px;
@@ -429,7 +419,7 @@ if "selected_country_name" not in st.session_state:
     st.session_state.selected_country_name = "Türkiye"
 
 if "gdp_val" not in st.session_state:
-    init_c = COUNTRIES_DATA.get("Türkiye", list(COUNTRIES_DATA.values()))
+    init_c = COUNTRIES_DATA.get("Türkiye", list(COUNTRIES_DATA.values())[0])
     st.session_state.gdp_val = init_c["gdp"]
     st.session_state.energy_val = init_c["energy"]
     st.session_state.gvc_val = init_c["gvc"]
@@ -510,7 +500,7 @@ else:
     selected_country_disp = st.sidebar.selectbox("Ülke Listesi / Country List:", country_display_list, index=curr_idx)
     selected_country_tr = REVERSE_COUNTRY_TRANSLATIONS.get(selected_country_disp, selected_country_disp)
     st.session_state.selected_country_name = selected_country_tr
-    c_info = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values()))
+    c_info = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values())[0])
     base_country_emission = c_info["emission"]
     base_vals = {
         'gdp': c_info["gdp"], 'energy': c_info["energy"], 'gvc': c_info["gvc"],
@@ -583,7 +573,7 @@ emission_pct_change = (emission_diff / BASE_EMISSION) * 100.0
 country_policy_diff = pred_emission - base_country_emission
 country_policy_pct = ((country_policy_diff / base_country_emission) * 100.0) if base_country_emission > 0 else 0.0
 
-c_info_cur = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values())) if mode_choice in [mod_opt1, 'Select from Global Country List'] else PROFILE_DETAILS[selected_profile]
+c_info_cur = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values())[0]) if mode_choice in [mod_opt1, 'Select from Global Country List'] else PROFILE_DETAILS[selected_profile]
 
 corp_export_default = 5000000
 b_factor = (c_info_cur["energy"] / 10.0) * (1.0 - (c_info_cur["renew"] / 100.0)) * 0.08
@@ -803,7 +793,7 @@ with tab1:
         color_continuous_scale=[[0.0, "#2ca02c"], [0.35, "#ff7f0e"], [1.0, "#d62728"]],
         title="Küresel Ekonomilerin Gerçek Karbon Ayak İzi Dağılımı (Mt CO₂eq)" if is_tr else "Global Economies Empirical Carbon Footprint (Mt CO₂eq)"
     )
-    sel_iso = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values()))["iso"] if mode_choice in [mod_opt1, "Select from Global Country List"] else "TUR"
+    sel_iso = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values())[0])["iso"] if mode_choice in [mod_opt1, "Select from Global Country List"] else "TUR"
     sel_row = df_map[df_map["ISO"] == sel_iso]
     if not sel_row.empty:
         fig_map.add_trace(go.Choropleth(locations=sel_row["ISO"], z=sel_row["Emisyon (Mt)"], colorscale=[[0, "#ffff00"], [1, "#ffff00"]], showscale=False, marker_line_color="#ffffff", marker_line_width=3.5))
@@ -845,7 +835,7 @@ with tab1:
             fig_radar.add_trace(go.Scatterpolar(r=val_selected, theta=categories, fill='toself', name=trace_name, fillcolor='rgba(43, 92, 143, 0.4)', line_color='#2b5c8f'))
             fig_radar.add_trace(go.Scatterpolar(r=val_base, theta=categories, fill='toself', name='Baseline (S0)', fillcolor='rgba(128, 128, 128, 0.2)', line_color='gray'))
             fig_radar.update_layout(
-                polar=dict(radialaxis=dict(visible=True, range=[1])),
+                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
                 showlegend=True,
                 height=380,
                 margin=dict(l=40, r=40, t=30, b=30),
@@ -892,7 +882,7 @@ with tab1:
         st.dataframe(df_prof_table.sort_values("Tahmini Emisyon (Mt)" if is_tr else "Predicted Emission (Mt)", ascending=False), use_container_width=True, hide_index=True)
     else:
         st.subheader(f"📌 {get_country_name(selected_country_tr, is_tr)} — {'Göstergeler & Küresel Sıralama' if is_tr else 'Indicators & Global Ranking'}")
-        c_m = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values()))
+        c_m = COUNTRIES_DATA.get(selected_country_tr, list(COUNTRIES_DATA.values())[0])
         st.markdown(f"#### 📊 {'Küresel Ülke Emisyon, Tedarik Zinciri & Dijitalleşme Listesi' if is_tr else 'Global Country Emission, Supply Chain & Digitalization List'}")
         st.dataframe(df_map.sort_values("Emisyon (Mt)", ascending=False), use_container_width=True, hide_index=True)
 
@@ -1001,7 +991,7 @@ with tab2:
     else:
         card1_html = f"""<div class='glass-card-green'>
         <h4>🍃 1. Renewable Energy Push</h4>
-        <p><b>Action:</b> Setting renewable energy share to <b>{renewable_energy:.1f}%</b> impacts emission prediction by a net <b>{c_renew:+.1f} Mt CO₂eq</b>.</p>
+        <p><b>Action:</b> Setting renewable energy share to <b>{renewable_energy:.1f}%</b> impacts predicted emissions by a net <b>{c_renew:+.1f} Mt CO₂eq</b>.</p>
         </div>"""
         card2_html = f"""<div class='glass-card-blue'>
         <h4>⚡ 2. Energy Efficiency & Grid</h4>
@@ -1062,7 +1052,7 @@ with tab3:
             custom_eval = []
             for cdisp in selected_custom_disp:
                 cname_tr = REVERSE_COUNTRY_TRANSLATIONS.get(cdisp, cdisp)
-                cinfo = COUNTRIES_DATA.get(cname_tr, list(COUNTRIES_DATA.values()))
+                cinfo = COUNTRIES_DATA.get(cname_tr, list(COUNTRIES_DATA.values())[0])
                 score = (cinfo["renew"] * 0.3) + ((15.0 - cinfo["energy"]) * 0.3) + (cinfo["gvc"] * 0.2) + (cinfo.get("digital_index", BASE_DIGITAL_INDEX) * 0.2)
                 cbam_risk, _, _ = eval_skdm_risk(cinfo["manuf"], cinfo["renew"], cinfo["energy"])
                 custom_eval.append({
@@ -1080,7 +1070,7 @@ with tab3:
             st.dataframe(df_custom_eval, use_container_width=True, hide_index=True)
     else:
         min_manuf_target = st.slider("Aradığınız Minimum İmalat Sanayi Altyapısı Payı (%):" if is_tr else "Min Manufacturing Infrastructure Share (%):", 5.0, 40.0, 15.0)
-        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/$):" if is_tr else "Max Acceptable Energy Intensity (MJ/$):", 0.5, 10.0, 5.0)
+        max_energy_limit = st.slider("Kabul Edilebilir Maksimum Enerji Yoğunluğu (MJ/$):" if is_tr else "Max Acceptable Energy Intensity (MJ/\$):", 0.5, 10.0, 5.0)
         
         opt_candidates = []
         for cname_tr, cinfo in COUNTRIES_DATA.items():
@@ -1156,8 +1146,8 @@ with tab5:
         country_B_disp = st.selectbox("2. Ülkeyi Seçiniz:" if is_tr else "Select Country 2:", pair_list_disp, index=min(1, len(pair_list_disp)-1))
         country_B_tr = REVERSE_COUNTRY_TRANSLATIONS.get(country_B_disp, country_B_disp)
         
-    cA_data = COUNTRIES_DATA.get(country_A_tr, list(COUNTRIES_DATA.values()))
-    cB_data = COUNTRIES_DATA.get(country_B_tr, list(COUNTRIES_DATA.values()))
+    cA_data = COUNTRIES_DATA.get(country_A_tr, list(COUNTRIES_DATA.values())[0])
+    cB_data = COUNTRIES_DATA.get(country_B_tr, list(COUNTRIES_DATA.values())[0])
     eA = cA_data["emission"]
     eB = cB_data["emission"]
     
@@ -1240,14 +1230,14 @@ with tab8:
     st.subheader("📜 Metodoloji, Şeffaf Hesaplama & XAI Notları" if is_tr else "📜 Methodology & XAI Notes")
     st.markdown("""
     ### 🔬 5-Kademeli Şeffaf Hesaplama ve Yapay Zeka Metodolojisi / 5-Stage Transparent Calculation Methodology
-    1. **Temel Bileşenler Analizi (PCA) / Principal Component Analysis:** Sabit Genişbant (\\(X_1\\)), İnternet Kullanımı (\\(X_2\\)) ve Mobil Abonelik (\\(X_3\\)) göstergeleri özdeğeri \\(\\lambda_1 = 2.1308\\) olan birincil bileşene dönüştürülür (\\(\\%70.93\\) varyans):
-    \\[PC_1 = 0.6208 \\cdot Z(X_1) + 0.6493 \\cdot Z(X_2) + 0.4394 \\cdot Z(X_3)\\]
+    1. **Temel Bileşenler Analizi (PCA) / Principal Component Analysis:** Sabit Genişbant (\\(X_1\\)), İnternet Kullanımı (\\(X_2\\)) ve Mobil Abonelik (\\(X_3\\)) göstergeleri özdeğeri \\(\lambda_1 = 2.1308\\) olan birincil bileşene dönüştürülür (\\(\%70.93\\) varyans):
+    \\[PC_1 = 0.6208 \cdot Z(X_1) + 0.6493 \cdot Z(X_2) + 0.4394 \cdot Z(X_3)\\]
     
-    2. **SVR Makro Tahmin Modeli / SVR Macro Prediction Model:** RBF çekirdekli Destek Vektör Regresyonu (\\(R^2 = 0.9771\\), \\(RMSE = 301.06 \\text{ Mt CO}_2\\text{eq}\\), \\(C=100, \\epsilon=0.1\\)).
+    2. **SVR Makro Tahmin Modeli / SVR Macro Prediction Model:** RBF çekirdekli Destek Vektör Regresyonu (\\(R^2 = 0.9771\\), \\(RMSE = 301.06 \text{ Mt CO}_2\text{eq}\\), \\(C=100, \epsilon=0.1\\)).
     
     3. **XAI / SHAP Marjinal Katkı / Marginal Effect:** Ticari Açıklık (\\(0.2172\\)), İmalat Sanayi (\\(0.1817\\)) ve Enerji Yoğunluğu (\\(0.1512\\)) öncülüğünde her bir politikanın emisyon üzerindeki net etkisi (\\(c_k\\)) tekil ayrıştırılır. Dijitalleşme İndeksi \\(\%83.87\\) pozitif SHAP payı ile Rebound etkisi sergiler.
     
-    4. **Monte Carlo Risk Simülasyonu / Risk Simulation:** 10.000 iterasyonlu rassal gürültü (\\(SD = 31.47 \\text{ Mt}\\)) eklenerek \\(\%5\\) ve \\(\%95\\) olasılık güven aralıkları hesaplanır.
+    4. **Monte Carlo Risk Simülasyonu / Risk Simulation:** 10.000 iterasyonlu rassal gürültü (\\(SD = 31.47 \text{ Mt}\\)) eklenerek \\(\%5\\) ve \\(\%95\\) olasılık güven aralıkları hesaplanır.
     
     5. **Macro-to-Micro Downscaling & SKDM / CBAM & Kapsam 3 (Scope 3):** Ülke düzeyindeki emisyon ve enerji yoğunluğu, ihracatçı şirketlerin AB SKDM vergi yükü (€) ve Kapsam 3 tedarik zinciri iklim risklerine indirgenir.
     
